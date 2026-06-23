@@ -1,16 +1,14 @@
-# LogansCreations v1.1
+# LogansCreations v1.2
 
-Converter-control upgrade.
+Converter visual polish upgrade.
 
 ## Added
-- Fixed top label to Sprite Pipeline v1.1
-- Visible numeric values beside every converter slider
-- One-tap converter presets:
-  - FireRed Auto
-  - Make Bigger
-  - Cleaner Face
-  - Less Detail Crush
-  - 96x96 Master
-- Better default converter values for 64x64 FireRed testing
+- Full Source preview now shows the entire AI image instead of only the crop.
+- Crop Preview is separate, so you can see exactly what will be converted.
+- Crop box overlay on the full source preview.
+- Safer crop clamping to avoid misleading chopped-off source previews.
+- New presets: Full Body Crop, Sprite Polish, Sharpen Sprite.
+- Extra sprite polish / edge cleanup checkbox.
+- Improved 64x64 defaults for less blurry output.
 
-Upload the files to your GitHub Pages repo root and open with `?v=11`.
+Upload the files to your GitHub Pages repo root and open with `?v=12`.

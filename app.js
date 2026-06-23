@@ -10,8 +10,10 @@ let spriteDataUrl = null;
 
 const $ = id => document.getElementById(id);
 const sourceCanvas = $("sourceCanvas");
+const cropCanvas = $("cropCanvas");
 const spriteCanvas = $("spriteCanvas");
 const sourceCtx = sourceCanvas.getContext("2d");
+const cropCtx = cropCanvas.getContext("2d");
 const spriteCtx = spriteCanvas.getContext("2d");
 
 const typeMotifs = {
@@ -232,14 +234,49 @@ function drawChecker(ctx, size) {
   for (let y=0;y<size;y+=step) for (let x=0;x<size;x+=step) if (((x+y)/step)%2===0) ctx.fillRect(x,y,step,step);
 }
 
+function clampCropToSource(crop) {
+  if (!sourceImage || !crop) return crop;
+  const size = Math.max(1, Math.min(crop.sw, crop.sh, sourceImage.width, sourceImage.height));
+  let cx = crop.sx + crop.sw / 2;
+  let cy = crop.sy + crop.sh / 2;
+  cx = Math.max(size / 2, Math.min(sourceImage.width - size / 2, cx));
+  cy = Math.max(size / 2, Math.min(sourceImage.height - size / 2, cy));
+  return { sx: cx - size / 2, sy: cy - size / 2, sw: size, sh: size };
+}
+
+function drawImageContained(ctx, img, size) {
+  const scale = Math.min(size / img.width, size / img.height);
+  const dw = img.width * scale;
+  const dh = img.height * scale;
+  const dx = (size - dw) / 2;
+  const dy = (size - dh) / 2;
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(img, dx, dy, dw, dh);
+  return { scale, dx, dy, dw, dh };
+}
+
 function drawSourcePreview() {
   sourceCtx.clearRect(0,0,192,192);
+  cropCtx.clearRect(0,0,192,192);
   drawChecker(sourceCtx, 192);
+  drawChecker(cropCtx, 192);
   if (!sourceImage) return;
-  const crop = activeCrop();
-  sourceCtx.imageSmoothingEnabled = true;
-  sourceCtx.imageSmoothingQuality = "high";
-  sourceCtx.drawImage(sourceImage, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, 192, 192);
+  const fit = drawImageContained(sourceCtx, sourceImage, 192);
+  const crop = clampCropToSource(activeCrop());
+  if ($("showCropBox")?.checked) {
+    sourceCtx.save();
+    sourceCtx.strokeStyle = "rgba(250, 204, 21, 0.95)";
+    sourceCtx.lineWidth = 2;
+    sourceCtx.setLineDash([6,4]);
+    sourceCtx.strokeRect(fit.dx + crop.sx * fit.scale, fit.dy + crop.sy * fit.scale, crop.sw * fit.scale, crop.sh * fit.scale);
+    sourceCtx.fillStyle = "rgba(250, 204, 21, 0.09)";
+    sourceCtx.fillRect(fit.dx + crop.sx * fit.scale, fit.dy + crop.sy * fit.scale, crop.sw * fit.scale, crop.sh * fit.scale);
+    sourceCtx.restore();
+  }
+  cropCtx.imageSmoothingEnabled = true;
+  cropCtx.imageSmoothingQuality = "high";
+  cropCtx.drawImage(sourceImage, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, 192, 192);
 }
 
 function resetConverter() {
@@ -257,6 +294,8 @@ function resetConverter() {
   $("removeBg").checked = true;
   $("transparentBg").checked = true;
   $("cleanSpeckles").checked = true;
+  if ($("showCropBox")) $("showCropBox").checked = true;
+  if ($("extraPolish")) $("extraPolish").checked = true;
   drawSourcePreview();
   updateSliderValues();
   convertSprite();
@@ -450,6 +489,58 @@ function cleanupSprite(ctx, size, passes = 1) {
   }
 }
 
+function polishSpriteEdges(ctx, size, strength = 1) {
+  const img = ctx.getImageData(0,0,size,size);
+  const src = new Uint8ClampedArray(img.data);
+  const d = img.data;
+  for (let y=1; y<size-1; y++) {
+    for (let x=1; x<size-1; x++) {
+      const i=(y*size+x)*4;
+      if (src[i+3] < 24) continue;
+      let transparentNear = false;
+      let darkNear = false;
+      let avgR=0, avgG=0, avgB=0, count=0;
+      for (let oy=-1; oy<=1; oy++) for (let ox=-1; ox<=1; ox++) {
+        if (!ox && !oy) continue;
+        const ni=((y+oy)*size+(x+ox))*4;
+        if (src[ni+3] < 24) transparentNear = true;
+        else { avgR += src[ni]; avgG += src[ni+1]; avgB += src[ni+2]; count++; if ((src[ni]+src[ni+1]+src[ni+2]) < 90) darkNear = true; }
+      }
+      if (transparentNear) {
+        d[i] = Math.max(6, d[i] * (0.74 - strength * 0.04));
+        d[i+1] = Math.max(5, d[i+1] * (0.74 - strength * 0.04));
+        d[i+2] = Math.max(5, d[i+2] * (0.74 - strength * 0.04));
+      } else if (count && !darkNear) {
+        const lum=(d[i]+d[i+1]+d[i+2])/3;
+        if (lum > 48 && lum < 218) {
+          d[i] = Math.min(255, d[i] * (1.03 + strength * 0.02));
+          d[i+1] = Math.min(255, d[i+1] * (1.03 + strength * 0.02));
+          d[i+2] = Math.min(255, d[i+2] * (1.03 + strength * 0.02));
+        }
+      }
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+
+function sharpenSprite(ctx, size, amount = 0.38) {
+  const img = ctx.getImageData(0,0,size,size);
+  const src = new Uint8ClampedArray(img.data);
+  const d = img.data;
+  for (let y=1; y<size-1; y++) {
+    for (let x=1; x<size-1; x++) {
+      const i=(y*size+x)*4;
+      if (src[i+3] < 24) continue;
+      for (let c=0; c<3; c++) {
+        const center = src[i+c] * 5;
+        const sum = src[((y-1)*size+x)*4+c] + src[((y+1)*size+x)*4+c] + src[(y*size+x-1)*4+c] + src[(y*size+x+1)*4+c];
+        d[i+c] = Math.max(0, Math.min(255, src[i+c] + (center - sum) * amount));
+      }
+    }
+  }
+  ctx.putImageData(img,0,0);
+}
+
 function processSpritePixels(ctx, size) {
   const img = ctx.getImageData(0,0,size,size);
   const d = img.data;
@@ -491,7 +582,7 @@ function convertSprite() {
   $("spriteStatus").textContent = `${outSize}x${outSize} ${mode} target`;
   drawSourcePreview();
 
-  const crop = activeCrop();
+  const crop = clampCropToSource(activeCrop());
   const simplify = Number($("simplifyDetails").value || 0);
   const superScale = mode === "clean" ? 6 : mode === "gba" ? 5 : 4;
   const hiSize = Math.max(outSize * superScale, 256);
@@ -522,6 +613,7 @@ function convertSprite() {
   if (!$("transparentBg").checked) { w.fillStyle = "#f8efe2"; w.fillRect(0,0,outSize,outSize); }
   w.drawImage(mid, 0, 0, midSize, midSize, 0, 0, outSize, outSize);
   processSpritePixels(w, outSize);
+  if ($("extraPolish")?.checked) { polishSpriteEdges(w, outSize, Math.max(1, simplify)); if (simplify > 0) sharpenSprite(w, outSize, 0.18); }
   const outline = Number($("outlineStrength").value || 0);
   if (outline > 0) addOutsideOutline(w, outSize, outline);
 
@@ -607,13 +699,24 @@ function setConverterPreset(name) {
   if (name === "firered") {
     set("spriteSize", "64");
     set("converterMode", "clean");
-    set("subjectFill", 90);
-    set("battleBias", -6);
+    set("subjectFill", 88);
+    set("battleBias", -4);
     set("simplifyDetails", 1);
     set("colorSteps", 0);
     set("outlineStrength", 1);
     set("contrast", 108);
     set("saturation", 108);
+  }
+  if (name === "fullbody") {
+    set("spriteSize", "64");
+    set("converterMode", "clean");
+    set("subjectFill", 86);
+    set("battleBias", 0);
+    set("simplifyDetails", 1);
+    set("colorSteps", 0);
+    set("outlineStrength", 1);
+    set("contrast", 106);
+    set("saturation", 106);
   }
   if (name === "bigger") {
     set("subjectFill", Math.min(94, Number($("subjectFill").value || 90) + 4));
@@ -626,6 +729,20 @@ function setConverterPreset(name) {
     set("outlineStrength", 1);
     set("contrast", 112);
     set("saturation", 112);
+  }
+  if (name === "polish") {
+    set("simplifyDetails", 2);
+    set("colorSteps", 0);
+    set("outlineStrength", 2);
+    set("contrast", 112);
+    set("saturation", 106);
+  }
+  if (name === "sharp") {
+    set("simplifyDetails", 1);
+    set("colorSteps", 0);
+    set("outlineStrength", 1);
+    set("contrast", 116);
+    set("saturation", 108);
   }
   if (name === "soft") {
     set("simplifyDetails", 0);
@@ -664,7 +781,7 @@ $("useAiForSpriteBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) retu
 $("downloadAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const name=selectedSpecies().name; downloadBlob(`${slug(name)}-concept.png`, dataUrlToBlob(currentAiDataUrl)); });
 $("saveAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const blob=dataUrlToBlob(currentAiDataUrl); const mon=selectedSpecies(); addAsset({type:"concept",name:`${mon.name} Concept Image`,description:`AI concept image for ${mon.name}`,tags:["concept",mon.name,mon.type],filename:`${slug(mon.name)}-concept.png`,mime:"image/png",size:blob.size,dataUrl:currentAiDataUrl,content:currentBrief}); });
 $("sourceUpload").addEventListener("change",()=>{ const file=$("sourceUpload").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>loadImageToConverter(reader.result); reader.readAsDataURL(file); });
-["spriteSize","converterMode","cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg","cleanSpeckles"].forEach(id=>$(id).addEventListener("input", () => { updateSliderValues(); (id === "subjectFill" || id === "battleBias") ? autoFitSubject() : convertSprite(); }));
+["spriteSize","converterMode","cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg","cleanSpeckles","showCropBox","extraPolish"].forEach(id=>$(id).addEventListener("input", () => { updateSliderValues(); (id === "subjectFill" || id === "battleBias") ? autoFitSubject() : convertSprite(); }));
 document.querySelectorAll("[data-converter-preset]").forEach(btn => btn.addEventListener("click", () => setConverterPreset(btn.dataset.converterPreset)));
 $("autoFitBtn").addEventListener("click",autoFitSubject);
 $("resetConverterBtn").addEventListener("click",resetConverter);
@@ -673,7 +790,7 @@ $("downloadSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return 
 $("saveSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return alert("Convert a sprite first."); const blob=dataUrlToBlob(spriteDataUrl); const mon=selectedSpecies(); addAsset({type:"sprite",name:`${mon.name} ${$("spriteSize").value}x${$("spriteSize").value} Sprite`,description:`Converted FireRed-style sprite for ${mon.name}`,tags:["sprite",mon.name,mon.type,`${$("spriteSize").value}x${$("spriteSize").value}`],filename:`${slug(mon.name)}-sprite-${$("spriteSize").value}.png`,mime:"image/png",size:blob.size,dataUrl:spriteDataUrl,content:currentBrief}); });
 $("importFile").addEventListener("click",()=>$("fileInput").click());
 $("fileInput").addEventListener("change",()=>{ [...$("fileInput").files].forEach(file=>{ if(file.size>2.5*1024*1024) return alert(`${file.name} is too large for this local vault.`); const reader=new FileReader(); reader.onload=()=>addAsset({type:file.type.startsWith("image/")?"sprite":"file",name:file.name.replace(/\.[^/.]+$/,"") ,description:`Imported file: ${file.name}`,tags:["imported"],filename:file.name,mime:file.type||"application/octet-stream",size:file.size,dataUrl:reader.result}); reader.readAsDataURL(file); }); $("fileInput").value=""; });
-$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"1.1",assets:vault},null,2)],{type:"application/json"})));
+$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"1.2",assets:vault},null,2)],{type:"application/json"})));
 $("restoreVaultBtn").addEventListener("click",()=>$("restoreInput").click());
 $("restoreInput").addEventListener("change",()=>{ const file=$("restoreInput").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const parsed=JSON.parse(reader.result); vault=Array.isArray(parsed)?parsed:parsed.assets; if(!Array.isArray(vault)) throw new Error("No assets array"); saveVault(); renderVault(); openSection("vault"); }catch{ alert("Could not restore that JSON backup."); } }; reader.readAsText(file); });
 $("clearVault").addEventListener("click",()=>{ if(vault.length&&confirm("Remove every asset from this device vault?")){ vault=[]; saveVault(); renderVault(); } });

@@ -21,7 +21,7 @@
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="status-pill">Sprite Pipeline v1.1</span>
+        <span class="status-pill">Sprite Pipeline v1.2</span>
         <button class="ghost-button" id="effectToggle" type="button" aria-label="Toggle background effects">✦</button>
       </div>
       <div class="brand-block">
@@ -116,7 +116,7 @@
 
         <div class="section-divider"></div>
         <div class="section-heading">
-          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter has visible slider values, one-tap presets, better FireRed defaults, stronger subject fill, and cleaner sprite-polish controls so you do not have to guess from unlabeled bars.</p></div>
+          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter separates the full source from the crop preview, shows a crop guide, adds stronger sprite-polish tools, and uses safer crop handling so the source image does not look chopped off.</p></div>
           <span class="vault-stats" id="spriteStatus">64x64 target</span>
         </div>
 
@@ -140,20 +140,26 @@
             <label class="check-row"><input id="removeBg" type="checkbox" checked /> Remove white/flat background before output</label>
             <label class="check-row"><input id="transparentBg" type="checkbox" checked /> Transparent output background</label>
             <label class="check-row"><input id="cleanSpeckles" type="checkbox" checked /> Clean noise pixels / fill tiny gaps</label>
+            <label class="check-row"><input id="showCropBox" type="checkbox" checked /> Show crop box on full source preview</label>
+            <label class="check-row"><input id="extraPolish" type="checkbox" checked /> Extra sprite polish / edge cleanup</label>
             <div class="preset-row">
               <button type="button" data-converter-preset="firered">FireRed Auto</button>
+              <button type="button" data-converter-preset="fullbody">Full Body Crop</button>
               <button type="button" data-converter-preset="bigger">Make Bigger</button>
               <button type="button" data-converter-preset="face">Cleaner Face</button>
+              <button type="button" data-converter-preset="polish">Sprite Polish</button>
+              <button type="button" data-converter-preset="sharp">Sharpen Sprite</button>
               <button type="button" data-converter-preset="soft">Less Detail Crush</button>
               <button type="button" data-converter-preset="master96">96x96 Master</button>
             </div>
             <div class="command-row"><button type="button" id="autoFitBtn">Auto Fit Subject</button><button type="button" id="resetConverterBtn">Reset Converter</button><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
-            <p class="small-warning">Tip: press FireRed Auto first. If the sprite is too small, press Make Bigger. If the face gets muddy, press Cleaner Face. Use 96x96 Master for a cleaner preview before exporting 64x64.</p>
+            <p class="small-warning">Tip: press FireRed Auto first. Full Source shows the entire AI image; Crop Preview shows what will become the sprite. If the output is blurry, try Sprite Polish or Sharpen Sprite.</p>
           </div>
 
           <div class="converter-card">
             <div class="canvas-columns">
-              <div><p class="eyebrow">Source</p><canvas id="sourceCanvas" width="192" height="192"></canvas></div>
+              <div><p class="eyebrow">Full source</p><canvas id="sourceCanvas" width="192" height="192"></canvas></div>
+              <div><p class="eyebrow">Crop preview</p><canvas id="cropCanvas" width="192" height="192"></canvas></div>
               <div><p class="eyebrow">Sprite output</p><canvas id="spriteCanvas" width="192" height="192"></canvas></div>
             </div>
             <p id="converterHint" class="small-warning">Generate an AI image or upload a source image first.</p>

@@ -38,3 +38,12 @@
 .preset-row button:hover {
   border-color: rgba(250, 204, 21, 0.75);
 }
+
+
+.converter-card .canvas-columns {
+  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
+}
+
+.converter-card canvas {
+  max-width: 100%;
+}
