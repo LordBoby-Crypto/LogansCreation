@@ -379,3 +379,223 @@ body.light-mode { --panel: rgba(23, 7, 5, 0.86); --panel-strong: rgba(42, 12, 8,
   .quick-actions > button, .vault-command-row > button { flex: 1 1 150px; }
   .preview-header, .vault-heading { align-items: flex-start; flex-direction: column; }
 }
+
+.sprite-panel {
+  background: linear-gradient(145deg, rgba(239, 68, 68, 0.10), rgba(168, 85, 247, 0.10)), var(--panel);
+}
+
+.sprite-heading, .sprite-preview-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.sprite-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.sprite-controls, .sprite-preview-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(11, 3, 3, 0.54);
+  padding: 16px;
+}
+
+.sprite-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.sprite-form-grid label {
+  display: grid;
+  gap: 7px;
+}
+
+.sprite-form-grid label span, .mini-stage span, .sprite-info-block h4, .stat-row span {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ffca94;
+  font-weight: 800;
+}
+
+.sprite-form-grid input,
+.sprite-form-grid select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  background: rgba(10, 3, 3, 0.7);
+  padding: 0 14px;
+  outline: none;
+}
+
+.sprite-command-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.sprite-command-row button {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 850;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.08);
+}
+
+.sprite-command-row .primary-action {
+  border: 0;
+  background: linear-gradient(135deg, #ef4444, #f97316 55%, #facc15);
+}
+
+.sprite-canvas-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 14px;
+  margin-top: 14px;
+  align-items: start;
+}
+
+.main-sprite-stage, .mini-stage, .sprite-info-block {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+}
+
+.main-sprite-stage {
+  display: grid;
+  place-items: center;
+  min-height: 240px;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+    radial-gradient(circle at 50% 20%, rgba(249,115,22,0.18), transparent 58%),
+    rgba(12,4,4,0.74);
+  background-size: 18px 18px, 18px 18px, 100% 100%, 100% 100%;
+}
+
+#spriteCanvas,
+#spriteIconCanvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.sprite-side-stack {
+  display: grid;
+  gap: 12px;
+}
+
+.mini-stage {
+  padding: 12px;
+}
+
+.mini-stage canvas {
+  display: block;
+  margin: 10px auto 0;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+    rgba(10, 3, 3, 0.55);
+  background-size: 10px 10px;
+  border-radius: 10px;
+}
+
+.sprite-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.sprite-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.sprite-info-block {
+  padding: 14px;
+}
+
+.sprite-info-block h4 {
+  margin: 0 0 8px;
+}
+
+.sprite-info-block p {
+  margin: 0;
+}
+
+.sprite-info-wide {
+  grid-column: 1 / -1;
+}
+
+.stat-list {
+  display: grid;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-row strong {
+  font-size: 0.78rem;
+  color: #fff5df;
+}
+
+.stat-bar {
+  height: 9px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.stat-bar i {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ef4444, #f97316 55%, #facc15);
+}
+
+@media (max-width: 900px) {
+  .sprite-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .sprite-form-grid,
+  .sprite-info-grid,
+  .sprite-canvas-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  .sprite-heading,
+  .sprite-preview-top {
+    flex-direction: column;
+  }
+
+  .sprite-command-row > button {
+    flex: 1 1 140px;
+  }
+
+  .main-sprite-stage {
+    min-height: 200px;
+  }
+}

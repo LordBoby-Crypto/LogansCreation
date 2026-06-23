@@ -4,7 +4,19 @@ A Nether-themed GitHub Pages creative forge for sprites, books, cultures, langua
 
 ## Current version
 
-**v0.3** adds the first working module: **Asset Vault**.
+**v0.4** adds the first working **Create Sprite** system and keeps **Asset Vault** fully working.
+
+### Create Sprite features
+
+- Seed-based pixel sprite generation
+- Creature class, core type, body form, rarity, mood, palette theme, and size controls
+- Auto-generated or custom creature names
+- Generated stats, ability, habitat, and description
+- PNG export
+- JSON export
+- Save generated sprites directly into Asset Vault
+- Reroll body and reroll palette controls
+- Randomize-all option
 
 ### Asset Vault features
 

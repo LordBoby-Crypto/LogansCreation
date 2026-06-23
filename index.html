@@ -29,7 +29,7 @@
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="status-pill">Nether Build v0.3</span>
+        <span class="status-pill">Nether Build v0.4</span>
         <button class="ghost-button" id="themeToggle" type="button" aria-label="Toggle ember intensity">✦</button>
       </div>
 
@@ -54,7 +54,7 @@
         <div>
           <p class="eyebrow">Nether forge dashboard</p>
           <h2 id="start-title">Choose a creation module</h2>
-          <p>Asset Vault is the first working system. The other modules are staged as creator options and will plug into the vault as they are built.</p>
+          <p>Asset Vault and Create Sprite are now working systems. The remaining modules are staged and will plug into the vault as they are built.</p>
         </div>
       </section>
 
@@ -69,8 +69,8 @@
         <button class="module-card module-red" type="button" data-module="sprite-lab">
           <span class="module-icon">▣</span>
           <span class="module-title">Create Sprite</span>
-          <span class="module-desc">Forge one original creature, item, icon, or character sprite.</span>
-          <span class="module-meta">PNG · variants · stats</span>
+          <span class="module-desc">Forge original creature sprites with pixel art rendering, seed-based generation, metadata, export, and vault saving.</span>
+          <span class="module-meta">PNG · JSON · save to vault</span>
         </button>
 
         <button class="module-card module-orange" type="button" data-module="sprite-factory">
@@ -133,6 +133,183 @@
         </div>
         <p id="previewText">Tap any module above to preview what it will become.</p>
         <div class="option-row" id="previewOptions"></div>
+      </section>
+
+      <section class="panel sprite-panel" id="spriteLab" aria-labelledby="spriteTitle" hidden>
+        <div class="sprite-heading">
+          <div>
+            <p class="eyebrow">Working system</p>
+            <h2 id="spriteTitle">Create Sprite</h2>
+            <p>Forge a creature sprite using class, element, body form, rarity, mood, palette, size, and a repeatable seed. Export the PNG or JSON, then save it directly into Asset Vault.</p>
+          </div>
+          <span class="vault-stats" id="spriteStatus">Ready to forge</span>
+        </div>
+
+        <div class="sprite-layout">
+          <div class="sprite-controls">
+            <div class="sprite-form-grid">
+              <label>
+                <span>Creature Name</span>
+                <input id="spriteName" type="text" maxlength="32" placeholder="Leave blank to auto-generate" />
+              </label>
+              <label>
+                <span>Seed</span>
+                <input id="spriteSeed" type="text" maxlength="24" placeholder="Auto seed" />
+              </label>
+
+              <label>
+                <span>Creature Class</span>
+                <select id="spriteClass">
+                  <option>Beast</option>
+                  <option>Amphibian</option>
+                  <option>Reptile</option>
+                  <option>Insectoid</option>
+                  <option>Avian</option>
+                  <option>Plantborn</option>
+                  <option>Mineral</option>
+                  <option>Spirit</option>
+                  <option>Machine</option>
+                  <option>Eldritch</option>
+                </select>
+              </label>
+              <label>
+                <span>Core Type</span>
+                <select id="spriteType">
+                  <option>Ember</option>
+                  <option>Tide</option>
+                  <option>Storm</option>
+                  <option>Venom</option>
+                  <option>Bone</option>
+                  <option>Crystal</option>
+                  <option>Metal</option>
+                  <option>Solar</option>
+                  <option>Lunar</option>
+                  <option>Fungal</option>
+                  <option>Dream</option>
+                  <option>Static</option>
+                  <option>Gravity</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Body Form</span>
+                <select id="spriteBody">
+                  <option>Quadruped</option>
+                  <option>Serpent</option>
+                  <option>Winged</option>
+                  <option>Slime</option>
+                  <option>Humanoid</option>
+                  <option>Shellback</option>
+                  <option>Orb</option>
+                  <option>Insect</option>
+                </select>
+              </label>
+              <label>
+                <span>Rarity</span>
+                <select id="spriteRarity">
+                  <option>Common</option>
+                  <option>Uncommon</option>
+                  <option>Rare</option>
+                  <option>Epic</option>
+                  <option>Legendary</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Mood</span>
+                <select id="spriteMood">
+                  <option>Aggressive</option>
+                  <option>Noble</option>
+                  <option>Curious</option>
+                  <option>Mischievous</option>
+                  <option>Ancient</option>
+                  <option>Cowardly</option>
+                  <option>Territorial</option>
+                  <option>Symbiotic</option>
+                </select>
+              </label>
+              <label>
+                <span>Palette Theme</span>
+                <select id="spritePalette">
+                  <option>Auto</option>
+                  <option>Nether</option>
+                  <option>Forest</option>
+                  <option>Crystal</option>
+                  <option>Ocean</option>
+                  <option>Storm</option>
+                  <option>Shadow</option>
+                  <option>Royal</option>
+                  <option>Poison</option>
+                  <option>Machine</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Size</span>
+                <select id="spriteSize">
+                  <option>Tiny</option>
+                  <option>Small</option>
+                  <option selected>Medium</option>
+                  <option>Large</option>
+                  <option>Massive</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="sprite-command-row">
+              <button class="primary-action" type="button" id="generateSpriteBtn">Generate Sprite</button>
+              <button type="button" id="randomizeSpriteBtn">Randomize All</button>
+              <button type="button" id="rerollBodyBtn">Reroll Body</button>
+              <button type="button" id="rerollPaletteBtn">Reroll Palette</button>
+              <button type="button" id="downloadSpriteBtn">Download PNG</button>
+              <button type="button" id="downloadSpriteJsonBtn">Download JSON</button>
+              <button type="button" id="saveSpriteBtn">Save to Asset Vault</button>
+            </div>
+          </div>
+
+          <div class="sprite-preview-card">
+            <div class="sprite-preview-top">
+              <div>
+                <p class="eyebrow">Sprite preview</p>
+                <h3 id="spritePreviewName">No creature forged yet</h3>
+              </div>
+              <span class="preview-badge" id="spriteSeedBadge">Seed —</span>
+            </div>
+
+            <div class="sprite-canvas-wrap">
+              <div class="main-sprite-stage">
+                <canvas id="spriteCanvas" width="96" height="96" aria-label="Generated sprite preview"></canvas>
+              </div>
+              <div class="sprite-side-stack">
+                <div class="mini-stage">
+                  <span>Icon</span>
+                  <canvas id="spriteIconCanvas" width="48" height="48" aria-label="Sprite icon preview"></canvas>
+                </div>
+                <div class="mini-stage stats-stage">
+                  <span>Stats</span>
+                  <div class="stat-list" id="spriteStats"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sprite-chip-row" id="spriteTags"></div>
+
+            <div class="sprite-info-grid">
+              <div class="sprite-info-block">
+                <h4>Ability</h4>
+                <p id="spriteAbility">—</p>
+              </div>
+              <div class="sprite-info-block">
+                <h4>Habitat</h4>
+                <p id="spriteHabitat">—</p>
+              </div>
+              <div class="sprite-info-block sprite-info-wide">
+                <h4>Description</h4>
+                <p id="spriteDescription">Generate a sprite to see its profile.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="panel vault-panel" id="assetVault" aria-labelledby="vaultTitle" hidden>
