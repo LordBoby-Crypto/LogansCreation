@@ -1,14 +1,16 @@
-# LogansCreations v1.2
+# LogansCreations v1.3
 
-Converter visual polish upgrade.
+Palette-aware sprite converter upgrade.
 
 ## Added
-- Full Source preview now shows the entire AI image instead of only the crop.
-- Crop Preview is separate, so you can see exactly what will be converted.
-- Crop box overlay on the full source preview.
-- Safer crop clamping to avoid misleading chopped-off source previews.
-- New presets: Full Body Crop, Sprite Polish, Sharpen Sprite.
-- Extra sprite polish / edge cleanup checkbox.
-- Improved 64x64 defaults for less blurry output.
+- Better color preservation for greens, tan trim, dark fur, and amber/gold eyes
+- Less blurry 64x64 output
+- New checkboxes:
+  - Preserve source color groups
+  - Protect bright eyes / face details
+- New preset:
+  - Keep Source Colors
+- Stronger sprite polish and deblur pass
 
-Upload the files to your GitHub Pages repo root and open with `?v=12`.
+## Test
+Open with `?v=13`.
