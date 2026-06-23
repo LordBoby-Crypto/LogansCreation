@@ -1,16 +1,14 @@
-# LogansCreations v1.3
+# LogansCreations v1.4
 
-Palette-aware sprite converter upgrade.
+Cleaner sprite interpretation pass.
 
-## Added
-- Better color preservation for greens, tan trim, dark fur, and amber/gold eyes
-- Less blurry 64x64 output
-- New checkboxes:
-  - Preserve source color groups
-  - Protect bright eyes / face details
-- New preset:
-  - Keep Source Colors
-- Stronger sprite polish and deblur pass
+## New in v1.4
+- Clean sprite mode to reduce noisy detail
+- Muted palette mode to avoid neon greens / yellows
+- Clean Sprite preset
+- Muted Palette preset
+- Face Priority preset
+- Lower-noise 64x64 defaults
+- Controlled sharpening instead of harsher global sharpening
 
-## Test
-Open with `?v=13`.
+Open with `?v=14`.

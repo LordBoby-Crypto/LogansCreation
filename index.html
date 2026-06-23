@@ -21,7 +21,7 @@
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="status-pill">Sprite Pipeline v1.3</span>
+        <span class="status-pill">Sprite Pipeline v1.4</span>
         <button class="ghost-button" id="effectToggle" type="button" aria-label="Toggle background effects">✦</button>
       </div>
       <div class="brand-block">
@@ -116,7 +116,7 @@
 
         <div class="section-divider"></div>
         <div class="section-heading">
-          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter separates the full source from the crop preview, shows a crop guide, preserves key color groups better, protects eyes and face details more aggressively, and pushes the final 64x64 sprite to look cleaner and less blurry.</p></div>
+          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter now focuses on cleaner sprite interpretation: less noisy detail, more muted readable colors, better feature protection, and a less blurry 64x64 FireRed-style output.</p></div>
           <span class="vault-stats" id="spriteStatus">64x64 target</span>
         </div>
 
@@ -144,6 +144,8 @@
             <label class="check-row"><input id="extraPolish" type="checkbox" checked /> Extra sprite polish / edge cleanup</label>
             <label class="check-row"><input id="protectPalette" type="checkbox" checked /> Preserve source color groups (greens, fur, trim, eyes)</label>
             <label class="check-row"><input id="protectEyes" type="checkbox" checked /> Protect bright eyes / face details</label>
+            <label class="check-row"><input id="cleanSpriteMode" type="checkbox" checked /> Clean sprite mode (reduce noisy detail)</label>
+            <label class="check-row"><input id="mutedPalette" type="checkbox" checked /> Muted palette / less neon colors</label>
             <div class="preset-row">
               <button type="button" data-converter-preset="firered">FireRed Auto</button>
               <button type="button" data-converter-preset="fullbody">Full Body Crop</button>
@@ -151,12 +153,15 @@
               <button type="button" data-converter-preset="face">Cleaner Face</button>
               <button type="button" data-converter-preset="polish">Sprite Polish</button>
               <button type="button" data-converter-preset="colors">Keep Source Colors</button>
+              <button type="button" data-converter-preset="cleanmode">Clean Sprite</button>
+              <button type="button" data-converter-preset="muted">Muted Palette</button>
+              <button type="button" data-converter-preset="facepriority">Face Priority</button>
               <button type="button" data-converter-preset="sharp">Sharpen Sprite</button>
               <button type="button" data-converter-preset="soft">Less Detail Crush</button>
               <button type="button" data-converter-preset="master96">96x96 Master</button>
             </div>
             <div class="command-row"><button type="button" id="autoFitBtn">Auto Fit Subject</button><button type="button" id="resetConverterBtn">Reset Converter</button><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
-            <p class="small-warning">Tip: press FireRed Auto first. Full Source shows the entire AI image; Crop Preview shows what will become the sprite. If the output is blurry, try FireRed Auto first, then Keep Source Colors, Sprite Polish, or Sharpen Sprite.</p>
+            <p class="small-warning">Tip: press FireRed Auto first. Then try Clean Sprite for a cleaner 64x64, Keep Source Colors if the hues drift, Muted Palette if the sprite gets too neon, and Face Priority if the head needs more presence.</p>
           </div>
 
           <div class="converter-card">
