@@ -1,23 +1,23 @@
 # LoganCreations
 
-## v0.7
+## Current version
 
-Create Sprite has been replaced with **Loganmon Sprite Studio**.
+**v0.8** adds the first complete Loganmon sprite pipeline:
 
-This version loads all 151 Loganmon from the uploaded Pokédex spreadsheet and creates design briefs based on:
+1. Loganmon Brief Builder
+2. OpenAI Image Generator
+3. Image to FireRed Sprite Converter
+4. Asset Vault saving/exporting
 
-- Loganmon name
-- Loganmon type
-- Pokédex position
-- FireRed replacement slot
-- inferred rarity/role
-- evolution stage
-- optional custom notes
+## Notes
 
-Important: this does not pretend to generate final art locally. The reference quality requires a real artist, an image model/API, or an image-to-sprite workflow. This version creates strong design direction and art prompts so the output can reach the quality target.
+- The OpenAI API key is saved only in browser localStorage on your device.
+- Do not hardcode an API key into this repo.
+- Use a limited API key with spending limits.
+- Final FireRed-style sprite target defaults to 64x64.
 
 Open after upload:
 
 ```text
-https://lordboby-crypto.github.io/LogansCreations/?v=7
+https://lordboby-crypto.github.io/LogansCreations/?v=8
 ```

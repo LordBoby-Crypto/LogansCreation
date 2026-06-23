@@ -20,55 +20,146 @@
 
   <div class="app-shell">
     <header class="hero">
-      <div class="hero-topline"><span class="status-pill">Loganmon Build v0.7</span><button class="ghost-button" id="effectToggle" type="button">✦</button></div>
-      <div class="brand-block"><div class="brand-mark">LC</div><div><h1>LoganCreations</h1><p class="hero-subtitle">A Nether-styled creator suite. Create Sprite is now a Loganmon design studio built from your Pokédex list instead of the trash random shape generator.</p></div></div>
-      <div class="quick-actions"><button class="primary-action" type="button" data-open="studio">Loganmon Sprite Studio</button><button class="secondary-action" type="button" data-open="vault">Asset Vault</button></div>
+      <div class="hero-topline">
+        <span class="status-pill">Sprite Pipeline v0.8</span>
+        <button class="ghost-button" id="effectToggle" type="button" aria-label="Toggle background effects">✦</button>
+      </div>
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">LC</div>
+        <div>
+          <h1>LoganCreations</h1>
+          <p class="hero-subtitle">Loganmon sprite pipeline: species brief → OpenAI image → FireRed-style sprite converter → Asset Vault.</p>
+        </div>
+      </div>
+      <div class="quick-actions">
+        <button class="primary-action" type="button" data-open="pipeline">Open Sprite Pipeline</button>
+        <button class="secondary-action" type="button" data-open="vault">Asset Vault</button>
+      </div>
     </header>
 
     <main>
-      <section class="panel intro-panel"><p class="eyebrow">Important change</p><h2>Sprite generation was replaced with design direction</h2><p>The quality target you showed cannot be reached by random canvas blobs. This version creates a serious 64x64 FireRed-style sprite brief from the Loganmon name, type, evolution stage, rarity/replacement slot, and optional custom notes. Use these briefs for drawing or AI/image generation, then store finished sprites in the vault.</p></section>
-
-      <section class="module-grid">
-        <button class="module-card module-hot" type="button" data-open="studio"><span class="module-icon">▣</span><span class="module-title">Loganmon Sprite Studio</span><span class="module-desc">Pick a Loganmon. The app infers rarity from the FireRed replacement slot and creates a polished front battle sprite design brief.</span><span class="module-meta">working · design brief · 64x64</span></button>
-        <button class="module-card module-vault" type="button" data-open="vault"><span class="module-icon">▥</span><span class="module-title">Asset Vault</span><span class="module-desc">Store design briefs, imported sprite images, and backups locally on this device/browser.</span><span class="module-meta">working · storage · backup</span></button>
-        <button class="module-card" type="button" data-placeholder="Sprite Factory"><span class="module-icon">▦</span><span class="module-title">Sprite Factory</span><span class="module-desc">Later: batch generate/download all design briefs and sprite-pack folders.</span><span class="module-meta">planned</span></button>
-        <button class="module-card" type="button" data-placeholder="Image-to-Sprite Converter"><span class="module-icon">◫</span><span class="module-title">Image-to-Sprite Converter</span><span class="module-desc">Later: upload finished art/reference image, crop it, pixelize, palette-reduce, outline, and export.</span><span class="module-meta">planned</span></button>
+      <section class="panel intro-panel">
+        <p class="eyebrow">Working modules</p>
+        <h2>Build sprites the realistic way</h2>
+        <p>Pick a Loganmon from the loaded 151-species Dex, generate/edit the prompt, use your local OpenAI API key to generate concept art, then convert the image into a 64x64 FireRed-style sprite.</p>
       </section>
 
-      <section class="panel studio-panel" id="studioPanel">
-        <div class="section-heading"><div><p class="eyebrow">Working system</p><h2>Loganmon Sprite Studio</h2><p>Pick a Loganmon from your Pokédex order. The replacement Pokémon slot is used only to infer rarity/role and the broad gameplay silhouette, not to copy its design.</p></div><span class="vault-stats" id="studioStatus">151 loaded</span></div>
-        <div class="studio-layout">
-          <div class="studio-controls">
-            <div class="form-grid">
-              <label class="wide-field"><span>Loganmon</span><select id="speciesSelect"></select></label>
-              <label><span>Output Target</span><select id="spriteTarget"><option value="64x64 front battle" selected>64x64 FireRed front battle sprite</option><option value="64x64 back battle">64x64 back battle sprite</option><option value="96x96 concept master">96x96 concept master</option></select></label>
-              <label><span>View / Pose</span><select id="spriteView"><option selected>3/4 front battle view</option><option>side-facing battle view</option><option>front heroic pose</option><option>low aggressive pose</option><option>cute mascot pose</option></select></label>
-              <label><span>Style Intensity</span><select id="styleLevel"><option value="FireRed clean">FireRed clean</option><option value="High-detail reference style" selected>High-detail reference style</option><option value="Simplified icon-like">Simplified icon-like</option></select></label>
-              <label><span>Manual Base Creature</span><input id="manualBase" type="text" placeholder="Optional, e.g. schnauzer, beetle, raven" /></label>
-              <label><span>Manual Rarity Override</span><input id="manualRarity" type="text" placeholder="Optional" /></label>
-              <label class="wide-field"><span>Extra Design Notes</span><textarea id="extraNotes" maxlength="260" placeholder="Optional: beard, crystal armor, scary, cute, bulky, floating, etc."></textarea></label>
+      <section class="module-grid">
+        <button class="module-card module-hot" type="button" data-open="pipeline">
+          <span class="module-icon">▣</span><span class="module-title">Loganmon Sprite Pipeline</span>
+          <span class="module-desc">Brief builder, OpenAI image generation, image-to-sprite conversion, and export.</span><span class="module-meta">working · API · sprite</span>
+        </button>
+        <button class="module-card module-vault" type="button" data-open="vault">
+          <span class="module-icon">▥</span><span class="module-title">Asset Vault</span>
+          <span class="module-desc">Save briefs, concept images, converted sprites, imports, and backups.</span><span class="module-meta">working · storage</span>
+        </button>
+        <button class="module-card" type="button" data-placeholder="Sprite Factory"><span class="module-icon">▦</span><span class="module-title">Sprite Factory</span><span class="module-desc">Later: batch-generate sprite packs and sprite sheets from the LoganDex.</span><span class="module-meta">planned</span></button>
+        <button class="module-card" type="button" data-placeholder="Book / Novel Generator"><span class="module-icon">✦</span><span class="module-title">Book / Novel Generator</span><span class="module-desc">Later: generate story bibles, chapters, and books.</span><span class="module-meta">planned</span></button>
+        <button class="module-card" type="button" data-placeholder="Culture Generator"><span class="module-icon">◈</span><span class="module-title">Culture Generator</span><span class="module-desc">Later: create cultures, laws, myths, factions, and dossiers.</span><span class="module-meta">planned</span></button>
+        <button class="module-card" type="button" data-placeholder="Language / Name Engine"><span class="module-icon">⌁</span><span class="module-title">Language / Name Engine</span><span class="module-desc">Later: roots, names, and dictionaries.</span><span class="module-meta">planned</span></button>
+        <button class="module-card" type="button" data-placeholder="3D Model Generator"><span class="module-icon">⬡</span><span class="module-title">3D Model Generator</span><span class="module-desc">Later: procedural relics, creatures, props, and renders.</span><span class="module-meta">planned</span></button>
+        <button class="module-card" type="button" data-placeholder="Monster Sound Generator"><span class="module-icon">≋</span><span class="module-title">Monster Sound Generator</span><span class="module-desc">Later: roars, cries, attacks, and WAV exports.</span><span class="module-meta">planned</span></button>
+        <button class="module-card" type="button" data-placeholder="Comic Generator"><span class="module-icon">▤</span><span class="module-title">Comic Generator</span><span class="module-desc">Later: comic pages, panels, bubbles, and exports.</span><span class="module-meta">planned</span></button>
+      </section>
+
+      <section class="panel preview-panel" id="previewPanel">
+        <div class="preview-header"><div><p class="eyebrow">Selected module</p><h2 id="previewTitle">Loganmon Sprite Pipeline</h2></div><span class="preview-badge" id="previewBadge">Working</span></div>
+        <p id="previewText">Use the pipeline below to generate concept art and convert it into a sprite.</p>
+      </section>
+
+      <section class="panel pipeline-panel" id="pipelinePanel">
+        <div class="section-heading">
+          <div><p class="eyebrow">Step 1</p><h2>Loganmon Brief Builder</h2><p>Select a species. The app uses its name, type, dex number, evolution info, replacement slot, and rarity role to build a stronger prompt.</p></div>
+          <span class="vault-stats" id="dexStats">151 loaded</span>
+        </div>
+
+        <div class="pipeline-grid">
+          <div class="control-card">
+            <label><span>Loganmon</span><select id="speciesSelect"></select></label>
+            <div class="meta-box" id="speciesMeta"></div>
+            <label><span>Optional design notes</span><textarea id="customNotes" placeholder="Add details you want included, like beard, armor, cute, scary, crystals, lava cracks..."></textarea></label>
+            <div class="command-row">
+              <button class="primary-action" type="button" id="buildBriefBtn">Generate Design Brief</button>
+              <button type="button" id="copyPromptBtn">Copy Prompt</button>
+              <button type="button" id="saveBriefBtn">Save Brief</button>
             </div>
-            <div class="command-row"><button class="primary-action" type="button" id="generateBrief">Generate Design Brief</button><button type="button" id="copyPrompt">Copy Art Prompt</button><button type="button" id="downloadBrief">Download JSON</button><button type="button" id="downloadMarkdown">Download Markdown</button><button type="button" id="saveBrief">Save to Asset Vault</button><button type="button" id="downloadAll">Download All Briefs JSON</button></div>
           </div>
-          <div class="brief-output">
-            <div class="preview-header"><div><p class="eyebrow">Current brief</p><h3 id="briefTitle">No brief generated yet</h3></div><span class="preview-badge" id="briefBadge">Ready</span></div>
-            <div class="dex-card"><div><b>Dex</b><span id="dexNumber">—</span></div><div><b>Type</b><span id="dexType">—</span></div><div><b>Replacing</b><span id="dexReplace">—</span></div><div><b>Rarity</b><span id="dexRarity">—</span></div><div><b>Evolution</b><span id="dexEvolution">—</span></div></div>
-            <div class="chip-row" id="briefTags"></div>
-            <div class="brief-sections" id="briefSections"></div>
-            <label class="prompt-box"><span>Sprite Art Prompt</span><textarea id="artPrompt" readonly></textarea></label>
+
+          <div class="output-card">
+            <div class="preview-header"><div><p class="eyebrow">Generated brief</p><h3 id="briefTitle">No brief yet</h3></div><span class="preview-badge" id="briefBadge">Ready</span></div>
+            <textarea id="promptBox" class="big-textarea" placeholder="Prompt will appear here. You can edit it before generating an image."></textarea>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <div class="section-heading">
+          <div><p class="eyebrow">Step 2</p><h2>OpenAI Image Generator</h2><p>Your API key is saved only in this browser/device. Do not commit it to GitHub. Use a separate key with spending limits.</p></div>
+          <span class="vault-stats" id="apiStatus">API not saved</span>
+        </div>
+
+        <div class="pipeline-grid">
+          <div class="control-card">
+            <label><span>OpenAI API Key</span><input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off" /></label>
+            <label><span>Image Model</span><select id="imageModel"><option value="gpt-image-1" selected>gpt-image-1</option><option value="gpt-image-2">gpt-image-2</option><option value="gpt-image-1-mini">gpt-image-1-mini</option></select></label>
+            <label><span>Generation Size</span><select id="imageSize"><option value="1024x1024" selected>1024x1024</option><option value="1536x1024">1536x1024 wide</option><option value="1024x1536">1024x1536 tall</option></select></label>
+            <label><span>Quality</span><select id="imageQuality"><option value="low">low / cheaper test</option><option value="medium" selected>medium</option><option value="high">high</option></select></label>
+            <div class="command-row"><button type="button" id="saveKeyBtn">Save Key Locally</button><button class="danger-action" type="button" id="clearKeyBtn">Clear Key</button><button class="primary-action" type="button" id="generateImageBtn">Generate AI Image</button></div>
+            <p class="small-warning">Browser API-key use is convenient, but not professional-grade secure. Keep this repo private or use a limited key.</p>
+          </div>
+
+          <div class="image-card">
+            <div class="preview-header"><div><p class="eyebrow">AI concept image</p><h3 id="imageTitle">No image generated yet</h3></div><span class="preview-badge" id="imageStatus">Idle</span></div>
+            <div class="image-stage"><img id="aiImage" alt="Generated Loganmon concept" hidden /></div>
+            <div class="command-row"><button type="button" id="useAiForSpriteBtn">Use Image in Converter</button><button type="button" id="downloadAiBtn">Download AI Image</button><button type="button" id="saveAiBtn">Save AI Image</button></div>
+          </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <div class="section-heading">
+          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. Tune crop, pixel size, colors, outline, contrast, saturation, and background removal.</p></div>
+          <span class="vault-stats" id="spriteStatus">64x64 target</span>
+        </div>
+
+        <div class="pipeline-grid">
+          <div class="control-card">
+            <label><span>Upload / replace source image</span><input id="sourceUpload" type="file" accept="image/*" /></label>
+            <div class="slider-grid">
+              <label><span>Output size</span><select id="spriteSize"><option value="64" selected>64x64 FireRed front sprite</option><option value="80">80x80 preview</option><option value="96">96x96 master</option><option value="128">128x128 master</option></select></label>
+              <label><span>Zoom</span><input id="cropZoom" type="range" min="0.6" max="2.6" step="0.05" value="1.15" /></label>
+              <label><span>Horizontal offset</span><input id="offsetX" type="range" min="-60" max="60" step="1" value="0" /></label>
+              <label><span>Vertical offset</span><input id="offsetY" type="range" min="-60" max="60" step="1" value="0" /></label>
+              <label><span>Color steps</span><input id="colorSteps" type="range" min="3" max="10" step="1" value="6" /></label>
+              <label><span>Outline strength</span><input id="outlineStrength" type="range" min="0" max="3" step="1" value="1" /></label>
+              <label><span>Contrast</span><input id="contrast" type="range" min="70" max="150" step="1" value="116" /></label>
+              <label><span>Saturation</span><input id="saturation" type="range" min="50" max="160" step="1" value="118" /></label>
+            </div>
+            <label class="check-row"><input id="removeBg" type="checkbox" checked /> Remove bright/white background</label>
+            <label class="check-row"><input id="transparentBg" type="checkbox" checked /> Transparent output background</label>
+            <div class="command-row"><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
+          </div>
+
+          <div class="converter-card">
+            <div class="canvas-columns">
+              <div><p class="eyebrow">Source</p><canvas id="sourceCanvas" width="192" height="192"></canvas></div>
+              <div><p class="eyebrow">Sprite output</p><canvas id="spriteCanvas" width="192" height="192"></canvas></div>
+            </div>
+            <p id="converterHint" class="small-warning">Generate an AI image or upload a source image first.</p>
           </div>
         </div>
       </section>
 
       <section class="panel vault-panel" id="vaultPanel" hidden>
-        <div class="section-heading"><div><p class="eyebrow">Working system</p><h2>Asset Vault</h2><p>Saved briefs and imported files stay on this browser. Export a backup JSON if you want to move them.</p></div><span class="vault-stats" id="vaultStats">0 stored</span></div>
-        <div class="vault-toolbar"><input id="vaultSearch" type="search" placeholder="Search vault..." autocomplete="off" /><select id="vaultType"><option value="">All types</option><option value="design-brief">Design briefs</option><option value="sprite">Sprites / images</option><option value="file">Other files</option></select></div>
-        <div class="command-row"><button type="button" id="importFile">Import File</button><button type="button" id="exportVault">Export Vault Backup</button><button type="button" id="restoreVaultBtn">Restore Backup</button><button type="button" class="danger-action" id="clearVault">Clear Vault</button></div>
+        <div class="section-heading"><div><p class="eyebrow">Working system</p><h2>Asset Vault</h2><p>Stored locally in this browser. Save backups if you change devices.</p></div><span class="vault-stats" id="vaultStats">0 stored</span></div>
+        <div class="vault-toolbar"><input id="vaultSearch" type="search" placeholder="Search vault..." /><select id="vaultType"><option value="">All types</option><option value="brief">Briefs</option><option value="concept">Concept images</option><option value="sprite">Sprites</option><option value="file">Other files</option></select></div>
+        <div class="command-row"><button type="button" id="importFile">Import File</button><button type="button" id="exportVault">Export Backup</button><button type="button" id="restoreVaultBtn">Restore Backup</button><button type="button" class="danger-action" id="clearVault">Clear Vault</button></div>
         <input id="fileInput" type="file" multiple hidden /><input id="restoreInput" type="file" accept="application/json,.json" hidden />
-        <div class="vault-empty" id="vaultEmpty"><strong>No assets stored yet.</strong><span>Generate a design brief and save it, or import a sprite/reference file.</span></div><div class="vault-grid" id="vaultGrid"></div>
+        <div class="vault-empty" id="vaultEmpty"><strong>No assets stored yet.</strong><span>Save a brief, generated concept, converted sprite, or imported file.</span></div>
+        <div class="vault-grid" id="vaultGrid"></div>
       </section>
     </main>
+
     <footer><p>Made for <strong>LogansCreations</strong>.</p><p class="repo-url">https://lordboby-crypto.github.io/LogansCreations/</p></footer>
   </div>
   <script src="app.js"></script>
-</body></html>
+</body>
+</html>
