@@ -1,23 +1,12 @@
-# LoganCreations
+# LogansCreations v1.0
 
-## Current version
+This build upgrades the Loganmon Sprite Pipeline converter.
 
-**v0.9** adds the first complete Loganmon sprite pipeline:
+## New converter improvements
+- better subject fitting and fill
+- battle-sprite vertical bias
+- detail simplification for 64x64 readability
+- palette cleanup and speckle cleanup
+- stronger default outline for small sprites
 
-1. Loganmon Brief Builder
-2. OpenAI Image Generator
-3. Image to FireRed Sprite Converter
-4. Asset Vault saving/exporting
-
-## Notes
-
-- The OpenAI API key is saved only in browser localStorage on your device.
-- Do not hardcode an API key into this repo.
-- Use a limited API key with spending limits.
-- Final FireRed-style sprite target defaults to 64x64.
-
-Open after upload:
-
-```text
-https://lordboby-crypto.github.io/LogansCreations/?v=8
-```
+Upload these files to your GitHub Pages repo root and open with `?v=10`.

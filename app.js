@@ -206,7 +206,12 @@ async function generateOpenAiImage() {
 
 function loadImageToConverter(dataUrl) {
   const img = new Image();
-  img.onload = () => { sourceImage = img; drawSourcePreview(); convertSprite(); };
+  img.onload = () => {
+    sourceImage = img;
+    resetConverter();
+    autoFitSubject();
+    convertSprite();
+  };
   img.src = dataUrl;
 }
 
@@ -241,13 +246,17 @@ function resetConverter() {
   $("cropZoom").value = "0.72";
   $("offsetX").value = "0";
   $("offsetY").value = "0";
+  $("subjectFill").value = "88";
+  $("battleBias").value = "-4";
+  $("simplifyDetails").value = "2";
   $("colorSteps").value = "0";
-  $("outlineStrength").value = "0";
+  $("outlineStrength").value = "1";
   $("contrast").value = "104";
   $("saturation").value = "105";
   $("converterMode").value = "clean";
   $("removeBg").checked = true;
   $("transparentBg").checked = true;
+  $("cleanSpeckles").checked = true;
   drawSourcePreview();
   convertSprite();
 }
@@ -286,13 +295,16 @@ function autoFitSubject() {
   const bh = box.maxY - box.minY;
   const longest = Math.max(bw, bh);
   const minDim = Math.min(sourceImage.width, sourceImage.height);
-  const padding = 1.18;
+  const fill = Math.max(0.70, Math.min(0.94, Number($("subjectFill").value || 88) / 100));
+  const padding = 1 / fill;
   const zoom = Math.max(0.35, Math.min(2.4, minDim / (longest * padding)));
   const cx = (box.minX + box.maxX) / 2;
   const cy = (box.minY + box.maxY) / 2;
+  const bias = Number($("battleBias").value || -4) / 100;
+  const biasedCy = cy + bh * bias;
   $("cropZoom").value = zoom.toFixed(2);
   $("offsetX").value = Math.round(cx - sourceImage.width / 2);
-  $("offsetY").value = Math.round(cy - sourceImage.height / 2);
+  $("offsetY").value = Math.round(biasedCy - sourceImage.height / 2);
   drawSourcePreview();
   convertSprite();
 }
@@ -322,6 +334,120 @@ function cleanBackground(ctx, size) {
   ctx.putImageData(img,0,0);
 }
 
+function findAlphaBounds(ctx, size) {
+  const img = ctx.getImageData(0,0,size,size).data;
+  let minX=size, minY=size, maxX=-1, maxY=-1;
+  for (let y=0; y<size; y++) for (let x=0; x<size; x++) {
+    const a = img[(y*size+x)*4+3];
+    if (a > 24) {
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x > maxX) maxX = x;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxX < minX || maxY < minY) return null;
+  return { minX, minY, maxX, maxY, width: maxX-minX+1, height: maxY-minY+1 };
+}
+
+function frameAlphaSubject(ctx, size) {
+  const box = findAlphaBounds(ctx, size);
+  if (!box) return;
+  const fill = Math.max(0.70, Math.min(0.94, Number($("subjectFill").value || 88) / 100));
+  const bias = Number($("battleBias").value || -4) / 100;
+  const longest = Math.max(box.width, box.height);
+  const targetLong = size * fill;
+  const scale = targetLong / Math.max(1, longest);
+  const dw = box.width * scale;
+  const dh = box.height * scale;
+  const dx = (size - dw) / 2;
+  const dy = (size - dh) / 2 + bias * size * 0.35;
+  const framed = document.createElement("canvas");
+  framed.width = size; framed.height = size;
+  const fx = framed.getContext("2d", { willReadFrequently: true });
+  fx.imageSmoothingEnabled = true;
+  fx.imageSmoothingQuality = "high";
+  fx.drawImage(ctx.canvas, box.minX, box.minY, box.width, box.height, dx, dy, dw, dh);
+  ctx.clearRect(0,0,size,size);
+  ctx.drawImage(framed, 0, 0);
+}
+
+function kMeansQuantize(ctx, size, k) {
+  if (!k || k < 2) return;
+  const img = ctx.getImageData(0,0,size,size);
+  const d = img.data;
+  const pixels = [];
+  const idxs = [];
+  for (let i=0; i<d.length; i+=4) {
+    if (d[i+3] < 24) continue;
+    pixels.push([d[i], d[i+1], d[i+2]]);
+    idxs.push(i);
+  }
+  if (pixels.length === 0) return;
+  const actualK = Math.min(k, Math.max(1, Math.floor(pixels.length / 6)) || 1, 48);
+  if (actualK < 2) return;
+  const centroids = [];
+  for (let c=0; c<actualK; c++) centroids.push(pixels[Math.floor((c / actualK) * pixels.length)].slice());
+  const assignments = new Array(pixels.length).fill(0);
+  for (let iter=0; iter<6; iter++) {
+    const sums = Array.from({ length: actualK }, () => [0,0,0,0]);
+    for (let p=0; p<pixels.length; p++) {
+      const px = pixels[p];
+      let best = 0, bestDist = Infinity;
+      for (let c=0; c<actualK; c++) {
+        const cc = centroids[c];
+        const dr = px[0]-cc[0], dg = px[1]-cc[1], db = px[2]-cc[2];
+        const dist = dr*dr + dg*dg + db*db;
+        if (dist < bestDist) { bestDist = dist; best = c; }
+      }
+      assignments[p] = best;
+      sums[best][0] += px[0]; sums[best][1] += px[1]; sums[best][2] += px[2]; sums[best][3] += 1;
+    }
+    for (let c=0; c<actualK; c++) if (sums[c][3]) {
+      centroids[c][0] = sums[c][0] / sums[c][3];
+      centroids[c][1] = sums[c][1] / sums[c][3];
+      centroids[c][2] = sums[c][2] / sums[c][3];
+    }
+  }
+  for (let p=0; p<pixels.length; p++) {
+    const c = centroids[assignments[p]];
+    const i = idxs[p];
+    d[i] = Math.round(c[0]); d[i+1] = Math.round(c[1]); d[i+2] = Math.round(c[2]);
+  }
+  ctx.putImageData(img,0,0);
+}
+
+function cleanupSprite(ctx, size, passes = 1) {
+  for (let pass=0; pass<passes; pass++) {
+    const img = ctx.getImageData(0,0,size,size);
+    const src = new Uint8ClampedArray(img.data);
+    const dst = img.data;
+    for (let y=1; y<size-1; y++) {
+      for (let x=1; x<size-1; x++) {
+        const idx = (y*size+x)*4;
+        const alpha = src[idx+3];
+        const neighbors = [];
+        let opaque = 0;
+        for (let oy=-1; oy<=1; oy++) for (let ox=-1; ox<=1; ox++) {
+          if (!ox && !oy) continue;
+          const ni = ((y+oy)*size + (x+ox))*4;
+          if (src[ni+3] > 24) { opaque++; neighbors.push([src[ni],src[ni+1],src[ni+2],src[ni+3]]); }
+        }
+        if (alpha > 24 && opaque <= 1) {
+          if (neighbors.length) {
+            const avg = neighbors.reduce((a,n)=>[a[0]+n[0],a[1]+n[1],a[2]+n[2]],[0,0,0]);
+            dst[idx] = avg[0]/neighbors.length; dst[idx+1] = avg[1]/neighbors.length; dst[idx+2] = avg[2]/neighbors.length; dst[idx+3] = 0;
+          } else dst[idx+3] = 0;
+        } else if (alpha <= 24 && opaque >= 6) {
+          const avg = neighbors.reduce((a,n)=>[a[0]+n[0],a[1]+n[1],a[2]+n[2]],[0,0,0]);
+          dst[idx] = avg[0]/neighbors.length; dst[idx+1] = avg[1]/neighbors.length; dst[idx+2] = avg[2]/neighbors.length; dst[idx+3] = 255;
+        }
+      }
+    }
+    ctx.putImageData(img,0,0);
+  }
+}
+
 function processSpritePixels(ctx, size) {
   const img = ctx.getImageData(0,0,size,size);
   const d = img.data;
@@ -329,7 +455,7 @@ function processSpritePixels(ctx, size) {
   const mode = $("converterMode").value;
   const contrast = (Number($("contrast").value) || 100) / 100;
   const sat = (Number($("saturation").value) || 100) / 100;
-  const forcedSteps = mode === "gba" ? 12 : mode === "pixel" ? Math.max(steps, 10) : steps;
+  const forcedSteps = mode === "gba" ? 10 : mode === "pixel" ? Math.max(steps, 8) : steps;
   for (let i=0; i<d.length; i+=4) {
     if (d[i+3] < 16) continue;
     let r=d[i], g=d[i+1], b=d[i+2];
@@ -346,18 +472,27 @@ function processSpritePixels(ctx, size) {
     d[i]=r; d[i+1]=g; d[i+2]=b;
   }
   ctx.putImageData(img,0,0);
+
+  const simplify = Number($("simplifyDetails").value || 0);
+  let autoColors = 0;
+  if (mode === "gba") autoColors = 16;
+  else if (simplify > 0) autoColors = Math.max(14, (size <= 64 ? 34 : 42) - simplify * (size <= 64 ? 5 : 4));
+  if (autoColors > 1) kMeansQuantize(ctx, size, autoColors);
+  if ($("cleanSpeckles").checked && simplify > 0) cleanupSprite(ctx, size, simplify > 2 ? 2 : 1);
 }
 
 function convertSprite() {
   if (!sourceImage) return;
   const outSize = Number($("spriteSize").value);
   const mode = $("converterMode").value;
+  const fill = Number($("subjectFill").value || 88);
   $("spriteStatus").textContent = `${outSize}x${outSize} ${mode} target`;
   drawSourcePreview();
 
   const crop = activeCrop();
-  const superScale = mode === "clean" ? 4 : mode === "gba" ? 3 : 2;
-  const hiSize = outSize * superScale;
+  const simplify = Number($("simplifyDetails").value || 0);
+  const superScale = mode === "clean" ? 6 : mode === "gba" ? 5 : 4;
+  const hiSize = Math.max(outSize * superScale, 256);
   const hi = document.createElement("canvas");
   hi.width = hiSize; hi.height = hiSize;
   const h = hi.getContext("2d", { willReadFrequently: true });
@@ -366,6 +501,16 @@ function convertSprite() {
   if (!$("transparentBg").checked) { h.fillStyle = "#f8efe2"; h.fillRect(0,0,hiSize,hiSize); }
   h.drawImage(sourceImage, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, hiSize, hiSize);
   if ($("removeBg").checked) cleanBackground(h, hiSize);
+  frameAlphaSubject(h, hiSize);
+
+  const mid = document.createElement("canvas");
+  const midSize = Math.max(outSize * 2, outSize + simplify * outSize / 2);
+  mid.width = midSize; mid.height = midSize;
+  const m = mid.getContext("2d", { willReadFrequently: true });
+  m.imageSmoothingEnabled = true;
+  m.imageSmoothingQuality = "high";
+  if (!$("transparentBg").checked) { m.fillStyle = "#f8efe2"; m.fillRect(0,0,midSize,midSize); }
+  m.drawImage(hi, 0, 0, hiSize, hiSize, 0, 0, midSize, midSize);
 
   const work = document.createElement("canvas");
   work.width = outSize; work.height = outSize;
@@ -373,7 +518,7 @@ function convertSprite() {
   w.imageSmoothingEnabled = mode === "clean";
   w.imageSmoothingQuality = "high";
   if (!$("transparentBg").checked) { w.fillStyle = "#f8efe2"; w.fillRect(0,0,outSize,outSize); }
-  w.drawImage(hi, 0, 0, hiSize, hiSize, 0, 0, outSize, outSize);
+  w.drawImage(mid, 0, 0, midSize, midSize, 0, 0, outSize, outSize);
   processSpritePixels(w, outSize);
   const outline = Number($("outlineStrength").value || 0);
   if (outline > 0) addOutsideOutline(w, outSize, outline);
@@ -385,7 +530,7 @@ function convertSprite() {
   spriteCtx.drawImage(work,0,0,outSize,outSize,0,0,192,192);
   spriteDataUrl = work.toDataURL("image/png");
   const crush = Number($("colorSteps").value || 0);
-  $("converterHint").textContent = `Converted from the original source to ${outSize}x${outSize}. Palette crush: ${crush ? crush : "off"}. Outline: ${outline}.`;
+  $("converterHint").textContent = `Converted from the full source image to ${outSize}x${outSize}. Fill: ${fill}%. Simplify: ${simplify}. Palette crush: ${crush ? crush : "off"}. Outline: ${outline}.`;
 }
 
 function addOutsideOutline(ctx, size, strength) {
@@ -451,7 +596,7 @@ $("useAiForSpriteBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) retu
 $("downloadAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const name=selectedSpecies().name; downloadBlob(`${slug(name)}-concept.png`, dataUrlToBlob(currentAiDataUrl)); });
 $("saveAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const blob=dataUrlToBlob(currentAiDataUrl); const mon=selectedSpecies(); addAsset({type:"concept",name:`${mon.name} Concept Image`,description:`AI concept image for ${mon.name}`,tags:["concept",mon.name,mon.type],filename:`${slug(mon.name)}-concept.png`,mime:"image/png",size:blob.size,dataUrl:currentAiDataUrl,content:currentBrief}); });
 $("sourceUpload").addEventListener("change",()=>{ const file=$("sourceUpload").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>loadImageToConverter(reader.result); reader.readAsDataURL(file); });
-["spriteSize","converterMode","cropZoom","offsetX","offsetY","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg"].forEach(id=>$(id).addEventListener("input",convertSprite));
+["spriteSize","converterMode","cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg","cleanSpeckles"].forEach(id=>$(id).addEventListener("input", (id === "subjectFill" || id === "battleBias") ? autoFitSubject : convertSprite));
 $("autoFitBtn").addEventListener("click",autoFitSubject);
 $("resetConverterBtn").addEventListener("click",resetConverter);
 $("convertSpriteBtn").addEventListener("click",convertSprite);
@@ -459,7 +604,7 @@ $("downloadSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return 
 $("saveSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return alert("Convert a sprite first."); const blob=dataUrlToBlob(spriteDataUrl); const mon=selectedSpecies(); addAsset({type:"sprite",name:`${mon.name} ${$("spriteSize").value}x${$("spriteSize").value} Sprite`,description:`Converted FireRed-style sprite for ${mon.name}`,tags:["sprite",mon.name,mon.type,`${$("spriteSize").value}x${$("spriteSize").value}`],filename:`${slug(mon.name)}-sprite-${$("spriteSize").value}.png`,mime:"image/png",size:blob.size,dataUrl:spriteDataUrl,content:currentBrief}); });
 $("importFile").addEventListener("click",()=>$("fileInput").click());
 $("fileInput").addEventListener("change",()=>{ [...$("fileInput").files].forEach(file=>{ if(file.size>2.5*1024*1024) return alert(`${file.name} is too large for this local vault.`); const reader=new FileReader(); reader.onload=()=>addAsset({type:file.type.startsWith("image/")?"sprite":"file",name:file.name.replace(/\.[^/.]+$/,"") ,description:`Imported file: ${file.name}`,tags:["imported"],filename:file.name,mime:file.type||"application/octet-stream",size:file.size,dataUrl:reader.result}); reader.readAsDataURL(file); }); $("fileInput").value=""; });
-$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"0.9",assets:vault},null,2)],{type:"application/json"})));
+$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"1.0",assets:vault},null,2)],{type:"application/json"})));
 $("restoreVaultBtn").addEventListener("click",()=>$("restoreInput").click());
 $("restoreInput").addEventListener("change",()=>{ const file=$("restoreInput").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const parsed=JSON.parse(reader.result); vault=Array.isArray(parsed)?parsed:parsed.assets; if(!Array.isArray(vault)) throw new Error("No assets array"); saveVault(); renderVault(); openSection("vault"); }catch{ alert("Could not restore that JSON backup."); } }; reader.readAsText(file); });
 $("clearVault").addEventListener("click",()=>{ if(vault.length&&confirm("Remove every asset from this device vault?")){ vault=[]; saveVault(); renderVault(); } });

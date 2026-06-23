@@ -116,7 +116,7 @@
 
         <div class="section-divider"></div>
         <div class="section-heading">
-          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. The converter now keeps the original source image, auto-fits the subject, preserves colors by default, and only pixel-compresses when you ask it to.</p></div>
+          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter auto-fits the subject, fills the battle-sprite canvas more intelligently, cleans speckles, and simplifies detail so the final FireRed-sized sprite stays readable.</p></div>
           <span class="vault-stats" id="spriteStatus">64x64 target</span>
         </div>
 
@@ -129,15 +129,19 @@
               <label><span>Zoom / crop</span><input id="cropZoom" type="range" min="0.35" max="2.4" step="0.01" value="0.72" /></label>
               <label><span>Horizontal offset</span><input id="offsetX" type="range" min="-220" max="220" step="1" value="0" /></label>
               <label><span>Vertical offset</span><input id="offsetY" type="range" min="-220" max="220" step="1" value="0" /></label>
-              <label><span>Palette crush, 0 = preserve</span><input id="colorSteps" type="range" min="0" max="24" step="1" value="0" /></label>
-              <label><span>Outside outline</span><input id="outlineStrength" type="range" min="0" max="3" step="1" value="0" /></label>
+              <label><span>Subject fill on canvas</span><input id="subjectFill" type="range" min="70" max="94" step="1" value="88" /></label>
+              <label><span>Battle Y bias</span><input id="battleBias" type="range" min="-20" max="20" step="1" value="-4" /></label>
+              <label><span>Simplify details</span><input id="simplifyDetails" type="range" min="0" max="4" step="1" value="2" /></label>
+              <label><span>Palette crush, 0 = preserve more</span><input id="colorSteps" type="range" min="0" max="24" step="1" value="0" /></label>
+              <label><span>Outside outline</span><input id="outlineStrength" type="range" min="0" max="3" step="1" value="1" /></label>
               <label><span>Contrast</span><input id="contrast" type="range" min="70" max="140" step="1" value="104" /></label>
               <label><span>Saturation</span><input id="saturation" type="range" min="50" max="150" step="1" value="105" /></label>
             </div>
             <label class="check-row"><input id="removeBg" type="checkbox" checked /> Remove white/flat background before output</label>
             <label class="check-row"><input id="transparentBg" type="checkbox" checked /> Transparent output background</label>
+            <label class="check-row"><input id="cleanSpeckles" type="checkbox" checked /> Clean noise pixels / fill tiny gaps</label>
             <div class="command-row"><button type="button" id="autoFitBtn">Auto Fit Subject</button><button type="button" id="resetConverterBtn">Reset Converter</button><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
-            <p class="small-warning">Tip: keep Palette Crush at 0 first. Use 96x96/128x128 while designing, then export a final 64x64 sprite when the crop looks good.</p>
+            <p class="small-warning">Tip: start with Auto Fit Subject, keep Subject Fill around 86–90, use Simplify Details at 2, and preview a 96x96 master before exporting the final 64x64 FireRed sprite.</p>
           </div>
 
           <div class="converter-card">
