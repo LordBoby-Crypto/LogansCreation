@@ -246,18 +246,19 @@ function resetConverter() {
   $("cropZoom").value = "0.72";
   $("offsetX").value = "0";
   $("offsetY").value = "0";
-  $("subjectFill").value = "88";
-  $("battleBias").value = "-4";
-  $("simplifyDetails").value = "2";
+  $("subjectFill").value = "90";
+  $("battleBias").value = "-6";
+  $("simplifyDetails").value = "1";
   $("colorSteps").value = "0";
   $("outlineStrength").value = "1";
-  $("contrast").value = "104";
-  $("saturation").value = "105";
+  $("contrast").value = "108";
+  $("saturation").value = "108";
   $("converterMode").value = "clean";
   $("removeBg").checked = true;
   $("transparentBg").checked = true;
   $("cleanSpeckles").checked = true;
   drawSourcePreview();
+  updateSliderValues();
   convertSprite();
 }
 
@@ -306,6 +307,7 @@ function autoFitSubject() {
   $("offsetX").value = Math.round(cx - sourceImage.width / 2);
   $("offsetY").value = Math.round(biasedCy - sourceImage.height / 2);
   drawSourcePreview();
+  updateSliderValues();
   convertSprite();
 }
 
@@ -529,6 +531,7 @@ function convertSprite() {
   spriteCtx.imageSmoothingEnabled = false;
   spriteCtx.drawImage(work,0,0,outSize,outSize,0,0,192,192);
   spriteDataUrl = work.toDataURL("image/png");
+  updateSliderValues();
   const crush = Number($("colorSteps").value || 0);
   $("converterHint").textContent = `Converted from the full source image to ${outSize}x${outSize}. Fill: ${fill}%. Simplify: ${simplify}. Palette crush: ${crush ? crush : "off"}. Outline: ${outline}.`;
 }
@@ -582,6 +585,71 @@ function openSection(section) {
   if (section === "vault") { $("previewTitle").textContent="Asset Vault"; $("previewBadge").textContent="Working"; $("previewText").textContent="Download, duplicate, remove, and back up saved assets."; renderVault(); $("vaultPanel").scrollIntoView({behavior:"smooth",block:"start"}); }
 }
 
+
+function sliderFormat(id, value) {
+  const n = Number(value);
+  if (id === "cropZoom") return `${n.toFixed(2)}x`;
+  if (id === "subjectFill" || id === "contrast" || id === "saturation") return `${Math.round(n)}%`;
+  if (id === "offsetX" || id === "offsetY" || id === "battleBias") return String(Math.round(n));
+  return String(Math.round(n));
+}
+
+function updateSliderValues() {
+  ["cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation"].forEach(id => {
+    const el = $(id);
+    const out = $(`${id}Value`);
+    if (el && out) out.textContent = sliderFormat(id, el.value);
+  });
+}
+
+function setConverterPreset(name) {
+  const set = (id, value) => { if ($(id)) $(id).value = String(value); };
+  if (name === "firered") {
+    set("spriteSize", "64");
+    set("converterMode", "clean");
+    set("subjectFill", 90);
+    set("battleBias", -6);
+    set("simplifyDetails", 1);
+    set("colorSteps", 0);
+    set("outlineStrength", 1);
+    set("contrast", 108);
+    set("saturation", 108);
+  }
+  if (name === "bigger") {
+    set("subjectFill", Math.min(94, Number($("subjectFill").value || 90) + 4));
+    set("cropZoom", Math.min(2.4, Number($("cropZoom").value || 0.72) + 0.08).toFixed(2));
+  }
+  if (name === "face") {
+    set("subjectFill", 92);
+    set("battleBias", -12);
+    set("simplifyDetails", 0);
+    set("outlineStrength", 1);
+    set("contrast", 112);
+    set("saturation", 112);
+  }
+  if (name === "soft") {
+    set("simplifyDetails", 0);
+    set("colorSteps", 0);
+    set("outlineStrength", 1);
+    set("contrast", 104);
+    set("saturation", 104);
+  }
+  if (name === "master96") {
+    set("spriteSize", "96");
+    set("converterMode", "clean");
+    set("subjectFill", 88);
+    set("battleBias", -4);
+    set("simplifyDetails", 1);
+    set("colorSteps", 0);
+    set("outlineStrength", 1);
+    set("contrast", 106);
+    set("saturation", 108);
+  }
+  updateSliderValues();
+  autoFitSubject();
+  convertSprite();
+}
+
 document.querySelectorAll("[data-open]").forEach(btn=>btn.addEventListener("click",()=>openSection(btn.dataset.open)));
 document.querySelectorAll("[data-placeholder]").forEach(btn=>btn.addEventListener("click",()=>{ $("previewTitle").textContent=btn.dataset.placeholder; $("previewBadge").textContent="Planned"; $("previewText").textContent=`${btn.dataset.placeholder} is planned. The working tool right now is the Loganmon Sprite Pipeline.`; }));
 $("effectToggle").addEventListener("click",()=>document.body.classList.toggle("low-effects"));
@@ -596,7 +664,8 @@ $("useAiForSpriteBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) retu
 $("downloadAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const name=selectedSpecies().name; downloadBlob(`${slug(name)}-concept.png`, dataUrlToBlob(currentAiDataUrl)); });
 $("saveAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const blob=dataUrlToBlob(currentAiDataUrl); const mon=selectedSpecies(); addAsset({type:"concept",name:`${mon.name} Concept Image`,description:`AI concept image for ${mon.name}`,tags:["concept",mon.name,mon.type],filename:`${slug(mon.name)}-concept.png`,mime:"image/png",size:blob.size,dataUrl:currentAiDataUrl,content:currentBrief}); });
 $("sourceUpload").addEventListener("change",()=>{ const file=$("sourceUpload").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>loadImageToConverter(reader.result); reader.readAsDataURL(file); });
-["spriteSize","converterMode","cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg","cleanSpeckles"].forEach(id=>$(id).addEventListener("input", (id === "subjectFill" || id === "battleBias") ? autoFitSubject : convertSprite));
+["spriteSize","converterMode","cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg","cleanSpeckles"].forEach(id=>$(id).addEventListener("input", () => { updateSliderValues(); (id === "subjectFill" || id === "battleBias") ? autoFitSubject() : convertSprite(); }));
+document.querySelectorAll("[data-converter-preset]").forEach(btn => btn.addEventListener("click", () => setConverterPreset(btn.dataset.converterPreset)));
 $("autoFitBtn").addEventListener("click",autoFitSubject);
 $("resetConverterBtn").addEventListener("click",resetConverter);
 $("convertSpriteBtn").addEventListener("click",convertSprite);
@@ -604,11 +673,11 @@ $("downloadSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return 
 $("saveSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return alert("Convert a sprite first."); const blob=dataUrlToBlob(spriteDataUrl); const mon=selectedSpecies(); addAsset({type:"sprite",name:`${mon.name} ${$("spriteSize").value}x${$("spriteSize").value} Sprite`,description:`Converted FireRed-style sprite for ${mon.name}`,tags:["sprite",mon.name,mon.type,`${$("spriteSize").value}x${$("spriteSize").value}`],filename:`${slug(mon.name)}-sprite-${$("spriteSize").value}.png`,mime:"image/png",size:blob.size,dataUrl:spriteDataUrl,content:currentBrief}); });
 $("importFile").addEventListener("click",()=>$("fileInput").click());
 $("fileInput").addEventListener("change",()=>{ [...$("fileInput").files].forEach(file=>{ if(file.size>2.5*1024*1024) return alert(`${file.name} is too large for this local vault.`); const reader=new FileReader(); reader.onload=()=>addAsset({type:file.type.startsWith("image/")?"sprite":"file",name:file.name.replace(/\.[^/.]+$/,"") ,description:`Imported file: ${file.name}`,tags:["imported"],filename:file.name,mime:file.type||"application/octet-stream",size:file.size,dataUrl:reader.result}); reader.readAsDataURL(file); }); $("fileInput").value=""; });
-$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"1.0",assets:vault},null,2)],{type:"application/json"})));
+$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"1.1",assets:vault},null,2)],{type:"application/json"})));
 $("restoreVaultBtn").addEventListener("click",()=>$("restoreInput").click());
 $("restoreInput").addEventListener("change",()=>{ const file=$("restoreInput").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const parsed=JSON.parse(reader.result); vault=Array.isArray(parsed)?parsed:parsed.assets; if(!Array.isArray(vault)) throw new Error("No assets array"); saveVault(); renderVault(); openSection("vault"); }catch{ alert("Could not restore that JSON backup."); } }; reader.readAsText(file); });
 $("clearVault").addEventListener("click",()=>{ if(vault.length&&confirm("Remove every asset from this device vault?")){ vault=[]; saveVault(); renderVault(); } });
 $("vaultSearch").addEventListener("input",renderVault); $("vaultType").addEventListener("input",renderVault);
 $("vaultGrid").addEventListener("click",e=>{ const d=e.target.closest("[data-download]"), c=e.target.closest("[data-copy]"), r=e.target.closest("[data-remove]"); if(d){ const a=vault.find(x=>x.id===d.dataset.download); if(a) downloadBlob(a.filename||`${slug(a.name)}.asset`, a.dataUrl?dataUrlToBlob(a.dataUrl):new Blob([JSON.stringify(a.content||a,null,2)],{type:"application/json"})); } if(c){ const a=vault.find(x=>x.id===c.dataset.copy); if(a) addAsset({...a,id:undefined,createdAt:undefined,name:`${a.name} Copy`}); } if(r){ const a=vault.find(x=>x.id===r.dataset.remove); if(a&&confirm(`Remove "${a.name}"?`)){ vault=vault.filter(x=>x.id!==a.id); saveVault(); renderVault(); } } });
 
-populateSpecies(); updateSpeciesMeta(); updateApiStatus(); buildBrief(); renderVault();
+populateSpecies(); updateSpeciesMeta(); updateApiStatus(); buildBrief(); updateSliderValues(); renderVault();
