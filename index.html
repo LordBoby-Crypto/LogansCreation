@@ -116,7 +116,7 @@
 
         <div class="section-divider"></div>
         <div class="section-heading">
-          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. Tune crop, pixel size, colors, outline, contrast, saturation, and background removal.</p></div>
+          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. The converter now keeps the original source image, auto-fits the subject, preserves colors by default, and only pixel-compresses when you ask it to.</p></div>
           <span class="vault-stats" id="spriteStatus">64x64 target</span>
         </div>
 
@@ -124,18 +124,20 @@
           <div class="control-card">
             <label><span>Upload / replace source image</span><input id="sourceUpload" type="file" accept="image/*" /></label>
             <div class="slider-grid">
-              <label><span>Output size</span><select id="spriteSize"><option value="64" selected>64x64 FireRed front sprite</option><option value="80">80x80 preview</option><option value="96">96x96 master</option><option value="128">128x128 master</option></select></label>
-              <label><span>Zoom</span><input id="cropZoom" type="range" min="0.6" max="2.6" step="0.05" value="1.15" /></label>
-              <label><span>Horizontal offset</span><input id="offsetX" type="range" min="-60" max="60" step="1" value="0" /></label>
-              <label><span>Vertical offset</span><input id="offsetY" type="range" min="-60" max="60" step="1" value="0" /></label>
-              <label><span>Color steps</span><input id="colorSteps" type="range" min="3" max="10" step="1" value="6" /></label>
-              <label><span>Outline strength</span><input id="outlineStrength" type="range" min="0" max="3" step="1" value="1" /></label>
-              <label><span>Contrast</span><input id="contrast" type="range" min="70" max="150" step="1" value="116" /></label>
-              <label><span>Saturation</span><input id="saturation" type="range" min="50" max="160" step="1" value="118" /></label>
+              <label><span>Output size</span><select id="spriteSize"><option value="64" selected>64x64 FireRed final</option><option value="80">80x80 test sprite</option><option value="96">96x96 polished master</option><option value="128">128x128 concept master</option></select></label>
+              <label><span>Converter mode</span><select id="converterMode"><option value="clean" selected>Clean downscale - best default</option><option value="pixel">Hard pixel crunch</option><option value="gba">Strict GBA-ish palette</option></select></label>
+              <label><span>Zoom / crop</span><input id="cropZoom" type="range" min="0.35" max="2.4" step="0.01" value="0.72" /></label>
+              <label><span>Horizontal offset</span><input id="offsetX" type="range" min="-220" max="220" step="1" value="0" /></label>
+              <label><span>Vertical offset</span><input id="offsetY" type="range" min="-220" max="220" step="1" value="0" /></label>
+              <label><span>Palette crush, 0 = preserve</span><input id="colorSteps" type="range" min="0" max="24" step="1" value="0" /></label>
+              <label><span>Outside outline</span><input id="outlineStrength" type="range" min="0" max="3" step="1" value="0" /></label>
+              <label><span>Contrast</span><input id="contrast" type="range" min="70" max="140" step="1" value="104" /></label>
+              <label><span>Saturation</span><input id="saturation" type="range" min="50" max="150" step="1" value="105" /></label>
             </div>
-            <label class="check-row"><input id="removeBg" type="checkbox" checked /> Remove bright/white background</label>
+            <label class="check-row"><input id="removeBg" type="checkbox" checked /> Remove white/flat background before output</label>
             <label class="check-row"><input id="transparentBg" type="checkbox" checked /> Transparent output background</label>
-            <div class="command-row"><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
+            <div class="command-row"><button type="button" id="autoFitBtn">Auto Fit Subject</button><button type="button" id="resetConverterBtn">Reset Converter</button><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
+            <p class="small-warning">Tip: keep Palette Crush at 0 first. Use 96x96/128x128 while designing, then export a final 64x64 sprite when the crop looks good.</p>
           </div>
 
           <div class="converter-card">

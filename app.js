@@ -210,78 +210,200 @@ function loadImageToConverter(dataUrl) {
   img.src = dataUrl;
 }
 
+function activeCrop() {
+  if (!sourceImage) return null;
+  const zoom = Math.max(0.1, Number($("cropZoom").value) || 0.72);
+  const cropSize = Math.min(sourceImage.width, sourceImage.height) / zoom;
+  const centerX = sourceImage.width / 2 + Number($("offsetX").value || 0);
+  const centerY = sourceImage.height / 2 + Number($("offsetY").value || 0);
+  return { sx: centerX - cropSize / 2, sy: centerY - cropSize / 2, sw: cropSize, sh: cropSize };
+}
+
+function drawChecker(ctx, size) {
+  ctx.fillStyle = "#120303";
+  ctx.fillRect(0,0,size,size);
+  ctx.fillStyle = "rgba(255,255,255,0.035)";
+  const step = 12;
+  for (let y=0;y<size;y+=step) for (let x=0;x<size;x+=step) if (((x+y)/step)%2===0) ctx.fillRect(x,y,step,step);
+}
+
 function drawSourcePreview() {
   sourceCtx.clearRect(0,0,192,192);
-  sourceCtx.fillStyle = "#120303"; sourceCtx.fillRect(0,0,192,192);
+  drawChecker(sourceCtx, 192);
   if (!sourceImage) return;
-  const size = Math.min(sourceImage.width, sourceImage.height);
-  const sx = (sourceImage.width - size) / 2;
-  const sy = (sourceImage.height - size) / 2;
+  const crop = activeCrop();
   sourceCtx.imageSmoothingEnabled = true;
-  sourceCtx.drawImage(sourceImage, sx, sy, size, size, 0, 0, 192, 192);
+  sourceCtx.imageSmoothingQuality = "high";
+  sourceCtx.drawImage(sourceImage, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, 192, 192);
+}
+
+function resetConverter() {
+  $("cropZoom").value = "0.72";
+  $("offsetX").value = "0";
+  $("offsetY").value = "0";
+  $("colorSteps").value = "0";
+  $("outlineStrength").value = "0";
+  $("contrast").value = "104";
+  $("saturation").value = "105";
+  $("converterMode").value = "clean";
+  $("removeBg").checked = true;
+  $("transparentBg").checked = true;
+  drawSourcePreview();
+  convertSprite();
+}
+
+function findSubjectBox() {
+  if (!sourceImage) return null;
+  const maxSide = 512;
+  const scale = Math.min(1, maxSide / Math.max(sourceImage.width, sourceImage.height));
+  const w = Math.max(1, Math.round(sourceImage.width * scale));
+  const h = Math.max(1, Math.round(sourceImage.height * scale));
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const cx = c.getContext("2d", { willReadFrequently: true });
+  cx.drawImage(sourceImage, 0, 0, w, h);
+  const img = cx.getImageData(0,0,w,h).data;
+  const corners = [[0,0],[w-1,0],[0,h-1],[w-1,h-1]].map(([x,y]) => {
+    const i=(y*w+x)*4; return [img[i],img[i+1],img[i+2],img[i+3]];
+  });
+  const bg = corners.reduce((a,p)=>[a[0]+p[0]/4,a[1]+p[1]/4,a[2]+p[2]/4,a[3]+p[3]/4],[0,0,0,0]);
+  let minX=w, minY=h, maxX=0, maxY=0, found=false;
+  for (let y=0;y<h;y++) for (let x=0;x<w;x++) {
+    const i=(y*w+x)*4;
+    const a=img[i+3];
+    const diff=Math.abs(img[i]-bg[0])+Math.abs(img[i+1]-bg[1])+Math.abs(img[i+2]-bg[2]);
+    const nonBg = a > 20 && (a < 245 || diff > 64);
+    if (nonBg) { found=true; if(x<minX)minX=x; if(y<minY)minY=y; if(x>maxX)maxX=x; if(y>maxY)maxY=y; }
+  }
+  if (!found) return null;
+  return { minX:minX/scale, minY:minY/scale, maxX:maxX/scale, maxY:maxY/scale };
+}
+
+function autoFitSubject() {
+  const box = findSubjectBox();
+  if (!box || !sourceImage) return;
+  const bw = box.maxX - box.minX;
+  const bh = box.maxY - box.minY;
+  const longest = Math.max(bw, bh);
+  const minDim = Math.min(sourceImage.width, sourceImage.height);
+  const padding = 1.18;
+  const zoom = Math.max(0.35, Math.min(2.4, minDim / (longest * padding)));
+  const cx = (box.minX + box.maxX) / 2;
+  const cy = (box.minY + box.maxY) / 2;
+  $("cropZoom").value = zoom.toFixed(2);
+  $("offsetX").value = Math.round(cx - sourceImage.width / 2);
+  $("offsetY").value = Math.round(cy - sourceImage.height / 2);
+  drawSourcePreview();
+  convertSprite();
 }
 
 function adjustChannel(v, contrast, saturation, avg) {
   return Math.max(0, Math.min(255, ((v - 128) * contrast + 128 - avg) * saturation + avg));
 }
 
+function bgDistance(r,g,b,bg) {
+  return Math.abs(r-bg[0]) + Math.abs(g-bg[1]) + Math.abs(b-bg[2]);
+}
+
+function cleanBackground(ctx, size) {
+  const img = ctx.getImageData(0,0,size,size);
+  const d = img.data;
+  const sample = [];
+  const points = [[0,0],[size-1,0],[0,size-1],[size-1,size-1],[Math.floor(size/2),0],[0,Math.floor(size/2)],[size-1,Math.floor(size/2)]];
+  for (const [x,y] of points) { const i=(y*size+x)*4; sample.push([d[i],d[i+1],d[i+2]]); }
+  const bg = sample.reduce((a,p)=>[a[0]+p[0]/sample.length,a[1]+p[1]/sample.length,a[2]+p[2]/sample.length],[0,0,0]);
+  for (let i=0;i<d.length;i+=4) {
+    const r=d[i], g=d[i+1], b=d[i+2], a=d[i+3];
+    const max=Math.max(r,g,b), min=Math.min(r,g,b);
+    const lightFlat = max > 222 && (max-min) < 50;
+    const closeToBg = bgDistance(r,g,b,bg) < 58 && max > 165;
+    if (a < 20 || lightFlat || closeToBg) d[i+3]=0;
+  }
+  ctx.putImageData(img,0,0);
+}
+
+function processSpritePixels(ctx, size) {
+  const img = ctx.getImageData(0,0,size,size);
+  const d = img.data;
+  const steps = Number($("colorSteps").value || 0);
+  const mode = $("converterMode").value;
+  const contrast = (Number($("contrast").value) || 100) / 100;
+  const sat = (Number($("saturation").value) || 100) / 100;
+  const forcedSteps = mode === "gba" ? 12 : mode === "pixel" ? Math.max(steps, 10) : steps;
+  for (let i=0; i<d.length; i+=4) {
+    if (d[i+3] < 16) continue;
+    let r=d[i], g=d[i+1], b=d[i+2];
+    const avg=(r+g+b)/3;
+    r = adjustChannel(r, contrast, sat, avg);
+    g = adjustChannel(g, contrast, sat, avg);
+    b = adjustChannel(b, contrast, sat, avg);
+    if (forcedSteps > 1) {
+      const q = 255 / (forcedSteps - 1);
+      r = Math.round(r / q) * q;
+      g = Math.round(g / q) * q;
+      b = Math.round(b / q) * q;
+    }
+    d[i]=r; d[i+1]=g; d[i+2]=b;
+  }
+  ctx.putImageData(img,0,0);
+}
+
 function convertSprite() {
   if (!sourceImage) return;
   const outSize = Number($("spriteSize").value);
-  $("spriteStatus").textContent = `${outSize}x${outSize} sprite target`;
+  const mode = $("converterMode").value;
+  $("spriteStatus").textContent = `${outSize}x${outSize} ${mode} target`;
+  drawSourcePreview();
+
+  const crop = activeCrop();
+  const superScale = mode === "clean" ? 4 : mode === "gba" ? 3 : 2;
+  const hiSize = outSize * superScale;
+  const hi = document.createElement("canvas");
+  hi.width = hiSize; hi.height = hiSize;
+  const h = hi.getContext("2d", { willReadFrequently: true });
+  h.imageSmoothingEnabled = true;
+  h.imageSmoothingQuality = "high";
+  if (!$("transparentBg").checked) { h.fillStyle = "#f8efe2"; h.fillRect(0,0,hiSize,hiSize); }
+  h.drawImage(sourceImage, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, hiSize, hiSize);
+  if ($("removeBg").checked) cleanBackground(h, hiSize);
+
   const work = document.createElement("canvas");
   work.width = outSize; work.height = outSize;
-  const w = work.getContext("2d");
-  w.imageSmoothingEnabled = true;
+  const w = work.getContext("2d", { willReadFrequently: true });
+  w.imageSmoothingEnabled = mode === "clean";
+  w.imageSmoothingQuality = "high";
   if (!$("transparentBg").checked) { w.fillStyle = "#f8efe2"; w.fillRect(0,0,outSize,outSize); }
-  const srcSize = Math.min(sourceImage.width, sourceImage.height) / Number($("cropZoom").value);
-  const centerX = sourceImage.width / 2 + Number($("offsetX").value);
-  const centerY = sourceImage.height / 2 + Number($("offsetY").value);
-  w.drawImage(sourceImage, centerX - srcSize/2, centerY - srcSize/2, srcSize, srcSize, 0, 0, outSize, outSize);
-  let img = w.getImageData(0,0,outSize,outSize);
-  const data = img.data;
-  const steps = Number($("colorSteps").value);
-  const contrast = Number($("contrast").value) / 100;
-  const sat = Number($("saturation").value) / 100;
-  for (let i=0; i<data.length; i+=4) {
-    const r=data[i], g=data[i+1], b=data[i+2];
-    const max=Math.max(r,g,b), min=Math.min(r,g,b), avg=(r+g+b)/3;
-    if ($("removeBg").checked && max > 218 && (max-min) < 42) { data[i+3]=0; continue; }
-    data[i] = Math.round(adjustChannel(r, contrast, sat, avg));
-    data[i+1] = Math.round(adjustChannel(g, contrast, sat, avg));
-    data[i+2] = Math.round(adjustChannel(b, contrast, sat, avg));
-    const q = 255 / (steps - 1);
-    data[i] = Math.round(data[i] / q) * q;
-    data[i+1] = Math.round(data[i+1] / q) * q;
-    data[i+2] = Math.round(data[i+2] / q) * q;
-  }
-  w.putImageData(img,0,0);
-  const outline = Number($("outlineStrength").value);
-  if (outline > 0) addOutline(w, outSize, outline);
+  w.drawImage(hi, 0, 0, hiSize, hiSize, 0, 0, outSize, outSize);
+  processSpritePixels(w, outSize);
+  const outline = Number($("outlineStrength").value || 0);
+  if (outline > 0) addOutsideOutline(w, outSize, outline);
+
   spriteCanvas.width = 192; spriteCanvas.height = 192;
   spriteCtx.clearRect(0,0,192,192);
+  drawChecker(spriteCtx, 192);
   spriteCtx.imageSmoothingEnabled = false;
   spriteCtx.drawImage(work,0,0,outSize,outSize,0,0,192,192);
   spriteDataUrl = work.toDataURL("image/png");
-  $("converterHint").textContent = `Converted to ${outSize}x${outSize} PNG. Download or save to Asset Vault.`;
+  const crush = Number($("colorSteps").value || 0);
+  $("converterHint").textContent = `Converted from the original source to ${outSize}x${outSize}. Palette crush: ${crush ? crush : "off"}. Outline: ${outline}.`;
 }
 
-function addOutline(ctx, size, strength) {
+function addOutsideOutline(ctx, size, strength) {
   const img = ctx.getImageData(0,0,size,size);
   const src = new Uint8ClampedArray(img.data);
   const dst = img.data;
   for (let y=0;y<size;y++) {
     for (let x=0;x<size;x++) {
       const idx=(y*size+x)*4;
-      if (src[idx+3] !== 0) continue;
+      if (src[idx+3] > 15) continue;
       let near=false;
       for (let oy=-strength;oy<=strength;oy++) for (let ox=-strength;ox<=strength;ox++) {
         if (!ox && !oy) continue;
         const nx=x+ox, ny=y+oy;
         if (nx<0||ny<0||nx>=size||ny>=size) continue;
-        if (src[(ny*size+nx)*4+3] > 30) near=true;
+        if (src[(ny*size+nx)*4+3] > 70) near=true;
       }
-      if (near) { dst[idx]=22; dst[idx+1]=12; dst[idx+2]=10; dst[idx+3]=255; }
+      if (near) { dst[idx]=18; dst[idx+1]=12; dst[idx+2]=12; dst[idx+3]=255; }
     }
   }
   ctx.putImageData(img,0,0);
@@ -329,13 +451,15 @@ $("useAiForSpriteBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) retu
 $("downloadAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const name=selectedSpecies().name; downloadBlob(`${slug(name)}-concept.png`, dataUrlToBlob(currentAiDataUrl)); });
 $("saveAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const blob=dataUrlToBlob(currentAiDataUrl); const mon=selectedSpecies(); addAsset({type:"concept",name:`${mon.name} Concept Image`,description:`AI concept image for ${mon.name}`,tags:["concept",mon.name,mon.type],filename:`${slug(mon.name)}-concept.png`,mime:"image/png",size:blob.size,dataUrl:currentAiDataUrl,content:currentBrief}); });
 $("sourceUpload").addEventListener("change",()=>{ const file=$("sourceUpload").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>loadImageToConverter(reader.result); reader.readAsDataURL(file); });
-["spriteSize","cropZoom","offsetX","offsetY","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg"].forEach(id=>$(id).addEventListener("input",convertSprite));
+["spriteSize","converterMode","cropZoom","offsetX","offsetY","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg"].forEach(id=>$(id).addEventListener("input",convertSprite));
+$("autoFitBtn").addEventListener("click",autoFitSubject);
+$("resetConverterBtn").addEventListener("click",resetConverter);
 $("convertSpriteBtn").addEventListener("click",convertSprite);
 $("downloadSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return alert("Convert a sprite first."); downloadBlob(`${slug(selectedSpecies().name)}-sprite-${$("spriteSize").value}.png`, dataUrlToBlob(spriteDataUrl)); });
 $("saveSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return alert("Convert a sprite first."); const blob=dataUrlToBlob(spriteDataUrl); const mon=selectedSpecies(); addAsset({type:"sprite",name:`${mon.name} ${$("spriteSize").value}x${$("spriteSize").value} Sprite`,description:`Converted FireRed-style sprite for ${mon.name}`,tags:["sprite",mon.name,mon.type,`${$("spriteSize").value}x${$("spriteSize").value}`],filename:`${slug(mon.name)}-sprite-${$("spriteSize").value}.png`,mime:"image/png",size:blob.size,dataUrl:spriteDataUrl,content:currentBrief}); });
 $("importFile").addEventListener("click",()=>$("fileInput").click());
 $("fileInput").addEventListener("change",()=>{ [...$("fileInput").files].forEach(file=>{ if(file.size>2.5*1024*1024) return alert(`${file.name} is too large for this local vault.`); const reader=new FileReader(); reader.onload=()=>addAsset({type:file.type.startsWith("image/")?"sprite":"file",name:file.name.replace(/\.[^/.]+$/,"") ,description:`Imported file: ${file.name}`,tags:["imported"],filename:file.name,mime:file.type||"application/octet-stream",size:file.size,dataUrl:reader.result}); reader.readAsDataURL(file); }); $("fileInput").value=""; });
-$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"0.8",assets:vault},null,2)],{type:"application/json"})));
+$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"0.9",assets:vault},null,2)],{type:"application/json"})));
 $("restoreVaultBtn").addEventListener("click",()=>$("restoreInput").click());
 $("restoreInput").addEventListener("change",()=>{ const file=$("restoreInput").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const parsed=JSON.parse(reader.result); vault=Array.isArray(parsed)?parsed:parsed.assets; if(!Array.isArray(vault)) throw new Error("No assets array"); saveVault(); renderVault(); openSection("vault"); }catch{ alert("Could not restore that JSON backup."); } }; reader.readAsText(file); });
 $("clearVault").addEventListener("click",()=>{ if(vault.length&&confirm("Remove every asset from this device vault?")){ vault=[]; saveVault(); renderVault(); } });

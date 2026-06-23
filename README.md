@@ -2,7 +2,7 @@
 
 ## Current version
 
-**v0.8** adds the first complete Loganmon sprite pipeline:
+**v0.9** adds the first complete Loganmon sprite pipeline:
 
 1. Loganmon Brief Builder
 2. OpenAI Image Generator
