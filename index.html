@@ -21,7 +21,7 @@
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="status-pill">Sprite Pipeline v1.4</span>
+        <span class="status-pill">Sprite Pipeline v1.5</span>
         <button class="ghost-button" id="effectToggle" type="button" aria-label="Toggle background effects">✦</button>
       </div>
       <div class="brand-block">
@@ -116,7 +116,7 @@
 
         <div class="section-divider"></div>
         <div class="section-heading">
-          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter now focuses on cleaner sprite interpretation: less noisy detail, more muted readable colors, better feature protection, and a less blurry 64x64 FireRed-style output.</p></div>
+          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter now adds battle-sprite readability tuning: brighter dark fur, clearer face details, smoother downscaling, cleaner silhouettes, and less muddy 64x64 FireRed-style output.</p></div>
           <span class="vault-stats" id="spriteStatus">64x64 target</span>
         </div>
 
@@ -146,6 +146,7 @@
             <label class="check-row"><input id="protectEyes" type="checkbox" checked /> Protect bright eyes / face details</label>
             <label class="check-row"><input id="cleanSpriteMode" type="checkbox" checked /> Clean sprite mode (reduce noisy detail)</label>
             <label class="check-row"><input id="mutedPalette" type="checkbox" checked /> Muted palette / less neon colors</label>
+            <label class="check-row"><input id="battleSpriteBrighten" type="checkbox" checked /> Battle-sprite brighten / face readability</label>
             <div class="preset-row">
               <button type="button" data-converter-preset="firered">FireRed Auto</button>
               <button type="button" data-converter-preset="fullbody">Full Body Crop</button>
@@ -156,12 +157,13 @@
               <button type="button" data-converter-preset="cleanmode">Clean Sprite</button>
               <button type="button" data-converter-preset="muted">Muted Palette</button>
               <button type="button" data-converter-preset="facepriority">Face Priority</button>
+              <button type="button" data-converter-preset="readable">Face Readability</button>
               <button type="button" data-converter-preset="sharp">Sharpen Sprite</button>
               <button type="button" data-converter-preset="soft">Less Detail Crush</button>
               <button type="button" data-converter-preset="master96">96x96 Master</button>
             </div>
             <div class="command-row"><button type="button" id="autoFitBtn">Auto Fit Subject</button><button type="button" id="resetConverterBtn">Reset Converter</button><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
-            <p class="small-warning">Tip: press FireRed Auto first. Then try Clean Sprite for a cleaner 64x64, Keep Source Colors if the hues drift, Muted Palette if the sprite gets too neon, and Face Priority if the head needs more presence.</p>
+            <p class="small-warning">Tip: press FireRed Auto first. Then try Face Readability to make the head/eyes clearer, Clean Sprite for less noisy detail, Keep Source Colors if the hues drift, and Muted Palette if the sprite gets too neon.</p>
           </div>
 
           <div class="converter-card">

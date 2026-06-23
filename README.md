@@ -1,14 +1,13 @@
-# LogansCreations v1.4
+# LogansCreations v1.5
 
-Cleaner sprite interpretation pass.
+Battle-sprite readability upgrade.
 
-## New in v1.4
-- Clean sprite mode to reduce noisy detail
-- Muted palette mode to avoid neon greens / yellows
-- Clean Sprite preset
-- Muted Palette preset
-- Face Priority preset
-- Lower-noise 64x64 defaults
-- Controlled sharpening instead of harsher global sharpening
+## New in v1.5
+- Battle-sprite brighten / face readability option
+- Face Readability preset
+- Better shadow lifting for dark fur and armor
+- Smoother clean-mode downscaling
+- Cleaner silhouette definition
+- Less muddy 64x64 output
 
-Open with `?v=14`.
+Open with `?v=15`.
