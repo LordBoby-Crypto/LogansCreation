@@ -15,182 +15,177 @@
 <body>
   <div class="nether-scene" aria-hidden="true">
     <div class="lava-sky"></div>
-    <div class="portal-rift portal-rift-left"></div>
-    <div class="portal-rift portal-rift-right"></div>
-    <div class="falling-embers ember-layer-one"></div>
-    <div class="falling-embers ember-layer-two"></div>
-    <div class="nether-fortress"></div>
-    <div class="basalt-spikes"></div>
+    <div class="portal-rift portal-left"></div>
+    <div class="portal-rift portal-right"></div>
+    <div class="embers embers-a"></div>
+    <div class="embers embers-b"></div>
+    <div class="fortress"></div>
+    <div class="basalt"></div>
     <div class="lava-river"></div>
     <div class="block-floor"></div>
-    <div class="heat-haze"></div>
   </div>
 
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="status-pill">Nether Build v0.5</span>
-        <button class="ghost-button" id="themeToggle" type="button" aria-label="Toggle ember intensity">✦</button>
+        <span class="status-pill">Nether Build v0.6</span>
+        <button class="ghost-button" id="effectToggle" type="button" aria-label="Toggle background effects">✦</button>
       </div>
 
       <div class="brand-block">
-        <div class="brand-mark" aria-hidden="true">
-          <span>LC</span>
-        </div>
+        <div class="brand-mark" aria-hidden="true">LC</div>
         <div>
           <h1>LoganCreations</h1>
-          <p class="hero-subtitle">A Nether-styled creative forge for sprites, books, cultures, sounds, comics, models, and full asset packs.</p>
+          <p class="hero-subtitle">A Nether-styled mobile creative forge for sprites, books, cultures, sounds, comics, models, and asset packs.</p>
         </div>
       </div>
 
-      <div class="quick-actions" aria-label="Project actions">
-        <button class="primary-action" type="button" data-action="new-project">Start Forging</button>
-        <button class="secondary-action" type="button" data-action="open-library">Asset Vault</button>
+      <div class="quick-actions">
+        <button class="primary-action" type="button" data-open="sprite">Create Sprite</button>
+        <button class="secondary-action" type="button" data-open="vault">Asset Vault</button>
       </div>
     </header>
 
     <main>
-      <section class="panel intro-panel" aria-labelledby="start-title">
-        <div>
-          <p class="eyebrow">Nether forge dashboard</p>
-          <h2 id="start-title">Choose a creation module</h2>
-          <p>Asset Vault and Create Sprite are now working systems. The remaining modules are staged and will plug into the vault as they are built.</p>
-        </div>
+      <section class="panel intro-panel">
+        <p class="eyebrow">Creation modules</p>
+        <h2>Choose what to build</h2>
+        <p>Create Sprite and Asset Vault are working. The other buttons are placeholders for the next tools.</p>
       </section>
 
-      <section class="module-grid" aria-label="Creation modules">
-        <button class="module-card module-vault" type="button" data-module="asset-vault">
-          <span class="module-icon">▥</span>
-          <span class="module-title">Asset Vault</span>
-          <span class="module-desc">Store generated assets, import files, download entries, duplicate work, remove assets, and export backups.</span>
-          <span class="module-meta">storage · backup · download</span>
-        </button>
-
-        <button class="module-card module-red" type="button" data-module="sprite-lab">
+      <section class="module-grid">
+        <button class="module-card module-hot" type="button" data-open="sprite">
           <span class="module-icon">▣</span>
           <span class="module-title">Create Sprite</span>
-          <span class="module-desc">Forge original creature sprites with pixel art rendering, seed-based generation, metadata, export, and vault saving.</span>
-          <span class="module-meta">PNG · JSON · save to vault</span>
+          <span class="module-desc">Generate cleaner pixel-style sprites from real choices: kind, template, type/theme, prompt, colors, and output size.</span>
+          <span class="module-meta">working · PNG · JSON</span>
         </button>
 
-        <button class="module-card module-orange" type="button" data-module="sprite-factory">
+        <button class="module-card module-vault" type="button" data-open="vault">
+          <span class="module-icon">▥</span>
+          <span class="module-title">Asset Vault</span>
+          <span class="module-desc">Store generated assets locally, download them, duplicate them, remove them, and export backups.</span>
+          <span class="module-meta">working · storage · backup</span>
+        </button>
+
+        <button class="module-card" type="button" data-placeholder="Sprite Factory">
           <span class="module-icon">▦</span>
           <span class="module-title">Sprite Factory</span>
-          <span class="module-desc">Generate a full themed asset pack with creatures, icons, tiles, and metadata.</span>
-          <span class="module-meta">packs · atlas · ZIP</span>
+          <span class="module-desc">Later: generate full themed asset packs with many sprites, icons, and sprite sheets.</span>
+          <span class="module-meta">planned</span>
         </button>
 
-        <button class="module-card module-gold" type="button" data-module="novel-generator">
+        <button class="module-card" type="button" data-placeholder="Book / Novel Generator">
           <span class="module-icon">✦</span>
           <span class="module-title">Book / Novel Generator</span>
-          <span class="module-desc">Create premises, chapter plans, characters, settings, and story bibles.</span>
-          <span class="module-meta">outline · chapters · lore</span>
+          <span class="module-desc">Later: create story bibles, casts, outlines, chapters, and exportable book packages.</span>
+          <span class="module-meta">planned</span>
         </button>
 
-        <button class="module-card module-red" type="button" data-module="culture-generator">
+        <button class="module-card" type="button" data-placeholder="Culture Generator">
           <span class="module-icon">◈</span>
           <span class="module-title">Culture Generator</span>
-          <span class="module-desc">Build civilizations with customs, laws, symbols, myths, and conflicts.</span>
-          <span class="module-meta">worlds · factions · dossiers</span>
+          <span class="module-desc">Later: create civilizations, laws, rituals, symbols, myths, factions, and dossiers.</span>
+          <span class="module-meta">planned</span>
         </button>
 
-        <button class="module-card module-purple" type="button" data-module="language-engine">
+        <button class="module-card" type="button" data-placeholder="Language / Name Engine">
           <span class="module-icon">⌁</span>
           <span class="module-title">Language / Name Engine</span>
-          <span class="module-desc">Generate consistent names, roots, places, gods, monsters, and dictionaries.</span>
-          <span class="module-meta">roots · names · dictionary</span>
+          <span class="module-desc">Later: generate consistent names, roots, dictionaries, and naming rules.</span>
+          <span class="module-meta">planned</span>
         </button>
 
-        <button class="module-card module-stone" type="button" data-module="model-generator">
+        <button class="module-card" type="button" data-placeholder="3D Model Generator">
           <span class="module-icon">⬡</span>
           <span class="module-title">3D Model Generator</span>
-          <span class="module-desc">Create procedural relics, weapons, crystals, masks, towers, and props.</span>
-          <span class="module-meta">WebGL · JSON · renders</span>
+          <span class="module-desc">Later: make procedural relics, weapons, crystals, masks, props, and renders.</span>
+          <span class="module-meta">planned</span>
         </button>
 
-        <button class="module-card module-orange" type="button" data-module="sound-generator">
+        <button class="module-card" type="button" data-placeholder="Monster Sound Generator">
           <span class="module-icon">≋</span>
           <span class="module-title">Monster Sound Generator</span>
-          <span class="module-desc">Build roars, clicks, growls, whispers, attacks, and death sounds.</span>
-          <span class="module-meta">WAV · layers · waveform</span>
+          <span class="module-desc">Later: synthesize roars, hisses, clicks, impacts, and WAV files.</span>
+          <span class="module-meta">planned</span>
         </button>
 
-        <button class="module-card module-purple" type="button" data-module="comic-generator">
+        <button class="module-card" type="button" data-placeholder="Comic Generator">
           <span class="module-icon">▤</span>
           <span class="module-title">Comic Generator</span>
-          <span class="module-desc">Create panel layouts, speech bubbles, camera shots, and comic pages.</span>
-          <span class="module-meta">panels · PNG · script</span>
+          <span class="module-desc">Later: create panels, speech bubbles, captions, and comic page exports.</span>
+          <span class="module-meta">planned</span>
         </button>
       </section>
 
-      <section class="panel module-preview" aria-live="polite">
+      <section class="panel preview-panel" id="previewPanel">
         <div class="preview-header">
           <div>
             <p class="eyebrow">Selected module</p>
-            <h2 id="previewTitle">Nothing selected yet</h2>
+            <h2 id="previewTitle">Create Sprite</h2>
           </div>
-          <span id="previewBadge" class="preview-badge">Ready</span>
+          <span class="preview-badge" id="previewBadge">Working</span>
         </div>
-        <p id="previewText">Tap any module above to preview what it will become.</p>
-        <div class="option-row" id="previewOptions"></div>
+        <p id="previewText">Use the Create Sprite panel below to generate and export a sprite.</p>
       </section>
 
-      <section class="panel sprite-panel" id="spriteLab" aria-labelledby="spriteTitle" hidden>
-        <div class="sprite-heading">
+      <section class="panel sprite-panel" id="spritePanel">
+        <div class="section-heading">
           <div>
             <p class="eyebrow">Working system</p>
-            <h2 id="spriteTitle">Create Sprite</h2>
-            <p>This version is rebuilt as a practical sprite designer. The old abstract controls were removed. Pick what you are making, describe the idea, choose a concrete silhouette, choose a type/theme, set a real output size, then export or save it to Asset Vault.</p>
+            <h2>Create Sprite</h2>
+            <p>This version uses clearer options and a more deliberate renderer. Output Size changes the exported PNG. The prompt affects added details and naming metadata.</p>
           </div>
-          <span class="vault-stats" id="spriteStatus">Ready to design</span>
+          <span class="vault-stats" id="spriteStatus">Ready</span>
         </div>
 
         <div class="sprite-layout">
           <div class="sprite-controls">
-            <div class="sprite-form-grid">
+            <div class="form-grid">
               <label>
                 <span>Sprite Name</span>
-                <input id="spriteName" type="text" maxlength="36" placeholder="Example: Lava Cub, Iron Moth, Moon Badge" />
+                <input id="spriteName" type="text" maxlength="36" placeholder="Example: Lava Cub" />
               </label>
 
               <label>
                 <span>Output Size</span>
-                <select id="spriteOutputSize">
-                  <option value="32">32x32 small icon</option>
-                  <option value="64" selected>64x64 game sprite</option>
+                <select id="spriteSize">
+                  <option value="32">32x32 icon</option>
+                  <option value="64" selected>64x64 sprite</option>
                   <option value="96">96x96 large sprite</option>
+                  <option value="128">128x128 display sprite</option>
                 </select>
               </label>
 
               <label>
                 <span>What Are You Making?</span>
                 <select id="spriteKind">
-                  <option value="creature" selected>Creature / monster sprite</option>
-                  <option value="item">Item / object sprite</option>
-                  <option value="trainer">Trainer / character bust</option>
-                  <option value="badge">Badge / emblem sprite</option>
+                  <option value="creature" selected>Creature / monster</option>
+                  <option value="item">Item / object</option>
+                  <option value="trainer">Trainer / character</option>
+                  <option value="badge">Badge / emblem</option>
                 </select>
               </label>
 
               <label>
                 <span>Silhouette Template</span>
                 <select id="spriteTemplate">
-                  <option value="wolf" selected>Wolf / cat creature</option>
-                  <option value="dragon">Dragon / lizard creature</option>
-                  <option value="bird">Bird / winged creature</option>
-                  <option value="fish">Fish / aquatic creature</option>
-                  <option value="bug">Bug / insect creature</option>
-                  <option value="slime">Slime / blob creature</option>
-                  <option value="ghost">Ghost / spirit creature</option>
-                  <option value="golem">Rock / golem creature</option>
-                  <option value="robot">Robot / machine creature</option>
-                  <option value="mushroom">Mushroom / plant creature</option>
-                  <option value="sword">Sword / weapon item</option>
-                  <option value="potion">Potion / bottle item</option>
-                  <option value="gem">Gem / crystal item</option>
-                  <option value="egg">Egg / orb object</option>
-                  <option value="trainer">Trainer / character bust</option>
-                  <option value="badge">Badge / emblem</option>
+                  <option value="wolf" selected>Wolf / cat</option>
+                  <option value="dragon">Dragon / lizard</option>
+                  <option value="bird">Bird / winged</option>
+                  <option value="fish">Fish / aquatic</option>
+                  <option value="bug">Bug / insect</option>
+                  <option value="slime">Slime / blob</option>
+                  <option value="ghost">Ghost / spirit</option>
+                  <option value="golem">Rock / golem</option>
+                  <option value="robot">Robot / machine</option>
+                  <option value="mushroom">Mushroom / plant</option>
+                  <option value="sword">Sword / weapon</option>
+                  <option value="potion">Potion / bottle</option>
+                  <option value="gem">Gem / crystal</option>
+                  <option value="egg">Egg / orb</option>
+                  <option value="trainer">Trainer bust</option>
+                  <option value="badge">Badge emblem</option>
                 </select>
               </label>
 
@@ -210,30 +205,24 @@
                   <option>Fairy</option>
                   <option>Dark</option>
                   <option>Normal</option>
-                  <option>Nether</option>
-                  <option>Custom</option>
+                  <option selected>Nether</option>
                 </select>
               </label>
 
               <label>
                 <span>Palette Style</span>
-                <select id="spritePalette">
-                  <option value="auto" selected>Auto from type/theme</option>
-                  <option value="bright">Bright handheld RPG</option>
-                  <option value="muted">Muted modern pixel art</option>
-                  <option value="nether">Nether lava palette</option>
-                  <option value="custom">Custom colors below</option>
+                <select id="spritePaletteStyle">
+                  <option value="auto" selected>Auto from theme</option>
+                  <option value="bright">Bright RPG</option>
+                  <option value="muted">Muted pixel art</option>
+                  <option value="nether">Nether lava</option>
+                  <option value="custom">Use custom colors</option>
                 </select>
-              </label>
-
-              <label class="sprite-wide">
-                <span>Idea / Prompt</span>
-                <textarea id="spritePrompt" maxlength="160" placeholder="Example: a small lava wolf with cracked blackstone armor and glowing orange eyes"></textarea>
               </label>
 
               <label>
                 <span>Main Color</span>
-                <input id="spriteMainColor" type="color" value="#e24a21" />
+                <input id="spriteMainColor" type="color" value="#d9481f" />
               </label>
 
               <label>
@@ -243,123 +232,119 @@
 
               <label>
                 <span>Seed</span>
-                <input id="spriteSeed" type="text" maxlength="24" placeholder="Auto seed" />
+                <input id="spriteSeed" type="text" maxlength="24" placeholder="Auto" />
               </label>
 
               <label>
                 <span>Detail Level</span>
                 <select id="spriteDetail">
-                  <option value="clean">Clean readable sprite</option>
-                  <option value="detailed" selected>Detailed battle sprite</option>
-                  <option value="icon">Simple icon style</option>
+                  <option value="simple">Simple</option>
+                  <option value="detailed" selected>Detailed</option>
+                  <option value="extra">Extra details</option>
                 </select>
+              </label>
+
+              <label class="wide-field">
+                <span>Idea / Prompt</span>
+                <textarea id="spritePrompt" maxlength="180" placeholder="Example: small lava wolf with blackstone armor, glowing eyes, and cracked magma markings"></textarea>
               </label>
             </div>
 
-            <div class="sprite-command-row">
-              <button class="primary-action" type="button" id="generateSpriteBtn">Generate Sprite</button>
-              <button type="button" id="randomizeSpriteBtn">Surprise Me</button>
-              <button type="button" id="rerollShapeBtn">Reroll Shape</button>
-              <button type="button" id="rerollColorsBtn">Reroll Colors</button>
-              <button type="button" id="downloadSpriteBtn">Download PNG</button>
-              <button type="button" id="downloadSpriteJsonBtn">Download JSON</button>
-              <button type="button" id="saveSpriteBtn">Save to Asset Vault</button>
+            <div class="command-row">
+              <button class="primary-action" id="generateSprite" type="button">Generate Sprite</button>
+              <button type="button" id="surpriseSprite">Surprise Me</button>
+              <button type="button" id="rerollSeed">Reroll Seed</button>
+              <button type="button" id="downloadPng">Download PNG</button>
+              <button type="button" id="downloadJson">Download JSON</button>
+              <button type="button" id="saveToVault">Save to Asset Vault</button>
             </div>
           </div>
 
-          <div class="sprite-preview-card">
-            <div class="sprite-preview-top">
+          <div class="sprite-output">
+            <div class="preview-header">
               <div>
                 <p class="eyebrow">Sprite preview</p>
-                <h3 id="spritePreviewName">No sprite generated yet</h3>
+                <h3 id="spriteTitle">Not generated yet</h3>
               </div>
-              <span class="preview-badge" id="spriteSeedBadge">Seed —</span>
+              <span class="preview-badge" id="seedBadge">Seed —</span>
             </div>
 
-            <div class="sprite-canvas-wrap">
-              <div class="main-sprite-stage">
-                <canvas id="spriteCanvas" width="192" height="192" aria-label="Generated sprite preview"></canvas>
+            <div class="canvas-row">
+              <div class="canvas-stage">
+                <canvas id="spriteCanvas" width="192" height="192"></canvas>
               </div>
-              <div class="sprite-side-stack">
-                <div class="mini-stage">
-                  <span>Final PNG</span>
-                  <canvas id="spriteIconCanvas" width="96" height="96" aria-label="Sprite icon preview"></canvas>
+              <div class="side-preview">
+                <div class="mini-box">
+                  <span>Actual export</span>
+                  <canvas id="exportCanvas" width="64" height="64"></canvas>
                 </div>
-                <div class="mini-stage stats-stage">
-                  <span>Sprite Details</span>
-                  <div class="stat-list" id="spriteStats"></div>
+                <div class="mini-box">
+                  <span>Details</span>
+                  <div id="spriteDetails" class="details-list"></div>
                 </div>
               </div>
             </div>
 
-            <div class="sprite-chip-row" id="spriteTags"></div>
+            <div class="chip-row" id="spriteTags"></div>
 
-            <div class="sprite-info-grid">
-              <div class="sprite-info-block">
+            <div class="info-grid">
+              <div>
                 <h4>Use Case</h4>
-                <p id="spriteUseCase">—</p>
+                <p id="spriteUse">—</p>
               </div>
-              <div class="sprite-info-block">
+              <div>
                 <h4>Style Notes</h4>
-                <p id="spriteStyleNotes">—</p>
+                <p id="spriteNotes">—</p>
               </div>
-              <div class="sprite-info-block sprite-info-wide">
-                <h4>Generated Description</h4>
-                <p id="spriteDescription">Generate a sprite to see its profile.</p>
+              <div class="wide-info">
+                <h4>Description</h4>
+                <p id="spriteDescription">Choose options and press Generate Sprite.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section class="panel vault-panel" id="assetVault" aria-labelledby="vaultTitle" hidden>
-        <div class="vault-heading">
+      <section class="panel vault-panel" id="vaultPanel" hidden>
+        <div class="section-heading">
           <div>
             <p class="eyebrow">Working system</p>
-            <h2 id="vaultTitle">Asset Vault</h2>
-            <p>Assets saved here stay on this device/browser. Import files now, create demo assets, download individual entries, duplicate them, remove them, or export a backup JSON file.</p>
+            <h2>Asset Vault</h2>
+            <p>Saved sprites and imported files stay on this device/browser. Export a backup JSON if you want to move them.</p>
           </div>
           <span class="vault-stats" id="vaultStats">0 stored</span>
         </div>
 
-        <div class="vault-toolbar" aria-label="Asset Vault controls">
-          <input id="vaultSearch" type="search" placeholder="Search assets, tags, descriptions..." autocomplete="off" />
-          <select id="vaultType" aria-label="Filter assets by type">
+        <div class="vault-toolbar">
+          <input id="vaultSearch" type="search" placeholder="Search vault..." autocomplete="off" />
+          <select id="vaultType">
             <option value="">All types</option>
-            <option value="sprite">Sprites / Images</option>
-            <option value="factory">Sprite Factory Packs</option>
-            <option value="book">Books / Text</option>
-            <option value="culture">Cultures</option>
-            <option value="language">Languages / Names</option>
-            <option value="model">3D Models</option>
-            <option value="sound">Sounds</option>
-            <option value="comic">Comics</option>
-            <option value="file">Other Files</option>
+            <option value="sprite">Sprites / images</option>
+            <option value="file">Other files</option>
           </select>
         </div>
 
-        <div class="vault-command-row">
-          <button type="button" data-vault-command="demo">Create Demo Asset</button>
-          <button type="button" data-vault-command="import">Import File</button>
-          <button type="button" data-vault-command="export">Export Vault Backup</button>
-          <button type="button" data-vault-command="restore">Restore Backup</button>
-          <button class="danger-action" type="button" data-vault-command="clear">Clear Vault</button>
+        <div class="command-row">
+          <button type="button" id="importFile">Import File</button>
+          <button type="button" id="exportVault">Export Vault Backup</button>
+          <button type="button" id="restoreVaultBtn">Restore Backup</button>
+          <button type="button" class="danger-action" id="clearVault">Clear Vault</button>
         </div>
 
-        <input id="assetImport" type="file" multiple hidden />
-        <input id="vaultRestore" type="file" accept="application/json,.json" hidden />
+        <input id="fileInput" type="file" multiple hidden />
+        <input id="restoreInput" type="file" accept="application/json,.json" hidden />
 
         <div class="vault-empty" id="vaultEmpty">
           <strong>No assets stored yet.</strong>
-          <span>Create a demo asset or import a file to test the vault.</span>
+          <span>Generate a sprite and save it, or import a file.</span>
         </div>
 
-        <div class="vault-grid" id="vaultGrid" aria-live="polite"></div>
+        <div class="vault-grid" id="vaultGrid"></div>
       </section>
     </main>
 
     <footer>
-      <p>Made for <strong>LogansCreations</strong> on GitHub Pages.</p>
+      <p>Made for <strong>LogansCreations</strong>.</p>
       <p class="repo-url">https://lordboby-crypto.github.io/LogansCreations/</p>
     </footer>
   </div>

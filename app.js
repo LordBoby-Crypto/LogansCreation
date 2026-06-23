@@ -1,376 +1,539 @@
-const moduleDetails = {
-  "asset-vault": {
-    title: "Asset Vault",
-    badge: "Storage Core",
-    text: "Working vault for saved assets. Import files, create test assets, search, download, remove, and export the vault as a backup JSON file.",
-    options: ["Store", "Import", "Download", "Remove", "Backup", "Restore"]
-  },
-  "sprite-lab": {
-    title: "Create Sprite",
-    badge: "Sprite Designer v0.5",
-    text: "Rebuilt sprite designer with clearer controls: what you are making, concrete silhouette templates, type/theme, real output size, prompt notes, PNG/JSON export, and vault saving.",
-    options: ["Creature", "Item", "Trainer", "Badge", "PNG", "Save to Vault"]
-  },
-  "sprite-factory": {
-    title: "Sprite Factory",
-    badge: "Asset Pack",
-    text: "Planned pack generator for themed sets: creatures, items, tiles, spell icons, palettes, atlases, metadata, and ZIP exports.",
-    options: ["Monster Pack", "Item Pack", "Tileset", "Atlas", "Palette", "ZIP Export"]
-  },
-  "novel-generator": {
-    title: "Book / Novel Generator",
-    badge: "Story Engine",
-    text: "Planned novel pipeline for premise, cast, world rules, chapter cards, scene lists, style rewrites, and a full story bible.",
-    options: ["Premise", "Characters", "Outline", "Chapters", "Style", "Story Bible"]
-  },
-  "culture-generator": {
-    title: "Culture Generator",
-    badge: "Worldbuilding",
-    text: "Planned civilization builder for laws, rituals, architecture, social conflicts, symbols, taboos, myths, and exportable dossiers.",
-    options: ["Government", "Myths", "Laws", "Symbols", "Factions", "Dossier"]
-  },
-  "language-engine": {
-    title: "Language / Name Engine",
-    badge: "Naming System",
-    text: "Planned root-based naming engine for consistent people, places, gods, monsters, items, cities, moons, and dictionaries.",
-    options: ["Roots", "People", "Cities", "Gods", "Items", "Dictionary"]
-  },
-  "model-generator": {
-    title: "3D Model Generator",
-    badge: "WebGL Forge",
-    text: "Planned procedural 3D creator for relics, weapons, crystals, masks, towers, ships, statues, and exportable model data.",
-    options: ["Relic", "Weapon", "Crystal", "Mask", "Render", "Model JSON"]
-  },
-  "sound-generator": {
-    title: "Monster Sound Generator",
-    badge: "Audio Lab",
-    text: "Planned Web Audio synthesizer for roars, hisses, clicks, growls, whispers, attack sounds, hurt sounds, and WAV exports.",
-    options: ["Roar", "Attack", "Hurt", "Death", "Waveform", "WAV"]
-  },
-  "comic-generator": {
-    title: "Comic Generator",
-    badge: "Panel Maker",
-    text: "Planned comic page builder for panel layouts, camera shots, silhouettes, speech bubbles, captions, sound effects, and PNG export.",
-    options: ["Panels", "Bubbles", "Shots", "SFX", "Script", "PNG"]
-  }
-};
+const VAULT_KEY = "logansCreations.assetVault.v2";
 
 const themePalettes = {
-  Fire: ["#2a0803", "#7f1d1d", "#e24a21", "#ff9f1c", "#ffe066"],
-  Water: ["#071826", "#0f4c81", "#1982c4", "#5dd9ff", "#e6fdff"],
-  Electric: ["#111827", "#3d348b", "#7678ed", "#f7d51d", "#fff7a8"],
-  Grass: ["#10220f", "#2d6a2e", "#52b788", "#a7c957", "#f0ffb3"],
-  Ice: ["#0b1f2a", "#2f6f95", "#8ecae6", "#caf0f8", "#ffffff"],
-  Poison: ["#17111e", "#5a189a", "#7b2cbf", "#80b918", "#d9ed92"],
-  Ghost: ["#09090f", "#2b2d42", "#6d597a", "#b56576", "#f8edeb"],
-  Rock: ["#120d08", "#463f3a", "#8a817c", "#bcb8b1", "#f4f3ee"],
-  Steel: ["#0f1115", "#343a40", "#6c757d", "#adb5bd", "#f8f9fa"],
-  Dragon: ["#12091f", "#3a0ca3", "#7209b7", "#f72585", "#ffd166"],
-  Fairy: ["#2b0b20", "#b5179e", "#f72585", "#ffafcc", "#fff0f3"],
-  Dark: ["#050505", "#171717", "#3f3f46", "#a855f7", "#f5f3ff"],
-  Normal: ["#15110d", "#6b5d4d", "#a99985", "#e7d8c9", "#fff7ed"],
-  Nether: ["#090202", "#3b0808", "#b91c1c", "#f97316", "#a855f7"],
-  Custom: ["#111111", "#333333", "#e24a21", "#ffd166", "#ffffff"]
+  Fire: ["#351006", "#9a2312", "#e24a21", "#ff9d32", "#ffe08a"],
+  Water: ["#061a2c", "#125a8a", "#1fa5d8", "#8ee8ff", "#e7ffff"],
+  Electric: ["#16121d", "#5542a5", "#ffd447", "#fff49a", "#72f7ff"],
+  Grass: ["#0f2511", "#2d6b2f", "#62b947", "#b7ef77", "#fff6b5"],
+  Ice: ["#0b2030", "#2e7aa1", "#7ed8ff", "#d2f7ff", "#ffffff"],
+  Poison: ["#16121c", "#50247f", "#8b39b3", "#9ee23a", "#e7ff84"],
+  Ghost: ["#0c0a14", "#33275a", "#7d5cc4", "#d4b8ff", "#ffffff"],
+  Rock: ["#17110d", "#4c3323", "#826042", "#c8a476", "#f1dbb2"],
+  Steel: ["#111317", "#454c56", "#87909d", "#d9e1e8", "#ff934d"],
+  Dragon: ["#120c1d", "#3d215f", "#7f3fbf", "#e25252", "#ffd36a"],
+  Fairy: ["#21101f", "#af4fa3", "#ff9ee7", "#ffe1fb", "#fff4b8"],
+  Dark: ["#050508", "#181827", "#46415f", "#8b75c9", "#f2e9ff"],
+  Normal: ["#17130f", "#665247", "#b99a86", "#ead4bd", "#ffffff"],
+  Nether: ["#120303", "#4c0b07", "#b52516", "#ff7a18", "#ffd166"]
 };
 
-const templateGroups = {
-  creature: ["wolf", "dragon", "bird", "fish", "bug", "slime", "ghost", "golem", "robot", "mushroom"],
-  item: ["sword", "potion", "gem", "egg"],
-  trainer: ["trainer"],
-  badge: ["badge", "gem", "egg"]
+const templateDefaults = {
+  creature: "wolf",
+  item: "sword",
+  trainer: "trainer",
+  badge: "badge"
 };
 
-const templates = {
-  wolf: "Wolf / cat creature",
-  dragon: "Dragon / lizard creature",
-  bird: "Bird / winged creature",
-  fish: "Fish / aquatic creature",
-  bug: "Bug / insect creature",
-  slime: "Slime / blob creature",
-  ghost: "Ghost / spirit creature",
-  golem: "Rock / golem creature",
-  robot: "Robot / machine creature",
-  mushroom: "Mushroom / plant creature",
-  sword: "Sword / weapon item",
-  potion: "Potion / bottle item",
-  gem: "Gem / crystal item",
-  egg: "Egg / orb object",
-  trainer: "Trainer / character bust",
-  badge: "Badge / emblem"
+const kindUse = {
+  creature: "game creature, battle sprite, enemy, companion, monster index",
+  item: "inventory icon, loot item, weapon, relic, pickup",
+  trainer: "character profile, NPC, trainer portrait, dialogue icon",
+  badge: "achievement badge, faction mark, gym-style emblem, logo icon"
 };
 
-const VAULT_KEY = "logansCreations.assetVault.v1";
-const cards = document.querySelectorAll(".module-card");
-const previewTitle = document.getElementById("previewTitle");
-const previewBadge = document.getElementById("previewBadge");
-const previewText = document.getElementById("previewText");
-const previewOptions = document.getElementById("previewOptions");
-const themeToggle = document.getElementById("themeToggle");
-
-const spriteSection = document.getElementById("spriteLab");
-const spriteStatus = document.getElementById("spriteStatus");
-const spriteCanvas = document.getElementById("spriteCanvas");
-const spriteIconCanvas = document.getElementById("spriteIconCanvas");
-const spritePreviewName = document.getElementById("spritePreviewName");
-const spriteSeedBadge = document.getElementById("spriteSeedBadge");
-const spriteStats = document.getElementById("spriteStats");
-const spriteTags = document.getElementById("spriteTags");
-const spriteUseCase = document.getElementById("spriteUseCase");
-const spriteStyleNotes = document.getElementById("spriteStyleNotes");
-const spriteDescription = document.getElementById("spriteDescription");
-const spriteNameInput = document.getElementById("spriteName");
-const spriteOutputSizeInput = document.getElementById("spriteOutputSize");
-const spriteKindInput = document.getElementById("spriteKind");
-const spriteTemplateInput = document.getElementById("spriteTemplate");
-const spriteThemeInput = document.getElementById("spriteTheme");
-const spritePaletteInput = document.getElementById("spritePalette");
-const spritePromptInput = document.getElementById("spritePrompt");
-const spriteMainColorInput = document.getElementById("spriteMainColor");
-const spriteAccentColorInput = document.getElementById("spriteAccentColor");
-const spriteSeedInput = document.getElementById("spriteSeed");
-const spriteDetailInput = document.getElementById("spriteDetail");
-const generateSpriteBtn = document.getElementById("generateSpriteBtn");
-const randomizeSpriteBtn = document.getElementById("randomizeSpriteBtn");
-const rerollShapeBtn = document.getElementById("rerollShapeBtn");
-const rerollColorsBtn = document.getElementById("rerollColorsBtn");
-const downloadSpriteBtn = document.getElementById("downloadSpriteBtn");
-const downloadSpriteJsonBtn = document.getElementById("downloadSpriteJsonBtn");
-const saveSpriteBtn = document.getElementById("saveSpriteBtn");
-
-const vaultSection = document.getElementById("assetVault");
-const vaultGrid = document.getElementById("vaultGrid");
-const vaultEmpty = document.getElementById("vaultEmpty");
-const vaultSearch = document.getElementById("vaultSearch");
-const vaultType = document.getElementById("vaultType");
-const vaultStats = document.getElementById("vaultStats");
-const importInput = document.getElementById("assetImport");
-const restoreInput = document.getElementById("vaultRestore");
-
-let vaultAssets = loadVault();
+let vault = loadVault();
 let currentSprite = null;
 
-function selectModule(key) {
-  const details = moduleDetails[key];
-  if (!details) return;
-  cards.forEach(card => card.classList.toggle("active", card.dataset.module === key));
-  previewTitle.textContent = details.title;
-  previewBadge.textContent = details.badge;
-  previewText.textContent = details.text;
-  previewOptions.innerHTML = details.options.map(option => `<span class="option-chip">${option}</span>`).join("");
-  spriteSection.hidden = key !== "sprite-lab";
-  vaultSection.hidden = key !== "asset-vault";
-  if (key === "sprite-lab") showSpriteLab();
-  if (key === "asset-vault") showVault();
-}
+const $ = id => document.getElementById(id);
+const spritePanel = $("spritePanel");
+const vaultPanel = $("vaultPanel");
+const previewTitle = $("previewTitle");
+const previewBadge = $("previewBadge");
+const previewText = $("previewText");
 
-function showSpriteLab() {
-  spriteSection.hidden = false;
-  if (!currentSprite) generateSprite();
-  setTimeout(() => spriteSection.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
-}
+const canvas = $("spriteCanvas");
+const exportCanvas = $("exportCanvas");
+const ctx = canvas.getContext("2d");
+const exportCtx = exportCanvas.getContext("2d");
 
-function showVault() {
-  vaultSection.hidden = false;
-  renderVault();
-  setTimeout(() => vaultSection.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
-}
-
-function loadVault() {
-  try {
-    const raw = localStorage.getItem(VAULT_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch (error) {
-    console.warn("Could not load Asset Vault", error);
-    return [];
+function hashString(value) {
+  let h = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    h ^= value.charCodeAt(i);
+    h = Math.imul(h, 16777619);
   }
+  return h >>> 0;
 }
 
-function saveVault() {
-  localStorage.setItem(VAULT_KEY, JSON.stringify(vaultAssets));
-}
-
-function makeId() {
-  return `asset_${Date.now()}_${Math.random().toString(16).slice(2, 8)}`;
-}
-
-function makeSeed() {
-  return `LC-${Math.random().toString(36).slice(2, 6).toUpperCase()}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
-}
-
-function hashString(value = "") {
-  let hash = 2166136261;
-  for (let i = 0; i < value.length; i += 1) {
-    hash ^= value.charCodeAt(i);
-    hash = Math.imul(hash, 16777619);
-  }
-  return hash >>> 0;
-}
-
-function mulberry32(seed) {
-  return function rng() {
-    let t = seed += 0x6D2B79F5;
+function rngFromSeed(seed) {
+  let a = hashString(seed || "logan");
+  return function() {
+    a += 0x6D2B79F5;
+    let t = a;
     t = Math.imul(t ^ t >>> 15, t | 1);
     t ^= t + Math.imul(t ^ t >>> 7, t | 61);
     return ((t ^ t >>> 14) >>> 0) / 4294967296;
   };
 }
 
-function rngFrom(value) {
-  return mulberry32(hashString(value));
+function pick(rng, arr) {
+  return arr[Math.floor(rng() * arr.length)];
 }
 
-function randInt(rng, min, max) {
-  return Math.floor(rng() * (max - min + 1)) + min;
+function rand(rng, min, max) {
+  return min + rng() * (max - min);
 }
 
-function pick(rng, values) {
-  return values[Math.floor(rng() * values.length)];
+function makeSeed() {
+  return "LC-" + Math.random().toString(36).slice(2, 6).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
 }
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, char => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;"
-  }[char]));
+function slug(value) {
+  return String(value || "sprite").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "sprite";
 }
 
-function formatBytes(bytes = 0) {
+function lighten(hex, amt) {
+  const n = parseInt(hex.slice(1), 16);
+  let r = (n >> 16) + amt;
+  let g = ((n >> 8) & 255) + amt;
+  let b = (n & 255) + amt;
+  return "#" + [r,g,b].map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0")).join("");
+}
+
+function paletteFromControls() {
+  const theme = $("spriteTheme").value;
+  const style = $("spritePaletteStyle").value;
+  if (style === "custom") {
+    const main = $("spriteMainColor").value;
+    const accent = $("spriteAccentColor").value;
+    return ["#120303", lighten(main, -70), main, accent, lighten(accent, 45)];
+  }
+  if (style === "bright") {
+    const p = themePalettes[theme] || themePalettes.Nether;
+    return [p[0], p[1], lighten(p[2], 10), lighten(p[3], 20), p[4]];
+  }
+  if (style === "muted") {
+    const p = themePalettes[theme] || themePalettes.Nether;
+    return [p[0], lighten(p[1], -18), lighten(p[2], -22), lighten(p[3], -18), p[4]];
+  }
+  if (style === "nether") return themePalettes.Nether;
+  return themePalettes[theme] || themePalettes.Nether;
+}
+
+function ensureSeed() {
+  if (!$("spriteSeed").value.trim()) $("spriteSeed").value = makeSeed();
+  return $("spriteSeed").value.trim();
+}
+
+function getConfig() {
+  return {
+    name: $("spriteName").value.trim(),
+    size: Number($("spriteSize").value),
+    kind: $("spriteKind").value,
+    template: $("spriteTemplate").value,
+    theme: $("spriteTheme").value,
+    paletteStyle: $("spritePaletteStyle").value,
+    mainColor: $("spriteMainColor").value,
+    accentColor: $("spriteAccentColor").value,
+    seed: ensureSeed(),
+    detail: $("spriteDetail").value,
+    prompt: $("spritePrompt").value.trim()
+  };
+}
+
+function autoName(config, rng) {
+  const prefix = {
+    Fire:["Cinder","Ash","Flare","Magma"], Water:["Tide","Mira","Coral","Aqua"], Electric:["Volt","Jolt","Spark","Arc"],
+    Grass:["Moss","Leaf","Root","Fern"], Ice:["Frost","Glacier","Snow","Shard"], Poison:["Vile","Mire","Toxi","Spore"],
+    Ghost:["Shade","Wisp","Noct","Phantom"], Rock:["Boulder","Slate","Pebble","Basalt"], Steel:["Iron","Gear","Rivet","Chrome"],
+    Dragon:["Drake","Scale","Fang","Wyvern"], Fairy:["Glimmer","Pix","Charm","Rose"], Dark:["Night","Umbra","Dusk","Raven"],
+    Normal:["Tama","Nobi","Milo","Pip"], Nether:["Brim","Ash","Basalt","Cinder"]
+  }[config.theme] || ["Logan"];
+  const suffix = {
+    creature:["cub","moth","fang","pup","ling","beast"], item:["blade","charm","stone","relic","core"], trainer:["keeper","smith","rider","sage"], badge:["mark","crest","seal","badge","sigil"]
+  }[config.kind] || ["sprite"];
+  return pick(rng, prefix) + pick(rng, suffix).replace(/^./, c => c.toUpperCase());
+}
+
+function clearAll(c, size) {
+  c.clearRect(0, 0, size, size);
+  c.imageSmoothingEnabled = false;
+}
+
+function pixelSetup(size) {
+  canvas.width = 192;
+  canvas.height = 192;
+  exportCanvas.width = size;
+  exportCanvas.height = size;
+  clearAll(ctx, 192);
+  clearAll(exportCtx, size);
+  const work = document.createElement("canvas");
+  work.width = size;
+  work.height = size;
+  const wctx = work.getContext("2d");
+  wctx.imageSmoothingEnabled = false;
+  return { work, wctx, size, unit: size / 64 };
+}
+
+function px(v, unit) { return Math.round(v * unit); }
+
+function ellipse(c, unit, x, y, w, h, fill, stroke, line=2) {
+  c.fillStyle = fill;
+  c.strokeStyle = stroke;
+  c.lineWidth = Math.max(1, px(line, unit));
+  c.beginPath();
+  c.ellipse(px(x,unit), px(y,unit), px(w,unit), px(h,unit), 0, 0, Math.PI*2);
+  c.fill();
+  c.stroke();
+}
+
+function rect(c, unit, x, y, w, h, fill, stroke, line=2) {
+  c.fillStyle = fill;
+  c.strokeStyle = stroke;
+  c.lineWidth = Math.max(1, px(line, unit));
+  c.fillRect(px(x,unit), px(y,unit), px(w,unit), px(h,unit));
+  c.strokeRect(px(x,unit), px(y,unit), px(w,unit), px(h,unit));
+}
+
+function poly(c, unit, points, fill, stroke, line=2) {
+  c.fillStyle = fill;
+  c.strokeStyle = stroke;
+  c.lineWidth = Math.max(1, px(line, unit));
+  c.beginPath();
+  points.forEach(([x,y], i) => i ? c.lineTo(px(x,unit), px(y,unit)) : c.moveTo(px(x,unit), px(y,unit)));
+  c.closePath();
+  c.fill();
+  c.stroke();
+}
+
+function line(c, unit, x1, y1, x2, y2, color, width=2) {
+  c.strokeStyle = color;
+  c.lineWidth = Math.max(1, px(width, unit));
+  c.beginPath();
+  c.moveTo(px(x1,unit), px(y1,unit));
+  c.lineTo(px(x2,unit), px(y2,unit));
+  c.stroke();
+}
+
+function eye(c, unit, x, y, color) {
+  rect(c, unit, x, y, 3, 3, color, "#171008", 1);
+  rect(c, unit, x+1, y, 1, 1, "#ffffff", "#ffffff", 0);
+}
+
+function addThemeDetails(c, unit, config, p, rng) {
+  const accent = p[4];
+  if (config.detail === "simple") return;
+  const prompt = config.prompt.toLowerCase();
+  const count = config.detail === "extra" ? 7 : 4;
+  for (let i = 0; i < count; i++) {
+    const x = rand(rng, 20, 45);
+    const y = rand(rng, 20, 45);
+    if (prompt.includes("armor") || config.theme === "Steel" || config.theme === "Rock") rect(c, unit, x, y, rand(rng,3,6), rand(rng,2,4), p[1], "#171008", 1);
+    else if (prompt.includes("crack") || config.theme === "Fire" || config.theme === "Nether") line(c, unit, x, y, x+rand(rng,-4,4), y+rand(rng,3,6), accent, 1);
+    else ellipse(c, unit, x, y, rand(rng,1,2), rand(rng,1,2), accent, "#171008", 1);
+  }
+}
+
+function drawCreature(c, unit, config, p, rng) {
+  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
+  switch (config.template) {
+    case "dragon":
+      ellipse(c,unit,34,35,15,10,body,o); ellipse(c,unit,47,28,10,8,body,o);
+      poly(c,unit,[[45,20],[50,9],[52,22]],accent,o); poly(c,unit,[[52,21],[60,17],[55,27]],light,o);
+      line(c,unit,21,38,8,48,dark,5); line(c,unit,26,44,22,56,dark,4); line(c,unit,39,44,42,56,dark,4);
+      poly(c,unit,[[29,30],[16,14],[22,35]],dark,o); poly(c,unit,[[36,28],[48,13],[43,35]],dark,o);
+      eye(c,unit,49,26,accent); break;
+    case "bird":
+      ellipse(c,unit,33,35,13,12,body,o); ellipse(c,unit,44,25,8,7,body,o);
+      poly(c,unit,[[51,24],[62,28],[51,31]],accent,o); poly(c,unit,[[31,32],[10,20],[19,43]],dark,o);
+      poly(c,unit,[[35,32],[55,17],[48,43]],light,o); line(c,unit,31,46,27,57,dark,3); line(c,unit,37,46,39,57,dark,3);
+      eye(c,unit,44,24,accent); break;
+    case "fish":
+      ellipse(c,unit,33,33,17,11,body,o); poly(c,unit,[[17,32],[4,21],[6,44]],dark,o);
+      poly(c,unit,[[38,21],[45,8],[48,26]],accent,o); poly(c,unit,[[37,45],[45,56],[48,40]],light,o);
+      eye(c,unit,45,30,accent); line(c,unit,24,29,42,29,light,2); break;
+    case "bug":
+      ellipse(c,unit,25,35,9,10,dark,o); ellipse(c,unit,37,34,12,12,body,o); ellipse(c,unit,50,31,8,8,body,o);
+      for (let y of [28,35,42]) { line(c,unit,28,y,14,y-7,dark,3); line(c,unit,44,y,58,y-7,dark,3); }
+      line(c,unit,50,24,56,15,accent,2); line(c,unit,52,24,62,19,accent,2); eye(c,unit,50,30,accent); break;
+    case "slime":
+      ellipse(c,unit,32,39,18,15,body,o); ellipse(c,unit,26,30,8,8,light,o); ellipse(c,unit,43,31,7,7,body,o);
+      eye(c,unit,25,36,accent); eye(c,unit,38,36,accent); rect(c,unit,30,45,8,3,dark,o,1); break;
+    case "ghost":
+      ellipse(c,unit,32,29,15,14,body,o); poly(c,unit,[[17,34],[20,55],[28,47],[34,56],[42,47],[48,56],[47,34]],body,o);
+      eye(c,unit,26,27,accent); eye(c,unit,37,27,accent); ellipse(c,unit,32,39,4,5,dark,o,1); break;
+    case "golem":
+      rect(c,unit,21,25,25,22,body,o); rect(c,unit,17,18,18,13,light,o); rect(c,unit,38,20,12,12,dark,o);
+      rect(c,unit,13,36,8,16,dark,o); rect(c,unit,46,35,8,17,dark,o); rect(c,unit,24,47,8,12,dark,o); rect(c,unit,37,47,8,12,dark,o);
+      eye(c,unit,29,28,accent); eye(c,unit,39,28,accent); break;
+    case "robot":
+      rect(c,unit,21,20,25,18,body,o); rect(c,unit,24,38,19,16,dark,o); line(c,unit,32,20,32,12,accent,2);
+      rect(c,unit,14,39,8,12,body,o); rect(c,unit,45,39,8,12,body,o); rect(c,unit,25,54,7,7,dark,o); rect(c,unit,36,54,7,7,dark,o);
+      eye(c,unit,27,27,accent); eye(c,unit,38,27,accent); break;
+    case "mushroom":
+      ellipse(c,unit,32,26,18,11,accent,o); rect(c,unit,25,31,14,24,body,o); ellipse(c,unit,25,24,3,2,light,o,1); ellipse(c,unit,38,26,4,3,light,o,1);
+      eye(c,unit,28,41,dark); eye(c,unit,36,41,dark); break;
+    case "wolf":
+    default:
+      ellipse(c,unit,32,38,16,10,body,o); ellipse(c,unit,46,30,10,8,body,o);
+      poly(c,unit,[[41,24],[43,12],[49,25]],body,o); poly(c,unit,[[49,24],[55,14],[55,29]],dark,o);
+      line(c,unit,18,39,8,34,dark,5); line(c,unit,24,46,21,58,dark,4); line(c,unit,37,46,39,58,dark,4);
+      eye(c,unit,47,29,accent); rect(c,unit,55,32,3,2,o,o,1); break;
+  }
+  addThemeDetails(c, unit, config, p, rng);
+}
+
+function drawItem(c, unit, config, p, rng) {
+  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
+  if (config.template === "potion") {
+    rect(c,unit,25,16,14,9,light,o); ellipse(c,unit,32,40,15,17,body,o); rect(c,unit,28,14,8,8,dark,o);
+    ellipse(c,unit,37,34,4,5,accent,o,1); line(c,unit,24,48,41,28,light,2);
+  } else if (config.template === "gem") {
+    poly(c,unit,[[32,8],[49,22],[43,53],[22,53],[15,22]],body,o);
+    poly(c,unit,[[32,8],[38,22],[32,53],[26,22]],light,o,1); poly(c,unit,[[15,22],[26,22],[22,53]],dark,o,1);
+  } else if (config.template === "egg") {
+    ellipse(c,unit,32,35,16,22,body,o); ellipse(c,unit,27,27,4,3,light,o,1); ellipse(c,unit,38,42,5,4,accent,o,1);
+  } else {
+    poly(c,unit,[[35,5],[45,16],[35,45],[29,45],[23,16]],light,o);
+    rect(c,unit,28,42,11,7,accent,o); rect(c,unit,30,49,7,12,dark,o);
+    line(c,unit,36,12,31,42,body,2);
+  }
+}
+
+function drawTrainer(c, unit, config, p, rng) {
+  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
+  ellipse(c,unit,32,22,11,12,light,o); rect(c,unit,20,34,24,24,body,o);
+  poly(c,unit,[[20,18],[29,8],[44,15],[43,21],[24,21]],accent,o);
+  rect(c,unit,18,40,7,16,dark,o); rect(c,unit,39,40,7,16,dark,o);
+  eye(c,unit,27,22,o); eye(c,unit,36,22,o); line(c,unit,29,30,36,30,o,1);
+}
+
+function drawBadge(c, unit, config, p, rng) {
+  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
+  if (config.template === "badge") {
+    poly(c,unit,[[32,6],[52,18],[48,45],[32,58],[16,45],[12,18]],body,o);
+    poly(c,unit,[[32,14],[44,22],[41,41],[32,49],[23,41],[20,22]],dark,o,1);
+    poly(c,unit,[[32,19],[38,32],[32,45],[26,32]],accent,o,1);
+  } else {
+    ellipse(c,unit,32,32,22,22,body,o); ellipse(c,unit,32,32,13,13,dark,o,1);
+    poly(c,unit,[[32,12],[37,27],[53,27],[40,36],[45,52],[32,42],[19,52],[24,36],[11,27],[27,27]],accent,o,1);
+  }
+}
+
+function drawSprite(config) {
+  const rng = rngFromSeed(JSON.stringify(config));
+  const p = paletteFromControls();
+  const { work, wctx, size, unit } = pixelSetup(config.size);
+  wctx.imageSmoothingEnabled = false;
+
+  if (config.kind === "item") drawItem(wctx, unit, config, p, rng);
+  else if (config.kind === "trainer") drawTrainer(wctx, unit, config, p, rng);
+  else if (config.kind === "badge") drawBadge(wctx, unit, config, p, rng);
+  else drawCreature(wctx, unit, config, p, rng);
+
+  exportCtx.clearRect(0,0,size,size);
+  exportCtx.imageSmoothingEnabled = false;
+  exportCtx.drawImage(work,0,0);
+
+  ctx.clearRect(0,0,192,192);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(work,0,0,size,size,0,0,192,192);
+
+  return exportCanvas.toDataURL("image/png");
+}
+
+function spriteMeta(config, dataUrl) {
+  const rng = rngFromSeed(config.seed + config.theme + config.template);
+  const name = config.name || autoName(config, rng);
+  const detailText = config.detail === "extra" ? "extra detail" : config.detail;
+  const desc = config.prompt
+    ? `${name} is a ${config.theme.toLowerCase()} ${config.kind} sprite based on: ${config.prompt}.`
+    : `${name} is a ${config.theme.toLowerCase()} ${config.kind} sprite using the ${config.template} template.`;
+  return {
+    app: "LoganCreations",
+    version: "0.6",
+    module: "Create Sprite",
+    name,
+    kind: config.kind,
+    template: config.template,
+    theme: config.theme,
+    paletteStyle: config.paletteStyle,
+    outputSize: `${config.size}x${config.size}`,
+    detailLevel: detailText,
+    prompt: config.prompt,
+    seed: config.seed,
+    description: desc,
+    useCase: kindUse[config.kind],
+    styleNotes: `${config.size}x${config.size} pixel-style PNG, ${config.theme} theme, ${detailText} renderer.`,
+    tags: [config.kind, config.template, config.theme.toLowerCase(), `${config.size}x${config.size}`],
+    imageDataUrl: dataUrl
+  };
+}
+
+function generateSprite() {
+  const config = getConfig();
+  const dataUrl = drawSprite(config);
+  const meta = spriteMeta(config, dataUrl);
+  currentSprite = { config, meta, dataUrl };
+
+  if (!$("spriteName").value.trim()) $("spriteName").value = meta.name;
+  $("spriteTitle").textContent = meta.name;
+  $("seedBadge").textContent = `Seed ${config.seed}`;
+  $("spriteStatus").textContent = `${config.size}x${config.size} ${config.kind}`;
+  $("spriteUse").textContent = meta.useCase;
+  $("spriteNotes").textContent = meta.styleNotes;
+  $("spriteDescription").textContent = meta.description;
+  $("spriteTags").innerHTML = meta.tags.map(t => `<span>${escapeHtml(t)}</span>`).join("");
+  $("spriteDetails").innerHTML = [
+    ["Kind", config.kind],
+    ["Template", config.template],
+    ["Theme", config.theme],
+    ["Size", `${config.size}x${config.size}`],
+    ["Detail", config.detail]
+  ].map(([a,b]) => `<div><b>${a}</b><span>${b}</span></div>`).join("");
+}
+
+function escapeHtml(v) {
+  return String(v).replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
+}
+
+function downloadBlob(filename, blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function dataUrlToBlob(dataUrl) {
+  const [head, b64] = dataUrl.split(",");
+  const mime = head.match(/data:(.*?);/)?.[1] || "application/octet-stream";
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+  return new Blob([bytes], { type: mime });
+}
+
+function loadVault() {
+  try { return JSON.parse(localStorage.getItem(VAULT_KEY) || "[]"); }
+  catch { return []; }
+}
+
+function saveVault() {
+  localStorage.setItem(VAULT_KEY, JSON.stringify(vault));
+}
+
+function addAsset(asset) {
+  vault.unshift({ id: `asset_${Date.now()}_${Math.random().toString(16).slice(2,8)}`, createdAt: new Date().toISOString(), ...asset });
+  saveVault();
+  renderVault();
+}
+
+function formatBytes(bytes=0) {
   if (!bytes) return "0 B";
-  const units = ["B", "KB", "MB", "GB"];
-  const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
-  return `${(bytes / Math.pow(1024, index)).toFixed(index ? 1 : 0)} ${units[index]}`;
-}
-
-function slugify(value) {
-  return String(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "sprite";
-}
-
-function assetIcon(type) {
-  return { sprite: "▣", book: "✦", culture: "◈", language: "⌁", model: "⬡", sound: "≋", comic: "▤", factory: "▦", file: "◆" }[type] || "◆";
+  const u = ["B","KB","MB","GB"];
+  const i = Math.min(Math.floor(Math.log(bytes)/Math.log(1024)), u.length-1);
+  return `${(bytes/Math.pow(1024,i)).toFixed(i?1:0)} ${u[i]}`;
 }
 
 function renderVault() {
-  const query = vaultSearch.value.trim().toLowerCase();
-  const type = vaultType.value;
-  const filtered = vaultAssets.filter(asset => {
-    const searchable = `${asset.name} ${asset.type} ${(asset.tags || []).join(" ")} ${asset.description || ""}`.toLowerCase();
-    return (!type || asset.type === type) && (!query || searchable.includes(query));
-  });
-  const totalSize = vaultAssets.reduce((sum, asset) => sum + (asset.size || 0), 0);
-  vaultStats.textContent = `${vaultAssets.length} stored · ${filtered.length} showing · ${formatBytes(totalSize)}`;
-  vaultEmpty.hidden = filtered.length !== 0;
-  vaultGrid.innerHTML = filtered.map(asset => `
-    <article class="asset-card" data-id="${asset.id}">
-      <div class="asset-card-top">
-        <div class="asset-icon">${assetIcon(asset.type)}</div>
+  const q = $("vaultSearch").value.toLowerCase().trim();
+  const type = $("vaultType").value;
+  const filtered = vault.filter(a => (!type || a.type === type) && (!q || `${a.name} ${a.description} ${(a.tags||[]).join(" ")}`.toLowerCase().includes(q)));
+  $("vaultStats").textContent = `${vault.length} stored · ${filtered.length} showing`;
+  $("vaultEmpty").hidden = filtered.length > 0;
+  $("vaultGrid").innerHTML = filtered.map(a => `
+    <article class="asset-card">
+      <div class="asset-top">
+        ${a.dataUrl && a.mime && a.mime.startsWith("image/") ? `<img class="asset-thumb" src="${a.dataUrl}" alt="">` : `<div class="asset-icon">◆</div>`}
         <div>
-          <h3>${escapeHtml(asset.name)}</h3>
-          <p>${escapeHtml(asset.type)} · ${formatBytes(asset.size)} · ${new Date(asset.createdAt).toLocaleDateString()}</p>
+          <h3>${escapeHtml(a.name)}</h3>
+          <p>${escapeHtml(a.type)} · ${formatBytes(a.size)} · ${new Date(a.createdAt).toLocaleDateString()}</p>
         </div>
       </div>
-      <p class="asset-description">${escapeHtml(asset.description || "No description yet.")}</p>
-      <div class="asset-tags">${(asset.tags || []).map(tag => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
+      <p>${escapeHtml(a.description || "")}</p>
+      <div class="asset-tags">${(a.tags||[]).map(t=>`<span>${escapeHtml(t)}</span>`).join("")}</div>
       <div class="asset-actions">
-        <button type="button" data-vault-action="download" data-id="${asset.id}">Download</button>
-        <button type="button" data-vault-action="duplicate" data-id="${asset.id}">Duplicate</button>
-        <button class="danger-action" type="button" data-vault-action="remove" data-id="${asset.id}">Remove</button>
+        <button type="button" data-download="${a.id}">Download</button>
+        <button type="button" data-copy="${a.id}">Duplicate</button>
+        <button type="button" class="danger-action" data-remove="${a.id}">Remove</button>
       </div>
     </article>
   `).join("");
 }
 
-function addAsset(asset) {
-  vaultAssets.unshift({ tags: [], ...asset, id: makeId(), createdAt: new Date().toISOString() });
-  saveVault();
-  renderVault();
-}
-
-function createDemoAsset() {
+function saveSpriteToVault() {
+  if (!currentSprite) generateSprite();
+  const meta = { ...currentSprite.meta };
+  delete meta.imageDataUrl;
+  const blob = dataUrlToBlob(currentSprite.dataUrl);
   addAsset({
     type: "sprite",
-    name: "Demo Vault Sprite",
-    description: "Demo entry for testing Asset Vault controls.",
-    tags: ["demo", "sprite"],
-    filename: "demo-vault-sprite.json",
-    mime: "application/json",
-    size: 300,
-    content: { demo: true, module: "Asset Vault" }
+    name: currentSprite.meta.name,
+    description: currentSprite.meta.description,
+    tags: currentSprite.meta.tags,
+    filename: `${slug(currentSprite.meta.name)}.png`,
+    mime: "image/png",
+    size: blob.size,
+    dataUrl: currentSprite.dataUrl,
+    content: meta
   });
+  $("spriteStatus").textContent = "Saved to Asset Vault";
 }
 
-function downloadBlob(filename, blob) {
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
+function openSection(section) {
+  spritePanel.hidden = section !== "sprite";
+  vaultPanel.hidden = section !== "vault";
+  if (section === "sprite") {
+    previewTitle.textContent = "Create Sprite";
+    previewBadge.textContent = "Working";
+    previewText.textContent = "Use the sprite designer to generate, export, and save sprites.";
+    spritePanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  } else {
+    previewTitle.textContent = "Asset Vault";
+    previewBadge.textContent = "Working";
+    previewText.textContent = "Stored assets can be downloaded, duplicated, removed, backed up, and restored.";
+    renderVault();
+    vaultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
-function dataUrlToBlob(dataUrl) {
-  const [header, base64] = dataUrl.split(",");
-  const mime = header.match(/data:(.*?);base64/)?.[1] || "application/octet-stream";
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
-  return new Blob([bytes], { type: mime });
-}
+document.querySelectorAll("[data-open]").forEach(btn => btn.addEventListener("click", () => openSection(btn.dataset.open)));
+document.querySelectorAll("[data-placeholder]").forEach(btn => btn.addEventListener("click", () => {
+  previewTitle.textContent = btn.dataset.placeholder;
+  previewBadge.textContent = "Planned";
+  previewText.textContent = `${btn.dataset.placeholder} is not built yet. Create Sprite and Asset Vault are the working modules right now.`;
+}));
 
-function downloadAsset(id) {
-  const asset = vaultAssets.find(item => item.id === id);
-  if (!asset) return;
-  if (asset.dataUrl) return downloadBlob(asset.filename || `${asset.name}.asset`, dataUrlToBlob(asset.dataUrl));
-  const blob = new Blob([JSON.stringify(asset.content || asset, null, 2)], { type: "application/json" });
-  downloadBlob(asset.filename || `${slugify(asset.name)}.json`, blob);
-}
+$("effectToggle").addEventListener("click", () => document.body.classList.toggle("low-effects"));
+$("generateSprite").addEventListener("click", generateSprite);
+$("surpriseSprite").addEventListener("click", () => {
+  const kinds = ["creature","item","trainer","badge"];
+  const templates = ["wolf","dragon","bird","fish","bug","slime","ghost","golem","robot","mushroom","sword","potion","gem","egg","trainer","badge"];
+  const themes = Object.keys(themePalettes);
+  $("spriteName").value = "";
+  $("spriteKind").value = pick(Math.random, kinds);
+  $("spriteTemplate").value = pick(Math.random, templates);
+  $("spriteTheme").value = pick(Math.random, themes);
+  $("spritePaletteStyle").value = pick(Math.random, ["auto","bright","muted","nether"]);
+  $("spriteDetail").value = pick(Math.random, ["simple","detailed","extra"]);
+  $("spriteSeed").value = makeSeed();
+  generateSprite();
+});
+$("rerollSeed").addEventListener("click", () => { $("spriteSeed").value = makeSeed(); generateSprite(); });
+$("downloadPng").addEventListener("click", () => {
+  if (!currentSprite) generateSprite();
+  downloadBlob(`${slug(currentSprite.meta.name)}.png`, dataUrlToBlob(currentSprite.dataUrl));
+});
+$("downloadJson").addEventListener("click", () => {
+  if (!currentSprite) generateSprite();
+  const meta = { ...currentSprite.meta };
+  delete meta.imageDataUrl;
+  downloadBlob(`${slug(meta.name)}.json`, new Blob([JSON.stringify(meta,null,2)], { type:"application/json" }));
+});
+$("saveToVault").addEventListener("click", saveSpriteToVault);
+$("spriteKind").addEventListener("change", () => { $("spriteTemplate").value = templateDefaults[$("spriteKind").value]; });
 
-function duplicateAsset(id) {
-  const asset = vaultAssets.find(item => item.id === id);
-  if (!asset) return;
-  const { id: oldId, createdAt, ...copy } = asset;
-  addAsset({ ...copy, name: `${asset.name} Copy` });
-}
-
-function removeAsset(id) {
-  const asset = vaultAssets.find(item => item.id === id);
-  if (!asset || !confirm(`Remove "${asset.name}" from the Asset Vault?`)) return;
-  vaultAssets = vaultAssets.filter(item => item.id !== id);
-  saveVault();
-  renderVault();
-}
-
-function exportVault() {
-  const backup = { app: "LoganCreations", version: "0.5", exportedAt: new Date().toISOString(), assets: vaultAssets };
-  downloadBlob("loganscreations-asset-vault-backup.json", new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
-}
-
-function clearVault() {
-  if (!vaultAssets.length || !confirm("Remove every asset from the Asset Vault on this device?")) return;
-  vaultAssets = [];
-  saveVault();
-  renderVault();
-}
-
-function detectType(file) {
-  const name = file.name.toLowerCase();
-  if (file.type.startsWith("image/")) return "sprite";
-  if (file.type.startsWith("audio/")) return "sound";
-  if (name.endsWith(".obj") || name.endsWith(".glb") || name.endsWith(".gltf")) return "model";
-  if (name.endsWith(".md") || name.endsWith(".txt")) return "book";
-  if (name.includes("comic")) return "comic";
-  return "file";
-}
-
-function importFiles(files) {
-  [...files].forEach(file => {
-    if (file.size > 2.5 * 1024 * 1024) return alert(`${file.name} is too large for this first localStorage vault. Keep files under 2.5 MB for now.`);
+$("importFile").addEventListener("click", () => $("fileInput").click());
+$("fileInput").addEventListener("change", () => {
+  [...$("fileInput").files].forEach(file => {
+    if (file.size > 2.5 * 1024 * 1024) return alert(`${file.name} is too large for this local vault.`);
     const reader = new FileReader();
     reader.onload = () => addAsset({
-      type: detectType(file),
+      type: file.type.startsWith("image/") ? "sprite" : "file",
       name: file.name.replace(/\.[^/.]+$/, ""),
       description: `Imported file: ${file.name}`,
-      tags: ["imported", file.name.split(".").pop()?.toLowerCase()].filter(Boolean),
+      tags: ["imported"],
       filename: file.name,
       mime: file.type || "application/octet-stream",
       size: file.size,
@@ -378,403 +541,51 @@ function importFiles(files) {
     });
     reader.readAsDataURL(file);
   });
-}
-
-function restoreVault(file) {
+  $("fileInput").value = "";
+});
+$("exportVault").addEventListener("click", () => downloadBlob("loganscreations-vault-backup.json", new Blob([JSON.stringify({app:"LoganCreations",version:"0.6",assets:vault},null,2)], { type:"application/json" })));
+$("restoreVaultBtn").addEventListener("click", () => $("restoreInput").click());
+$("restoreInput").addEventListener("change", () => {
+  const file = $("restoreInput").files[0];
+  if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
     try {
       const parsed = JSON.parse(reader.result);
-      const restoredAssets = Array.isArray(parsed) ? parsed : parsed.assets;
-      if (!Array.isArray(restoredAssets)) throw new Error("Backup has no assets array.");
-      vaultAssets = restoredAssets;
-      saveVault();
-      renderVault();
-      showVault();
-    } catch (error) {
-      alert("Could not restore that backup JSON file.");
-      console.error(error);
-    }
+      vault = Array.isArray(parsed) ? parsed : parsed.assets;
+      if (!Array.isArray(vault)) throw new Error("No assets array.");
+      saveVault(); renderVault(); openSection("vault");
+    } catch { alert("Could not restore that JSON backup."); }
   };
   reader.readAsText(file);
-}
-
-function getSpriteConfig() {
-  if (!spriteSeedInput.value.trim()) spriteSeedInput.value = makeSeed();
-  return {
-    name: spriteNameInput.value.trim(),
-    outputSize: Number(spriteOutputSizeInput.value),
-    kind: spriteKindInput.value,
-    template: spriteTemplateInput.value,
-    theme: spriteThemeInput.value,
-    paletteMode: spritePaletteInput.value,
-    prompt: spritePromptInput.value.trim(),
-    mainColor: spriteMainColorInput.value,
-    accentColor: spriteAccentColorInput.value,
-    seed: spriteSeedInput.value.trim(),
-    detail: spriteDetailInput.value
-  };
-}
-
-function resolvedPalette(config) {
-  let base = themePalettes[config.theme] || themePalettes.Normal;
-  if (config.paletteMode === "nether") base = themePalettes.Nether;
-  if (config.paletteMode === "muted") base = [base[0], shade(base[2], -45), shade(base[2], -10), shade(base[3], -15), shade(base[4], -10)];
-  if (config.paletteMode === "bright") base = [base[0], shade(base[2], -35), base[2], shade(base[3], 20), base[4]];
-  if (config.paletteMode === "custom") base = ["#101010", shade(config.mainColor, -45), config.mainColor, config.accentColor, "#fff4cc"];
-  return { outline: base[0], shadow: base[1], mid: base[2], light: base[3], shine: base[4] };
-}
-
-function shade(hex, amount) {
-  const n = parseInt(hex.replace("#", ""), 16);
-  const r = Math.max(0, Math.min(255, (n >> 16) + amount));
-  const g = Math.max(0, Math.min(255, ((n >> 8) & 255) + amount));
-  const b = Math.max(0, Math.min(255, (n & 255) + amount));
-  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
-}
-
-function makeGrid(size = 32) {
-  return Array.from({ length: size }, () => Array(size).fill(null));
-}
-
-function cell(grid, x, y, color) {
-  x = Math.round(x); y = Math.round(y);
-  if (x < 0 || y < 0 || y >= grid.length || x >= grid[0].length) return;
-  grid[y][x] = color;
-}
-
-function rect(grid, x, y, w, h, color) {
-  for (let py = y; py < y + h; py += 1) for (let px = x; px < x + w; px += 1) cell(grid, px, py, color);
-}
-
-function ellipse(grid, cx, cy, rx, ry, color) {
-  for (let y = Math.floor(cy - ry); y <= Math.ceil(cy + ry); y += 1) {
-    for (let x = Math.floor(cx - rx); x <= Math.ceil(cx + rx); x += 1) {
-      const dx = (x - cx) / rx;
-      const dy = (y - cy) / ry;
-      if (dx * dx + dy * dy <= 1) cell(grid, x, y, color);
+});
+$("clearVault").addEventListener("click", () => {
+  if (vault.length && confirm("Remove every asset from this device vault?")) {
+    vault = []; saveVault(); renderVault();
+  }
+});
+$("vaultSearch").addEventListener("input", renderVault);
+$("vaultType").addEventListener("input", renderVault);
+$("vaultGrid").addEventListener("click", e => {
+  const d = e.target.closest("[data-download]");
+  const c = e.target.closest("[data-copy]");
+  const r = e.target.closest("[data-remove]");
+  if (d) {
+    const a = vault.find(x => x.id === d.dataset.download);
+    if (a) downloadBlob(a.filename || `${slug(a.name)}.asset`, a.dataUrl ? dataUrlToBlob(a.dataUrl) : new Blob([JSON.stringify(a.content || a,null,2)], { type:"application/json" }));
+  }
+  if (c) {
+    const a = vault.find(x => x.id === c.dataset.copy);
+    if (a) addAsset({ ...a, id: undefined, createdAt: undefined, name: `${a.name} Copy` });
+  }
+  if (r) {
+    const a = vault.find(x => x.id === r.dataset.remove);
+    if (a && confirm(`Remove "${a.name}"?`)) {
+      vault = vault.filter(x => x.id !== a.id); saveVault(); renderVault();
     }
   }
-}
-
-function line(grid, x1, y1, x2, y2, color, thickness = 1) {
-  const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
-  for (let i = 0; i <= steps; i += 1) {
-    const x = x1 + (x2 - x1) * (i / steps);
-    const y = y1 + (y2 - y1) * (i / steps);
-    for (let oy = -Math.floor(thickness / 2); oy <= Math.floor(thickness / 2); oy += 1) for (let ox = -Math.floor(thickness / 2); ox <= Math.floor(thickness / 2); ox += 1) cell(grid, x + ox, y + oy, color);
-  }
-}
-
-function tri(grid, points, color) {
-  const [a, b, c] = points;
-  const minX = Math.floor(Math.min(a[0], b[0], c[0]));
-  const maxX = Math.ceil(Math.max(a[0], b[0], c[0]));
-  const minY = Math.floor(Math.min(a[1], b[1], c[1]));
-  const maxY = Math.ceil(Math.max(a[1], b[1], c[1]));
-  const area = edge(a, b, c);
-  for (let y = minY; y <= maxY; y += 1) for (let x = minX; x <= maxX; x += 1) {
-    const p = [x, y];
-    const w0 = edge(b, c, p);
-    const w1 = edge(c, a, p);
-    const w2 = edge(a, b, p);
-    if ((w0 >= 0 && w1 >= 0 && w2 >= 0 && area >= 0) || (w0 <= 0 && w1 <= 0 && w2 <= 0 && area <= 0)) cell(grid, x, y, color);
-  }
-}
-
-function edge(a, b, c) {
-  return (c[0] - a[0]) * (b[1] - a[1]) - (c[1] - a[1]) * (b[0] - a[0]);
-}
-
-function drawEyes(grid, x, y, colors) {
-  cell(grid, x - 1, y, colors.shine);
-  cell(grid, x + 1, y, colors.shine);
-  cell(grid, x - 1, y + 1, colors.outline);
-  cell(grid, x + 1, y + 1, colors.outline);
-}
-
-function addOutline(source, colors) {
-  const size = source.length;
-  const out = source.map(row => row.slice());
-  for (let y = 0; y < size; y += 1) for (let x = 0; x < size; x += 1) {
-    if (!source[y][x]) continue;
-    [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]].forEach(([ox, oy]) => {
-      const nx = x + ox, ny = y + oy;
-      if (nx >= 0 && ny >= 0 && nx < size && ny < size && !source[ny][nx]) out[ny][nx] = colors.outline;
-    });
-  }
-  return out;
-}
-
-function drawSparkles(grid, rng, colors, count) {
-  for (let i = 0; i < count; i += 1) {
-    const x = randInt(rng, 4, 27), y = randInt(rng, 4, 27);
-    cell(grid, x, y, colors.light);
-    if (rng() > 0.6) cell(grid, x + 1, y, colors.shine);
-  }
-}
-
-function drawTemplate(grid, config, rng, colors) {
-  const d = config.detail;
-  const high = d === "detailed";
-  switch (config.template) {
-    case "wolf":
-      ellipse(grid, 14, 18, 8, 5, colors.mid); ellipse(grid, 22, 14, 5, 4, colors.mid);
-      tri(grid, [[19,11],[21,6],[23,12]], colors.mid); tri(grid, [[23,11],[26,7],[26,14]], colors.mid);
-      line(grid, 7, 18, 2, 14, colors.shadow, 2); rect(grid, 8, 22, 3, 5, colors.shadow); rect(grid, 15, 22, 3, 5, colors.shadow); rect(grid, 20, 20, 3, 5, colors.shadow);
-      drawEyes(grid, 23, 14, colors); rect(grid, 16, 15, 5, 2, colors.light); break;
-    case "dragon":
-      ellipse(grid, 13, 18, 8, 4, colors.mid); ellipse(grid, 22, 14, 5, 4, colors.mid);
-      line(grid, 7, 19, 2, 23, colors.shadow, 2); line(grid, 13, 14, 8, 8, colors.shadow, 2); line(grid, 15, 14, 22, 7, colors.shadow, 2);
-      tri(grid, [[20,11],[21,6],[23,11]], colors.light); tri(grid, [[23,11],[26,7],[26,14]], colors.light); drawEyes(grid, 23, 14, colors); break;
-    case "bird":
-      ellipse(grid, 16, 17, 6, 7, colors.mid); ellipse(grid, 20, 11, 4, 4, colors.mid);
-      tri(grid, [[14,16],[5,10],[10,22]], colors.shadow); tri(grid, [[22,11],[28,13],[22,15]], colors.light); line(grid, 16, 23, 14, 28, colors.shadow, 2); line(grid, 18, 23, 20, 28, colors.shadow, 2); drawEyes(grid, 20, 10, colors); break;
-    case "fish":
-      ellipse(grid, 16, 16, 8, 5, colors.mid); tri(grid, [[7,16],[2,11],[2,21]], colors.shadow); tri(grid, [[17,12],[20,6],[22,13]], colors.light); tri(grid, [[17,20],[21,26],[22,19]], colors.light); drawEyes(grid, 21, 15, colors); break;
-    case "bug":
-      ellipse(grid, 10, 17, 4, 5, colors.shadow); ellipse(grid, 16, 16, 5, 6, colors.mid); ellipse(grid, 23, 15, 4, 4, colors.mid);
-      [8,12,18,22].forEach(x => { line(grid, x, 18, x - 4, 23, colors.shadow); line(grid, x, 14, x - 3, 9, colors.shadow); });
-      line(grid, 24, 12, 27, 7, colors.light); line(grid, 25, 13, 29, 10, colors.light); drawEyes(grid, 23, 14, colors); break;
-    case "slime":
-      ellipse(grid, 16, 19, 10, 8, colors.mid); ellipse(grid, 13, 14, 5, 4, colors.light); rect(grid, 8, 25, 5, 2, colors.shadow); rect(grid, 19, 25, 5, 2, colors.shadow); drawEyes(grid, 16, 18, colors); break;
-    case "ghost":
-      ellipse(grid, 16, 15, 8, 9, colors.mid); rect(grid, 8, 17, 16, 8, colors.mid); tri(grid, [[8,25],[11,30],[14,25]], colors.mid); tri(grid, [[14,25],[17,30],[20,25]], colors.mid); tri(grid, [[20,25],[24,30],[24,25]], colors.mid); drawEyes(grid, 16, 14, colors); break;
-    case "golem":
-      rect(grid, 10, 9, 12, 8, colors.mid); rect(grid, 8, 17, 16, 9, colors.shadow); rect(grid, 5, 18, 4, 8, colors.mid); rect(grid, 23, 18, 4, 8, colors.mid); rect(grid, 10, 26, 5, 4, colors.shadow); rect(grid, 18, 26, 5, 4, colors.shadow); drawEyes(grid, 16, 13, colors); break;
-    case "robot":
-      rect(grid, 10, 8, 12, 10, colors.mid); rect(grid, 9, 18, 14, 9, colors.shadow); rect(grid, 5, 20, 4, 5, colors.mid); rect(grid, 23, 20, 4, 5, colors.mid); line(grid, 13, 8, 10, 4, colors.light); line(grid, 19, 8, 22, 4, colors.light); drawEyes(grid, 16, 13, colors); break;
-    case "mushroom":
-      ellipse(grid, 16, 12, 10, 6, colors.mid); rect(grid, 12, 15, 8, 12, colors.light); ellipse(grid, 11, 10, 3, 2, colors.shine); ellipse(grid, 20, 13, 2, 2, colors.shine); drawEyes(grid, 16, 20, colors); break;
-    case "sword":
-      tri(grid, [[16,3],[12,18],[20,18]], colors.light); rect(grid, 14, 17, 4, 8, colors.mid); rect(grid, 9, 20, 14, 3, colors.shadow); rect(grid, 13, 25, 6, 4, colors.accent || colors.shine); break;
-    case "potion":
-      rect(grid, 14, 5, 5, 6, colors.light); ellipse(grid, 16, 18, 7, 9, colors.mid); rect(grid, 12, 11, 9, 2, colors.shadow); ellipse(grid, 18, 16, 2, 3, colors.shine); break;
-    case "gem":
-      tri(grid, [[16,3],[6,13],[26,13]], colors.light); tri(grid, [[6,13],[16,29],[26,13]], colors.mid); line(grid, 16, 4, 16, 28, colors.shine); line(grid, 6, 13, 26, 13, colors.shadow); break;
-    case "egg":
-      ellipse(grid, 16, 17, 8, 11, colors.mid); ellipse(grid, 13, 12, 3, 4, colors.light); rect(grid, 10, 21, 4, 3, colors.shadow); rect(grid, 19, 17, 3, 3, colors.accent || colors.shine); break;
-    case "trainer":
-      ellipse(grid, 16, 10, 6, 6, colors.light); rect(grid, 10, 16, 12, 11, colors.mid); rect(grid, 8, 13, 16, 3, colors.shadow); rect(grid, 12, 8, 8, 2, colors.shadow); drawEyes(grid, 16, 10, colors); break;
-    case "badge":
-      ellipse(grid, 16, 16, 10, 10, colors.mid); ellipse(grid, 16, 16, 6, 6, colors.light); tri(grid, [[16,5],[19,16],[16,27],[13,16]], colors.shadow); drawSparkles(grid, rng, colors, 8); break;
-  }
-  if (high) drawSparkles(grid, rng, colors, 5);
-}
-
-function renderGrid(grid, canvas, size, colors) {
-  const finalGrid = addOutline(grid, colors);
-  const logical = finalGrid.length;
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-  ctx.clearRect(0, 0, size, size);
-  const pixel = size / logical;
-  for (let y = 0; y < logical; y += 1) for (let x = 0; x < logical; x += 1) {
-    if (!finalGrid[y][x]) continue;
-    ctx.fillStyle = finalGrid[y][x];
-    ctx.fillRect(Math.floor(x * pixel), Math.floor(y * pixel), Math.ceil(pixel), Math.ceil(pixel));
-  }
-  return canvas.toDataURL("image/png");
-}
-
-function previewDataUrl(dataUrl, canvas) {
-  const img = new Image();
-  img.onload = () => {
-    const ctx = canvas.getContext("2d");
-    ctx.imageSmoothingEnabled = false;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  };
-  img.src = dataUrl;
-}
-
-function autoName(config, rng) {
-  if (config.name) return config.name;
-  const first = {
-    Fire: ["Ash", "Cinder", "Flare"], Water: ["Ripple", "Mire", "Aqua"], Electric: ["Volt", "Spark", "Jolt"], Grass: ["Moss", "Thorn", "Leaf"], Ice: ["Frost", "Snow", "Glaze"], Poison: ["Vile", "Toxi", "Spore"], Ghost: ["Wisp", "Shade", "Hex"], Rock: ["Boulder", "Gravel", "Stone"], Steel: ["Iron", "Chrome", "Gear"], Dragon: ["Drake", "Fang", "Scale"], Fairy: ["Glimmer", "Charm", "Pix"], Dark: ["Night", "Umbra", "Gloom"], Normal: ["Nim", "Pip", "Taro"], Nether: ["Ash", "Basalt", "Magma"], Custom: ["Nova", "Rune", "Flux"]
-  }[config.theme] || ["Nova"];
-  const last = { creature: ["cub", "ling", "fang", "moth", "drake"], item: ["stone", "blade", "orb", "vial"], trainer: ["hero", "rival", "scout"], badge: ["badge", "crest", "sigil"] }[config.kind];
-  return `${pick(rng, first)}${pick(rng, last)}`.replace(/^./, c => c.toUpperCase());
-}
-
-function buildSprite() {
-  const config = getSpriteConfig();
-  const rng = rngFrom(`${config.seed}|${config.kind}|${config.template}|${config.theme}|${config.paletteMode}|${config.detail}|${config.prompt}`);
-  const colors = resolvedPalette(config);
-  colors.accent = config.accentColor;
-  const grid = makeGrid(32);
-  drawTemplate(grid, config, rng, colors);
-  const outputCanvas = document.createElement("canvas");
-  const dataUrl = renderGrid(grid, outputCanvas, config.outputSize, colors);
-  previewDataUrl(dataUrl, spriteCanvas);
-  previewDataUrl(dataUrl, spriteIconCanvas);
-  const name = autoName(config, rng);
-  const useCase = `${config.outputSize}x${config.outputSize} ${config.kind} PNG`;
-  const styleNotes = `${templates[config.template]} · ${config.theme} theme · ${config.detail} detail`;
-  const desc = config.prompt ? `${name}: ${config.prompt}` : `${name} is a ${config.theme.toLowerCase()} themed ${templates[config.template].toLowerCase()} made for a custom monster/RPG project.`;
-  const exportData = {
-    app: "LoganCreations",
-    version: "0.5",
-    module: "Create Sprite",
-    name,
-    kind: config.kind,
-    template: config.template,
-    theme: config.theme,
-    paletteMode: config.paletteMode,
-    outputSize: config.outputSize,
-    seed: config.seed,
-    detail: config.detail,
-    prompt: config.prompt,
-    useCase,
-    styleNotes,
-    description: desc,
-    filename: `${slugify(name)}.png`
-  };
-  currentSprite = {
-    name,
-    dataUrl,
-    filename: `${slugify(name)}.png`,
-    jsonFilename: `${slugify(name)}.json`,
-    size: Math.ceil(((dataUrl.split(",")[1] || "").length * 3) / 4),
-    exportData,
-    description: desc,
-    tags: [config.kind, config.template, config.theme.toLowerCase(), `${config.outputSize}x${config.outputSize}`]
-  };
-  if (!spriteNameInput.value.trim()) spriteNameInput.value = name;
-  updateSpriteUi(config);
-}
-
-function updateSpriteUi(config) {
-  spritePreviewName.textContent = currentSprite.name;
-  spriteSeedBadge.textContent = `Seed ${config.seed}`;
-  spriteStatus.textContent = `${config.outputSize}x${config.outputSize} ${config.kind}`;
-  spriteUseCase.textContent = currentSprite.exportData.useCase;
-  spriteStyleNotes.textContent = currentSprite.exportData.styleNotes;
-  spriteDescription.textContent = currentSprite.description;
-  spriteTags.innerHTML = currentSprite.tags.map(tag => `<span class="option-chip">${escapeHtml(tag)}</span>`).join("");
-  spriteStats.innerHTML = [
-    ["SIZE", `${config.outputSize}x${config.outputSize}`],
-    ["KIND", config.kind],
-    ["SHAPE", templates[config.template].split(" /")[0]],
-    ["THEME", config.theme]
-  ].map(([label, value]) => `<div class="stat-row sprite-detail-row"><span>${label}</span><strong>${escapeHtml(value)}</strong></div>`).join("");
-}
-
-function randomizeSprite() {
-  const kind = pick(Math.random, ["creature", "item", "trainer", "badge"]);
-  spriteKindInput.value = kind;
-  syncTemplateOptions();
-  spriteTemplateInput.value = pick(Math.random, templateGroups[kind]);
-  spriteThemeInput.value = pick(Math.random, Object.keys(themePalettes));
-  spritePaletteInput.value = pick(Math.random, ["auto", "bright", "muted", "nether"]);
-  spriteOutputSizeInput.value = pick(Math.random, ["32", "64", "96"]);
-  spriteDetailInput.value = pick(Math.random, ["clean", "detailed", "icon"]);
-  spriteNameInput.value = "";
-  spriteSeedInput.value = makeSeed();
-  generateSprite();
-}
-
-function rerollShape() {
-  const values = templateGroups[spriteKindInput.value] || templateGroups.creature;
-  const available = values.filter(value => value !== spriteTemplateInput.value);
-  spriteTemplateInput.value = pick(Math.random, available.length ? available : values);
-  spriteSeedInput.value = makeSeed();
-  generateSprite();
-}
-
-function rerollColors() {
-  const names = Object.keys(themePalettes).filter(name => name !== spriteThemeInput.value);
-  spriteThemeInput.value = pick(Math.random, names);
-  spriteSeedInput.value = makeSeed();
-  generateSprite();
-}
-
-function syncTemplateOptions() {
-  const values = templateGroups[spriteKindInput.value] || templateGroups.creature;
-  spriteTemplateInput.innerHTML = values.map(value => `<option value="${value}">${templates[value]}</option>`).join("");
-}
-
-function downloadCurrentSprite() {
-  if (!currentSprite) return;
-  downloadBlob(currentSprite.filename, dataUrlToBlob(currentSprite.dataUrl));
-}
-
-function downloadCurrentSpriteJson() {
-  if (!currentSprite) return;
-  downloadBlob(currentSprite.jsonFilename, new Blob([JSON.stringify(currentSprite.exportData, null, 2)], { type: "application/json" }));
-}
-
-function saveCurrentSpriteToVault() {
-  if (!currentSprite) return;
-  addAsset({
-    type: "sprite",
-    name: currentSprite.name,
-    description: currentSprite.description,
-    tags: currentSprite.tags,
-    filename: currentSprite.filename,
-    mime: "image/png",
-    size: currentSprite.size,
-    dataUrl: currentSprite.dataUrl,
-    content: currentSprite.exportData
-  });
-  spriteStatus.textContent = `${currentSprite.name} saved to Asset Vault`;
-}
-
-cards.forEach(card => card.addEventListener("click", () => selectModule(card.dataset.module)));
-
-document.querySelectorAll("[data-action]").forEach(button => {
-  button.addEventListener("click", () => {
-    if (button.dataset.action === "new-project") selectModule("sprite-lab");
-    if (button.dataset.action === "open-library") selectModule("asset-vault");
-  });
 });
 
-document.querySelectorAll("[data-vault-command]").forEach(button => {
-  button.addEventListener("click", () => {
-    const command = button.dataset.vaultCommand;
-    if (command === "demo") createDemoAsset();
-    if (command === "import") importInput.click();
-    if (command === "export") exportVault();
-    if (command === "restore") restoreInput.click();
-    if (command === "clear") clearVault();
-  });
-});
-
-vaultGrid.addEventListener("click", event => {
-  const button = event.target.closest("[data-vault-action]");
-  if (!button) return;
-  if (button.dataset.vaultAction === "download") downloadAsset(button.dataset.id);
-  if (button.dataset.vaultAction === "duplicate") duplicateAsset(button.dataset.id);
-  if (button.dataset.vaultAction === "remove") removeAsset(button.dataset.id);
-});
-
-[vaultSearch, vaultType].forEach(input => input.addEventListener("input", renderVault));
-importInput.addEventListener("change", () => { importFiles(importInput.files); importInput.value = ""; });
-restoreInput.addEventListener("change", () => { const [file] = restoreInput.files; if (file) restoreVault(file); restoreInput.value = ""; });
-
-generateSpriteBtn.addEventListener("click", buildSprite);
-randomizeSpriteBtn.addEventListener("click", randomizeSprite);
-rerollShapeBtn.addEventListener("click", rerollShape);
-rerollColorsBtn.addEventListener("click", rerollColors);
-downloadSpriteBtn.addEventListener("click", downloadCurrentSprite);
-downloadSpriteJsonBtn.addEventListener("click", downloadCurrentSpriteJson);
-saveSpriteBtn.addEventListener("click", saveCurrentSpriteToVault);
-
-[spriteOutputSizeInput, spriteTemplateInput, spriteThemeInput, spritePaletteInput, spriteMainColorInput, spriteAccentColorInput, spriteDetailInput].forEach(input => input.addEventListener("change", buildSprite));
-spritePromptInput.addEventListener("change", buildSprite);
-spriteNameInput.addEventListener("change", buildSprite);
-spriteSeedInput.addEventListener("change", buildSprite);
-spriteKindInput.addEventListener("change", () => { syncTemplateOptions(); buildSprite(); });
-
-themeToggle.addEventListener("click", () => {
-  document.body.classList.toggle("light-mode");
-  themeToggle.textContent = document.body.classList.contains("light-mode") ? "☀" : "☾";
-});
-
-if (!spriteSeedInput.value.trim()) spriteSeedInput.value = makeSeed();
-syncTemplateOptions();
-buildSprite();
+if (!$("spriteSeed").value.trim()) $("spriteSeed").value = makeSeed();
+generateSprite();
 renderVault();
-selectModule("sprite-lab");

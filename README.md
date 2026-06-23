@@ -1,73 +1,44 @@
 # LoganCreations
 
-A Nether-themed GitHub Pages creative forge for sprites, books, cultures, languages, 3D models, monster sounds, comics, animations, and asset packs.
+Nether-themed GitHub Pages creative forge.
 
 ## Current version
 
-**v0.5** rebuilds **Create Sprite** after feedback: clearer options, practical templates, real output sizing, stronger pixel rendering, and no abstract rarity/mood/class controls.
+**v0.6** fixes the broken v0.5 file mismatch and rebuilds Create Sprite as a working practical sprite designer.
 
-### Create Sprite changes in v0.5
+## Working modules
 
-- Removed confusing Creature Class, Core Type, Body Form, Rarity, and Mood controls
-- Replaced them with practical sprite controls:
-  - What Are You Making?
-  - Silhouette Template
-  - Type / Theme
-  - Palette Style
-  - Idea / Prompt
-  - Output Size
-  - Detail Level
-- Output Size now actually changes the exported PNG size
-- Better pixel-art templates for creatures, items, trainers, and badges
-- PNG export
-- JSON metadata export
-- Save generated sprites directly into Asset Vault
-- Reroll shape and reroll colors controls
+### Create Sprite
 
-### Important quality note
+- Generate button works
+- Clearer options
+- Output size changes exported PNG
+- Creature, item, trainer, and badge modes
+- Silhouette templates
+- Type/theme palette system
+- Custom colors
+- Prompt field affects metadata and details
+- Download PNG
+- Download JSON
+- Save to Asset Vault
 
-This is still an offline browser generator. It can make cleaner procedural sprites, but the highest-quality future version should use either:
+### Asset Vault
 
-1. a curated handmade sprite-part library, or
-2. an optional AI/image service, or
-3. an import-reference workflow where the app pixelates and edits an uploaded image.
-
-### Asset Vault features
-
-- Store assets locally in the browser
-- Create demo assets for testing
-- Import small files from your device
-- Search assets by name, tag, type, or description
-- Filter by asset type
-- Download individual assets
+- Save generated sprites
+- Import files
+- Search/filter assets
+- Download assets
 - Duplicate assets
 - Remove assets
-- Clear the vault
-- Export a full vault backup as JSON
-- Restore a vault backup JSON file
+- Export backup JSON
+- Restore backup JSON
 
-## Files
+## Upload files
 
-Upload these files to the root of the `LogansCreations` GitHub repo:
+Upload all files from this folder to the root of your `LogansCreations` GitHub repo.
 
-```text
-index.html
-styles.css
-app.js
-manifest.json
-README.md
-icons/icon-192.svg
-icons/icon-512.svg
-```
-
-## GitHub Pages URL
+Open with:
 
 ```text
-https://lordboby-crypto.github.io/LogansCreations/
+https://lordboby-crypto.github.io/LogansCreations/?v=6
 ```
-
-## Notes
-
-The Asset Vault currently stores assets in local browser storage. Files are stored on the device/browser where the app is opened. Export a backup JSON if you want to move the vault to another device or browser.
-
-For this first storage version, imported files should stay under roughly 2.5 MB each. Later versions can move to IndexedDB for larger files and full ZIP project packs.

@@ -1,7 +1,7 @@
 {
   "name": "LoganCreations",
   "short_name": "LoganCreations",
-  "description": "Nether-themed creative forge with a rebuilt Create Sprite designer and Asset Vault for storing and exporting generated assets.",
+  "description": "Nether-themed creative forge with a working Create Sprite tool and Asset Vault.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#090202",
