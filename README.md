@@ -1,12 +1,16 @@
-# LogansCreations v1.0
+# LogansCreations v1.1
 
-This build upgrades the Loganmon Sprite Pipeline converter.
+Converter-control upgrade.
 
-## New converter improvements
-- better subject fitting and fill
-- battle-sprite vertical bias
-- detail simplification for 64x64 readability
-- palette cleanup and speckle cleanup
-- stronger default outline for small sprites
+## Added
+- Fixed top label to Sprite Pipeline v1.1
+- Visible numeric values beside every converter slider
+- One-tap converter presets:
+  - FireRed Auto
+  - Make Bigger
+  - Cleaner Face
+  - Less Detail Crush
+  - 96x96 Master
+- Better default converter values for 64x64 FireRed testing
 
-Upload these files to your GitHub Pages repo root and open with `?v=10`.
+Upload the files to your GitHub Pages repo root and open with `?v=11`.
