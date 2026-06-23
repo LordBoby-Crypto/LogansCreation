@@ -1,0 +1,381 @@
+:root {
+  color-scheme: dark;
+  --bg: #090202;
+  --panel: rgba(24, 8, 6, 0.78);
+  --panel-strong: rgba(44, 12, 8, 0.92);
+  --text: #fff7ed;
+  --muted: #f2bba4;
+  --line: rgba(255, 210, 155, 0.16);
+  --accent: #f97316;
+  --accent-2: #a855f7;
+  --hot: #ef4444;
+  --gold: #facc15;
+  --shadow: 0 24px 80px rgba(0, 0, 0, 0.52);
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html { min-height: 100%; background: var(--bg); }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: #090202;
+  overflow-x: hidden;
+}
+
+button, input, select { font: inherit; }
+button { cursor: pointer; }
+
+.nether-scene {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(168, 85, 247, 0.22), transparent 22%),
+    radial-gradient(circle at 74% 16%, rgba(249, 115, 22, 0.34), transparent 24%),
+    linear-gradient(180deg, #250303 0%, #4a0b07 36%, #160605 74%, #070202 100%);
+}
+
+.lava-sky {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 0 22px, rgba(255, 125, 25, 0.08) 22px 24px, transparent 24px 48px),
+    linear-gradient(0deg, transparent 0 22px, rgba(255, 200, 80, 0.055) 22px 24px, transparent 24px 48px);
+  background-size: 72px 72px;
+  opacity: 0.55;
+  animation: skyDrift 24s linear infinite;
+}
+
+.portal-rift {
+  position: absolute;
+  width: 20vw;
+  min-width: 150px;
+  height: 58vh;
+  top: 8vh;
+  border-radius: 48% 52% 45% 55%;
+  filter: blur(0.2px);
+  background:
+    radial-gradient(ellipse at center, rgba(216, 180, 254, 0.92), rgba(168, 85, 247, 0.38) 30%, rgba(76, 29, 149, 0.12) 58%, transparent 68%);
+  box-shadow: 0 0 60px rgba(168, 85, 247, 0.42), inset 0 0 36px rgba(250, 245, 255, 0.22);
+  opacity: 0.42;
+  animation: portalPulse 3.8s ease-in-out infinite;
+}
+.portal-rift-left { left: -7vw; transform: rotate(-8deg); }
+.portal-rift-right { right: -8vw; top: 22vh; transform: rotate(10deg); animation-delay: -1.7s; }
+
+.falling-embers {
+  position: absolute;
+  inset: -20% 0 0;
+  background-image:
+    radial-gradient(circle, rgba(255, 221, 118, 0.95) 0 1px, transparent 2px),
+    radial-gradient(circle, rgba(255, 88, 26, 0.9) 0 2px, transparent 3px),
+    radial-gradient(circle, rgba(168, 85, 247, 0.75) 0 1px, transparent 2px);
+  background-size: 80px 120px, 140px 180px, 170px 220px;
+  opacity: 0.6;
+  animation: emberFall 16s linear infinite;
+}
+.ember-layer-two { opacity: 0.36; filter: blur(1px); animation-duration: 25s; animation-delay: -8s; }
+body.light-mode .falling-embers { opacity: 0.18; }
+
+.nether-fortress {
+  position: absolute;
+  left: 4%;
+  right: 2%;
+  bottom: 22vh;
+  height: 150px;
+  opacity: 0.34;
+  background:
+    linear-gradient(#160403, #160403) 6% 48% / 34% 42px no-repeat,
+    linear-gradient(#160403, #160403) 37% 34% / 22% 36px no-repeat,
+    linear-gradient(#160403, #160403) 62% 46% / 32% 42px no-repeat,
+    linear-gradient(#160403, #160403) 14% 0 / 46px 120px no-repeat,
+    linear-gradient(#160403, #160403) 52% 8% / 52px 110px no-repeat,
+    linear-gradient(#160403, #160403) 84% 18% / 44px 96px no-repeat;
+  filter: drop-shadow(0 0 12px rgba(255, 94, 0, 0.22));
+}
+
+.basalt-spikes {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16vh;
+  height: 180px;
+  background:
+    linear-gradient(130deg, transparent 0 52%, #0f0505 53% 100%) 2% 100% / 80px 170px no-repeat,
+    linear-gradient(225deg, transparent 0 52%, #130606 53% 100%) 12% 100% / 120px 145px no-repeat,
+    linear-gradient(130deg, transparent 0 52%, #0b0303 53% 100%) 72% 100% / 105px 190px no-repeat,
+    linear-gradient(225deg, transparent 0 52%, #160606 53% 100%) 88% 100% / 130px 150px no-repeat;
+  opacity: 0.78;
+}
+
+.lava-river {
+  position: absolute;
+  left: -10%;
+  right: -10%;
+  bottom: 5vh;
+  height: 18vh;
+  transform: skewY(-3deg);
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.22) 0 8%, transparent 8% 18%, rgba(255,255,255,0.16) 18% 24%, transparent 24% 100%),
+    linear-gradient(180deg, #ffdd55, #ff7a18 38%, #b91c1c 76%, #3b0808);
+  background-size: 180px 100%, 100% 100%;
+  box-shadow: 0 -18px 80px rgba(249, 115, 22, 0.42);
+  animation: lavaFlow 7s linear infinite;
+}
+
+.block-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 24vh;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(25, 7, 6, 0.86), rgba(5, 2, 2, 0.98));
+  background-size: 42px 42px, 42px 42px, 100% 100%;
+  transform: perspective(400px) rotateX(58deg) scale(1.45);
+  transform-origin: bottom center;
+}
+
+.heat-haze {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 80%, rgba(255, 132, 0, 0.12), transparent 32%);
+  mix-blend-mode: screen;
+  animation: heatPulse 5s ease-in-out infinite;
+}
+
+.app-shell {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: max(18px, env(safe-area-inset-top)) 18px max(28px, env(safe-area-inset-bottom));
+}
+
+.hero, .panel, .module-card, .asset-card {
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding: 22px;
+  border-radius: var(--radius-xl);
+  background:
+    linear-gradient(145deg, rgba(255, 180, 70, 0.13), rgba(168, 85, 247, 0.075)),
+    rgba(22, 5, 4, 0.72);
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: auto -20% -48% 20%;
+  height: 180px;
+  background: linear-gradient(90deg, transparent, rgba(249, 115, 22, 0.36), transparent);
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.hero-topline, .quick-actions, .preview-header, .brand-block, .vault-heading, .asset-card-top {
+  display: flex;
+  align-items: center;
+}
+
+.hero-topline { justify-content: space-between; gap: 12px; margin-bottom: 24px; }
+
+.status-pill, .preview-badge, .module-meta, .eyebrow, .vault-stats {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+.status-pill, .preview-badge, .vault-stats {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #ffd7a8;
+  background: rgba(255, 139, 47, 0.08);
+}
+
+.ghost-button {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--text);
+  background: rgba(255, 139, 47, 0.12);
+}
+
+.brand-block { gap: 16px; position: relative; z-index: 1; }
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  flex: 0 0 74px;
+  height: 74px;
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, #27110a 0 20%, #ff7a18 20% 40%, #57120b 40% 60%, #a855f7 60% 80%, #130606 80% 100%);
+  color: white;
+  font-weight: 950;
+  font-size: 1.45rem;
+  box-shadow: 0 16px 42px rgba(249, 115, 22, 0.42);
+  image-rendering: pixelated;
+}
+
+h1, h2, h3, p { margin: 0; }
+h1 { font-size: clamp(2rem, 10vw, 4.8rem); line-height: 0.95; letter-spacing: -0.08em; }
+.hero-subtitle { max-width: 760px; margin-top: 12px; color: var(--muted); font-size: clamp(1rem, 3.5vw, 1.25rem); line-height: 1.5; }
+
+.quick-actions { position: relative; z-index: 1; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+.primary-action, .secondary-action, .vault-command-row button, .asset-actions button {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 10px;
+  color: white;
+  font-weight: 850;
+}
+.primary-action, .vault-command-row button:first-child { border: 0; background: linear-gradient(135deg, #ef4444, #f97316 55%, #facc15); }
+.secondary-action, .vault-command-row button, .asset-actions button {
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.08);
+}
+.danger-action { border-color: rgba(248, 113, 113, 0.42) !important; background: rgba(127, 29, 29, 0.38) !important; }
+
+main { display: grid; gap: 18px; margin-top: 18px; }
+.panel { border-radius: var(--radius-lg); background: var(--panel); padding: 18px; }
+.eyebrow { margin-bottom: 8px; color: #facc15; font-weight: 900; }
+.panel h2 { font-size: clamp(1.35rem, 5vw, 2rem); letter-spacing: -0.04em; margin-bottom: 8px; }
+.panel p { color: var(--muted); line-height: 1.55; }
+
+.module-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.module-card {
+  display: grid;
+  gap: 10px;
+  min-height: 205px;
+  padding: 18px;
+  text-align: left;
+  border-radius: var(--radius-lg);
+  color: var(--text);
+  background:
+    linear-gradient(145deg, rgba(255, 145, 45, 0.12), rgba(255, 255, 255, 0.025)),
+    var(--panel);
+  cursor: pointer;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+.module-card:hover, .module-card:focus-visible, .module-card.active {
+  transform: translateY(-4px);
+  border-color: rgba(250, 204, 21, 0.62);
+  outline: none;
+  background:
+    linear-gradient(145deg, rgba(249, 115, 22, 0.22), rgba(168, 85, 247, 0.10)),
+    var(--panel-strong);
+}
+.module-icon, .asset-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  color: white;
+  background: linear-gradient(135deg, #7f1d1d, #f97316 55%, #a855f7);
+  font-size: 1.2rem;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.16);
+}
+.module-vault .module-icon { background: linear-gradient(135deg, #18181b, #facc15 48%, #a855f7); }
+.module-title { display: block; font-size: 1.1rem; font-weight: 900; letter-spacing: -0.03em; }
+.module-desc { display: block; color: var(--muted); line-height: 1.42; }
+.module-meta { align-self: end; color: rgba(255, 247, 237, 0.68); font-weight: 800; }
+
+.module-preview { background: linear-gradient(145deg, rgba(249,115,22,0.10), rgba(168,85,247,0.08)), var(--panel); }
+.preview-header, .vault-heading { justify-content: space-between; gap: 14px; }
+.option-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.option-chip, .asset-tags span {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 9px 12px;
+  color: var(--text);
+  background: rgba(255,255,255,0.07);
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.vault-panel { background: linear-gradient(145deg, rgba(250, 204, 21, 0.08), rgba(168, 85, 247, 0.08)), var(--panel); }
+.vault-heading { align-items: flex-start; }
+.vault-toolbar { display: grid; grid-template-columns: 1fr 220px; gap: 12px; margin-top: 18px; }
+.vault-toolbar input, .vault-toolbar select {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  background: rgba(10, 3, 3, 0.58);
+  padding: 0 14px;
+  outline: none;
+}
+.vault-command-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.vault-empty {
+  display: grid;
+  gap: 5px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px dashed rgba(250, 204, 21, 0.32);
+  border-radius: var(--radius-md);
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.18);
+}
+.vault-empty strong { color: var(--text); }
+.vault-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+.asset-card {
+  border-radius: var(--radius-md);
+  background: rgba(13, 4, 4, 0.62);
+  padding: 14px;
+}
+.asset-card-top { gap: 12px; align-items: flex-start; }
+.asset-card h3 { font-size: 1.05rem; line-height: 1.2; }
+.asset-card-top p { font-size: 0.82rem; margin-top: 4px; }
+.asset-description { margin-top: 12px; font-size: 0.94rem; }
+.asset-tags { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+.asset-tags span { padding: 6px 9px; font-size: 0.75rem; }
+.asset-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.asset-actions button { min-height: 38px; padding: 0 12px; font-size: 0.86rem; }
+
+footer { margin-top: 22px; padding: 0 4px; color: var(--muted); font-size: 0.9rem; line-height: 1.6; text-align: center; }
+.repo-url { opacity: 0.75; word-break: break-word; }
+
+body.light-mode .nether-scene { filter: saturate(0.76) brightness(0.82); }
+body.light-mode { --panel: rgba(23, 7, 5, 0.86); --panel-strong: rgba(42, 12, 8, 0.95); --muted: #ffd3bd; }
+
+@keyframes skyDrift { to { background-position: 72px 72px; } }
+@keyframes emberFall { from { transform: translate3d(0, -12%, 0); } to { transform: translate3d(26px, 22%, 0); } }
+@keyframes portalPulse { 0%, 100% { transform: scaleY(1) rotate(var(--r, 0deg)); opacity: 0.36; } 50% { transform: scaleY(1.06) rotate(var(--r, 0deg)); opacity: 0.58; } }
+@keyframes lavaFlow { to { background-position: 180px 0, 0 0; } }
+@keyframes heatPulse { 0%, 100% { opacity: 0.45; } 50% { opacity: 0.82; } }
+
+@media (max-width: 900px) {
+  .module-grid, .vault-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .app-shell { padding-left: 12px; padding-right: 12px; }
+  .hero, .panel, .module-card { border-radius: 22px; }
+  .brand-block { align-items: flex-start; }
+  .brand-mark { flex-basis: 56px; height: 56px; font-size: 1.05rem; }
+  .module-grid, .vault-grid, .vault-toolbar { grid-template-columns: 1fr; }
+  .module-card { min-height: 164px; }
+  .quick-actions > button, .vault-command-row > button { flex: 1 1 150px; }
+  .preview-header, .vault-heading { align-items: flex-start; flex-direction: column; }
+}

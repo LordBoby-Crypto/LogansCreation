@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#2a0705" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LoganCreations" />
+  <title>LoganCreations</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.svg" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="nether-scene" aria-hidden="true">
+    <div class="lava-sky"></div>
+    <div class="portal-rift portal-rift-left"></div>
+    <div class="portal-rift portal-rift-right"></div>
+    <div class="falling-embers ember-layer-one"></div>
+    <div class="falling-embers ember-layer-two"></div>
+    <div class="nether-fortress"></div>
+    <div class="basalt-spikes"></div>
+    <div class="lava-river"></div>
+    <div class="block-floor"></div>
+    <div class="heat-haze"></div>
+  </div>
+
+  <div class="app-shell">
+    <header class="hero">
+      <div class="hero-topline">
+        <span class="status-pill">Nether Build v0.3</span>
+        <button class="ghost-button" id="themeToggle" type="button" aria-label="Toggle ember intensity">✦</button>
+      </div>
+
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">
+          <span>LC</span>
+        </div>
+        <div>
+          <h1>LoganCreations</h1>
+          <p class="hero-subtitle">A Nether-styled creative forge for sprites, books, cultures, sounds, comics, models, and full asset packs.</p>
+        </div>
+      </div>
+
+      <div class="quick-actions" aria-label="Project actions">
+        <button class="primary-action" type="button" data-action="new-project">Start Forging</button>
+        <button class="secondary-action" type="button" data-action="open-library">Asset Vault</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel intro-panel" aria-labelledby="start-title">
+        <div>
+          <p class="eyebrow">Nether forge dashboard</p>
+          <h2 id="start-title">Choose a creation module</h2>
+          <p>Asset Vault is the first working system. The other modules are staged as creator options and will plug into the vault as they are built.</p>
+        </div>
+      </section>
+
+      <section class="module-grid" aria-label="Creation modules">
+        <button class="module-card module-vault" type="button" data-module="asset-vault">
+          <span class="module-icon">▥</span>
+          <span class="module-title">Asset Vault</span>
+          <span class="module-desc">Store generated assets, import files, download entries, duplicate work, remove assets, and export backups.</span>
+          <span class="module-meta">storage · backup · download</span>
+        </button>
+
+        <button class="module-card module-red" type="button" data-module="sprite-lab">
+          <span class="module-icon">▣</span>
+          <span class="module-title">Create Sprite</span>
+          <span class="module-desc">Forge one original creature, item, icon, or character sprite.</span>
+          <span class="module-meta">PNG · variants · stats</span>
+        </button>
+
+        <button class="module-card module-orange" type="button" data-module="sprite-factory">
+          <span class="module-icon">▦</span>
+          <span class="module-title">Sprite Factory</span>
+          <span class="module-desc">Generate a full themed asset pack with creatures, icons, tiles, and metadata.</span>
+          <span class="module-meta">packs · atlas · ZIP</span>
+        </button>
+
+        <button class="module-card module-gold" type="button" data-module="novel-generator">
+          <span class="module-icon">✦</span>
+          <span class="module-title">Book / Novel Generator</span>
+          <span class="module-desc">Create premises, chapter plans, characters, settings, and story bibles.</span>
+          <span class="module-meta">outline · chapters · lore</span>
+        </button>
+
+        <button class="module-card module-red" type="button" data-module="culture-generator">
+          <span class="module-icon">◈</span>
+          <span class="module-title">Culture Generator</span>
+          <span class="module-desc">Build civilizations with customs, laws, symbols, myths, and conflicts.</span>
+          <span class="module-meta">worlds · factions · dossiers</span>
+        </button>
+
+        <button class="module-card module-purple" type="button" data-module="language-engine">
+          <span class="module-icon">⌁</span>
+          <span class="module-title">Language / Name Engine</span>
+          <span class="module-desc">Generate consistent names, roots, places, gods, monsters, and dictionaries.</span>
+          <span class="module-meta">roots · names · dictionary</span>
+        </button>
+
+        <button class="module-card module-stone" type="button" data-module="model-generator">
+          <span class="module-icon">⬡</span>
+          <span class="module-title">3D Model Generator</span>
+          <span class="module-desc">Create procedural relics, weapons, crystals, masks, towers, and props.</span>
+          <span class="module-meta">WebGL · JSON · renders</span>
+        </button>
+
+        <button class="module-card module-orange" type="button" data-module="sound-generator">
+          <span class="module-icon">≋</span>
+          <span class="module-title">Monster Sound Generator</span>
+          <span class="module-desc">Build roars, clicks, growls, whispers, attacks, and death sounds.</span>
+          <span class="module-meta">WAV · layers · waveform</span>
+        </button>
+
+        <button class="module-card module-purple" type="button" data-module="comic-generator">
+          <span class="module-icon">▤</span>
+          <span class="module-title">Comic Generator</span>
+          <span class="module-desc">Create panel layouts, speech bubbles, camera shots, and comic pages.</span>
+          <span class="module-meta">panels · PNG · script</span>
+        </button>
+      </section>
+
+      <section class="panel module-preview" aria-live="polite">
+        <div class="preview-header">
+          <div>
+            <p class="eyebrow">Selected module</p>
+            <h2 id="previewTitle">Nothing selected yet</h2>
+          </div>
+          <span id="previewBadge" class="preview-badge">Ready</span>
+        </div>
+        <p id="previewText">Tap any module above to preview what it will become.</p>
+        <div class="option-row" id="previewOptions"></div>
+      </section>
+
+      <section class="panel vault-panel" id="assetVault" aria-labelledby="vaultTitle" hidden>
+        <div class="vault-heading">
+          <div>
+            <p class="eyebrow">Working system</p>
+            <h2 id="vaultTitle">Asset Vault</h2>
+            <p>Assets saved here stay on this device/browser. Import files now, create demo assets, download individual entries, duplicate them, remove them, or export a backup JSON file.</p>
+          </div>
+          <span class="vault-stats" id="vaultStats">0 stored</span>
+        </div>
+
+        <div class="vault-toolbar" aria-label="Asset Vault controls">
+          <input id="vaultSearch" type="search" placeholder="Search assets, tags, descriptions..." autocomplete="off" />
+          <select id="vaultType" aria-label="Filter assets by type">
+            <option value="">All types</option>
+            <option value="sprite">Sprites / Images</option>
+            <option value="factory">Sprite Factory Packs</option>
+            <option value="book">Books / Text</option>
+            <option value="culture">Cultures</option>
+            <option value="language">Languages / Names</option>
+            <option value="model">3D Models</option>
+            <option value="sound">Sounds</option>
+            <option value="comic">Comics</option>
+            <option value="file">Other Files</option>
+          </select>
+        </div>
+
+        <div class="vault-command-row">
+          <button type="button" data-vault-command="demo">Create Demo Asset</button>
+          <button type="button" data-vault-command="import">Import File</button>
+          <button type="button" data-vault-command="export">Export Vault Backup</button>
+          <button type="button" data-vault-command="restore">Restore Backup</button>
+          <button class="danger-action" type="button" data-vault-command="clear">Clear Vault</button>
+        </div>
+
+        <input id="assetImport" type="file" multiple hidden />
+        <input id="vaultRestore" type="file" accept="application/json,.json" hidden />
+
+        <div class="vault-empty" id="vaultEmpty">
+          <strong>No assets stored yet.</strong>
+          <span>Create a demo asset or import a file to test the vault.</span>
+        </div>
+
+        <div class="vault-grid" id="vaultGrid" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Made for <strong>LogansCreations</strong> on GitHub Pages.</p>
+      <p class="repo-url">https://lordboby-crypto.github.io/LogansCreations/</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
