@@ -29,7 +29,7 @@
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="status-pill">Nether Build v0.4</span>
+        <span class="status-pill">Nether Build v0.5</span>
         <button class="ghost-button" id="themeToggle" type="button" aria-label="Toggle ember intensity">✦</button>
       </div>
 
@@ -140,127 +140,127 @@
           <div>
             <p class="eyebrow">Working system</p>
             <h2 id="spriteTitle">Create Sprite</h2>
-            <p>Forge a creature sprite using class, element, body form, rarity, mood, palette, size, and a repeatable seed. Export the PNG or JSON, then save it directly into Asset Vault.</p>
+            <p>This version is rebuilt as a practical sprite designer. The old abstract controls were removed. Pick what you are making, describe the idea, choose a concrete silhouette, choose a type/theme, set a real output size, then export or save it to Asset Vault.</p>
           </div>
-          <span class="vault-stats" id="spriteStatus">Ready to forge</span>
+          <span class="vault-stats" id="spriteStatus">Ready to design</span>
         </div>
 
         <div class="sprite-layout">
           <div class="sprite-controls">
             <div class="sprite-form-grid">
               <label>
-                <span>Creature Name</span>
-                <input id="spriteName" type="text" maxlength="32" placeholder="Leave blank to auto-generate" />
+                <span>Sprite Name</span>
+                <input id="spriteName" type="text" maxlength="36" placeholder="Example: Lava Cub, Iron Moth, Moon Badge" />
               </label>
+
+              <label>
+                <span>Output Size</span>
+                <select id="spriteOutputSize">
+                  <option value="32">32x32 small icon</option>
+                  <option value="64" selected>64x64 game sprite</option>
+                  <option value="96">96x96 large sprite</option>
+                </select>
+              </label>
+
+              <label>
+                <span>What Are You Making?</span>
+                <select id="spriteKind">
+                  <option value="creature" selected>Creature / monster sprite</option>
+                  <option value="item">Item / object sprite</option>
+                  <option value="trainer">Trainer / character bust</option>
+                  <option value="badge">Badge / emblem sprite</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Silhouette Template</span>
+                <select id="spriteTemplate">
+                  <option value="wolf" selected>Wolf / cat creature</option>
+                  <option value="dragon">Dragon / lizard creature</option>
+                  <option value="bird">Bird / winged creature</option>
+                  <option value="fish">Fish / aquatic creature</option>
+                  <option value="bug">Bug / insect creature</option>
+                  <option value="slime">Slime / blob creature</option>
+                  <option value="ghost">Ghost / spirit creature</option>
+                  <option value="golem">Rock / golem creature</option>
+                  <option value="robot">Robot / machine creature</option>
+                  <option value="mushroom">Mushroom / plant creature</option>
+                  <option value="sword">Sword / weapon item</option>
+                  <option value="potion">Potion / bottle item</option>
+                  <option value="gem">Gem / crystal item</option>
+                  <option value="egg">Egg / orb object</option>
+                  <option value="trainer">Trainer / character bust</option>
+                  <option value="badge">Badge / emblem</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Type / Theme</span>
+                <select id="spriteTheme">
+                  <option>Fire</option>
+                  <option>Water</option>
+                  <option>Electric</option>
+                  <option>Grass</option>
+                  <option>Ice</option>
+                  <option>Poison</option>
+                  <option>Ghost</option>
+                  <option>Rock</option>
+                  <option>Steel</option>
+                  <option>Dragon</option>
+                  <option>Fairy</option>
+                  <option>Dark</option>
+                  <option>Normal</option>
+                  <option>Nether</option>
+                  <option>Custom</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Palette Style</span>
+                <select id="spritePalette">
+                  <option value="auto" selected>Auto from type/theme</option>
+                  <option value="bright">Bright handheld RPG</option>
+                  <option value="muted">Muted modern pixel art</option>
+                  <option value="nether">Nether lava palette</option>
+                  <option value="custom">Custom colors below</option>
+                </select>
+              </label>
+
+              <label class="sprite-wide">
+                <span>Idea / Prompt</span>
+                <textarea id="spritePrompt" maxlength="160" placeholder="Example: a small lava wolf with cracked blackstone armor and glowing orange eyes"></textarea>
+              </label>
+
+              <label>
+                <span>Main Color</span>
+                <input id="spriteMainColor" type="color" value="#e24a21" />
+              </label>
+
+              <label>
+                <span>Accent Color</span>
+                <input id="spriteAccentColor" type="color" value="#ffd166" />
+              </label>
+
               <label>
                 <span>Seed</span>
                 <input id="spriteSeed" type="text" maxlength="24" placeholder="Auto seed" />
               </label>
 
               <label>
-                <span>Creature Class</span>
-                <select id="spriteClass">
-                  <option>Beast</option>
-                  <option>Amphibian</option>
-                  <option>Reptile</option>
-                  <option>Insectoid</option>
-                  <option>Avian</option>
-                  <option>Plantborn</option>
-                  <option>Mineral</option>
-                  <option>Spirit</option>
-                  <option>Machine</option>
-                  <option>Eldritch</option>
-                </select>
-              </label>
-              <label>
-                <span>Core Type</span>
-                <select id="spriteType">
-                  <option>Ember</option>
-                  <option>Tide</option>
-                  <option>Storm</option>
-                  <option>Venom</option>
-                  <option>Bone</option>
-                  <option>Crystal</option>
-                  <option>Metal</option>
-                  <option>Solar</option>
-                  <option>Lunar</option>
-                  <option>Fungal</option>
-                  <option>Dream</option>
-                  <option>Static</option>
-                  <option>Gravity</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Body Form</span>
-                <select id="spriteBody">
-                  <option>Quadruped</option>
-                  <option>Serpent</option>
-                  <option>Winged</option>
-                  <option>Slime</option>
-                  <option>Humanoid</option>
-                  <option>Shellback</option>
-                  <option>Orb</option>
-                  <option>Insect</option>
-                </select>
-              </label>
-              <label>
-                <span>Rarity</span>
-                <select id="spriteRarity">
-                  <option>Common</option>
-                  <option>Uncommon</option>
-                  <option>Rare</option>
-                  <option>Epic</option>
-                  <option>Legendary</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Mood</span>
-                <select id="spriteMood">
-                  <option>Aggressive</option>
-                  <option>Noble</option>
-                  <option>Curious</option>
-                  <option>Mischievous</option>
-                  <option>Ancient</option>
-                  <option>Cowardly</option>
-                  <option>Territorial</option>
-                  <option>Symbiotic</option>
-                </select>
-              </label>
-              <label>
-                <span>Palette Theme</span>
-                <select id="spritePalette">
-                  <option>Auto</option>
-                  <option>Nether</option>
-                  <option>Forest</option>
-                  <option>Crystal</option>
-                  <option>Ocean</option>
-                  <option>Storm</option>
-                  <option>Shadow</option>
-                  <option>Royal</option>
-                  <option>Poison</option>
-                  <option>Machine</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Size</span>
-                <select id="spriteSize">
-                  <option>Tiny</option>
-                  <option>Small</option>
-                  <option selected>Medium</option>
-                  <option>Large</option>
-                  <option>Massive</option>
+                <span>Detail Level</span>
+                <select id="spriteDetail">
+                  <option value="clean">Clean readable sprite</option>
+                  <option value="detailed" selected>Detailed battle sprite</option>
+                  <option value="icon">Simple icon style</option>
                 </select>
               </label>
             </div>
 
             <div class="sprite-command-row">
               <button class="primary-action" type="button" id="generateSpriteBtn">Generate Sprite</button>
-              <button type="button" id="randomizeSpriteBtn">Randomize All</button>
-              <button type="button" id="rerollBodyBtn">Reroll Body</button>
-              <button type="button" id="rerollPaletteBtn">Reroll Palette</button>
+              <button type="button" id="randomizeSpriteBtn">Surprise Me</button>
+              <button type="button" id="rerollShapeBtn">Reroll Shape</button>
+              <button type="button" id="rerollColorsBtn">Reroll Colors</button>
               <button type="button" id="downloadSpriteBtn">Download PNG</button>
               <button type="button" id="downloadSpriteJsonBtn">Download JSON</button>
               <button type="button" id="saveSpriteBtn">Save to Asset Vault</button>
@@ -271,22 +271,22 @@
             <div class="sprite-preview-top">
               <div>
                 <p class="eyebrow">Sprite preview</p>
-                <h3 id="spritePreviewName">No creature forged yet</h3>
+                <h3 id="spritePreviewName">No sprite generated yet</h3>
               </div>
               <span class="preview-badge" id="spriteSeedBadge">Seed —</span>
             </div>
 
             <div class="sprite-canvas-wrap">
               <div class="main-sprite-stage">
-                <canvas id="spriteCanvas" width="96" height="96" aria-label="Generated sprite preview"></canvas>
+                <canvas id="spriteCanvas" width="192" height="192" aria-label="Generated sprite preview"></canvas>
               </div>
               <div class="sprite-side-stack">
                 <div class="mini-stage">
-                  <span>Icon</span>
-                  <canvas id="spriteIconCanvas" width="48" height="48" aria-label="Sprite icon preview"></canvas>
+                  <span>Final PNG</span>
+                  <canvas id="spriteIconCanvas" width="96" height="96" aria-label="Sprite icon preview"></canvas>
                 </div>
                 <div class="mini-stage stats-stage">
-                  <span>Stats</span>
+                  <span>Sprite Details</span>
                   <div class="stat-list" id="spriteStats"></div>
                 </div>
               </div>
@@ -296,15 +296,15 @@
 
             <div class="sprite-info-grid">
               <div class="sprite-info-block">
-                <h4>Ability</h4>
-                <p id="spriteAbility">—</p>
+                <h4>Use Case</h4>
+                <p id="spriteUseCase">—</p>
               </div>
               <div class="sprite-info-block">
-                <h4>Habitat</h4>
-                <p id="spriteHabitat">—</p>
+                <h4>Style Notes</h4>
+                <p id="spriteStyleNotes">—</p>
               </div>
               <div class="sprite-info-block sprite-info-wide">
-                <h4>Description</h4>
+                <h4>Generated Description</h4>
                 <p id="spriteDescription">Generate a sprite to see its profile.</p>
               </div>
             </div>

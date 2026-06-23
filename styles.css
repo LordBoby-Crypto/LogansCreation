@@ -599,3 +599,32 @@ body.light-mode { --panel: rgba(23, 7, 5, 0.86); --panel-strong: rgba(42, 12, 8,
     min-height: 200px;
   }
 }
+
+.sprite-form-grid textarea {
+  width: 100%;
+  min-height: 92px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  background: rgba(10, 3, 3, 0.7);
+  padding: 12px 14px;
+  outline: none;
+  resize: vertical;
+}
+
+.sprite-wide {
+  grid-column: 1 / -1;
+}
+
+.sprite-form-grid input[type="color"] {
+  padding: 5px;
+  min-height: 48px;
+}
+
+.sprite-detail-row {
+  grid-template-columns: 54px 1fr !important;
+}
+
+.sprite-detail-row strong {
+  overflow-wrap: anywhere;
+}

@@ -7,9 +7,9 @@ const moduleDetails = {
   },
   "sprite-lab": {
     title: "Create Sprite",
-    badge: "Sprite Lab Live",
-    text: "Working pixel-art sprite forge with repeatable seed generation, palette themes, metadata, PNG/JSON export, and one-tap saving into Asset Vault.",
-    options: ["Creature DNA", "Seed", "Palette", "Stats", "PNG", "Save to Vault"]
+    badge: "Sprite Designer v0.5",
+    text: "Rebuilt sprite designer with clearer controls: what you are making, concrete silhouette templates, type/theme, real output size, prompt notes, PNG/JSON export, and vault saving.",
+    options: ["Creature", "Item", "Trainer", "Badge", "PNG", "Save to Vault"]
   },
   "sprite-factory": {
     title: "Sprite Factory",
@@ -55,91 +55,49 @@ const moduleDetails = {
   }
 };
 
-const palettePresets = {
-  Nether: { outline: "#1e0505", body: "#c73a1a", shadow: "#6f1209", light: "#ffb347", accent: "#bb6cff", eye: "#fff7b2" },
-  Forest: { outline: "#14230e", body: "#4e8b39", shadow: "#23441c", light: "#a6d96a", accent: "#e6df7a", eye: "#eefcc2" },
-  Crystal: { outline: "#101829", body: "#52b5ff", shadow: "#184a7f", light: "#c6f1ff", accent: "#ae7fff", eye: "#ffffff" },
-  Ocean: { outline: "#071c2e", body: "#1f7acc", shadow: "#0d4477", light: "#82d8ff", accent: "#3bf0c0", eye: "#ecffff" },
-  Storm: { outline: "#121724", body: "#5872a2", shadow: "#293651", light: "#c8d6ff", accent: "#f4d03f", eye: "#f9f3e7" },
-  Shadow: { outline: "#07070c", body: "#43415b", shadow: "#1f2030", light: "#9089c6", accent: "#e24fff", eye: "#f0d8ff" },
-  Royal: { outline: "#1c0d21", body: "#7b2cbf", shadow: "#46186f", light: "#d7aaff", accent: "#ffd166", eye: "#fff0ca" },
-  Poison: { outline: "#111d0b", body: "#70b82f", shadow: "#365d16", light: "#d5ff6f", accent: "#8b5cf6", eye: "#f7ffd0" },
-  Machine: { outline: "#111111", body: "#8b8f96", shadow: "#50545b", light: "#d8dde5", accent: "#ff8a3d", eye: "#f1fbff" }
+const themePalettes = {
+  Fire: ["#2a0803", "#7f1d1d", "#e24a21", "#ff9f1c", "#ffe066"],
+  Water: ["#071826", "#0f4c81", "#1982c4", "#5dd9ff", "#e6fdff"],
+  Electric: ["#111827", "#3d348b", "#7678ed", "#f7d51d", "#fff7a8"],
+  Grass: ["#10220f", "#2d6a2e", "#52b788", "#a7c957", "#f0ffb3"],
+  Ice: ["#0b1f2a", "#2f6f95", "#8ecae6", "#caf0f8", "#ffffff"],
+  Poison: ["#17111e", "#5a189a", "#7b2cbf", "#80b918", "#d9ed92"],
+  Ghost: ["#09090f", "#2b2d42", "#6d597a", "#b56576", "#f8edeb"],
+  Rock: ["#120d08", "#463f3a", "#8a817c", "#bcb8b1", "#f4f3ee"],
+  Steel: ["#0f1115", "#343a40", "#6c757d", "#adb5bd", "#f8f9fa"],
+  Dragon: ["#12091f", "#3a0ca3", "#7209b7", "#f72585", "#ffd166"],
+  Fairy: ["#2b0b20", "#b5179e", "#f72585", "#ffafcc", "#fff0f3"],
+  Dark: ["#050505", "#171717", "#3f3f46", "#a855f7", "#f5f3ff"],
+  Normal: ["#15110d", "#6b5d4d", "#a99985", "#e7d8c9", "#fff7ed"],
+  Nether: ["#090202", "#3b0808", "#b91c1c", "#f97316", "#a855f7"],
+  Custom: ["#111111", "#333333", "#e24a21", "#ffd166", "#ffffff"]
 };
 
-const autoPalettes = {
-  Ember: "Nether",
-  Tide: "Ocean",
-  Storm: "Storm",
-  Venom: "Poison",
-  Bone: "Shadow",
-  Crystal: "Crystal",
-  Metal: "Machine",
-  Solar: "Royal",
-  Lunar: "Shadow",
-  Fungal: "Forest",
-  Dream: "Royal",
-  Static: "Storm",
-  Gravity: "Shadow"
+const templateGroups = {
+  creature: ["wolf", "dragon", "bird", "fish", "bug", "slime", "ghost", "golem", "robot", "mushroom"],
+  item: ["sword", "potion", "gem", "egg"],
+  trainer: ["trainer"],
+  badge: ["badge", "gem", "egg"]
 };
 
-const habitatMap = {
-  Ember: ["lava deltas", "blackstone chasms", "magma tunnels"],
-  Tide: ["sunken caverns", "tidal marshes", "flooded ruins"],
-  Storm: ["thunder cliffs", "wind-carved mesas", "electro plains"],
-  Venom: ["poison bogs", "toxic groves", "mire caverns"],
-  Bone: ["ossuary valleys", "crypt dunes", "bone pits"],
-  Crystal: ["glittering caves", "quartz ridges", "shard temples"],
-  Metal: ["iron foundries", "abandoned forges", "gear warrens"],
-  Solar: ["sun altars", "golden deserts", "radiant towers"],
-  Lunar: ["moonlit marshes", "silver hollows", "twilight ruins"],
-  Fungal: ["spore forests", "moss caverns", "rotting groves"],
-  Dream: ["veil gardens", "sleeping temples", "mirage coasts"],
-  Static: ["charged ruins", "glass plains", "wire storms"],
-  Gravity: ["rift craters", "floating scars", "collapsed sanctums"]
+const templates = {
+  wolf: "Wolf / cat creature",
+  dragon: "Dragon / lizard creature",
+  bird: "Bird / winged creature",
+  fish: "Fish / aquatic creature",
+  bug: "Bug / insect creature",
+  slime: "Slime / blob creature",
+  ghost: "Ghost / spirit creature",
+  golem: "Rock / golem creature",
+  robot: "Robot / machine creature",
+  mushroom: "Mushroom / plant creature",
+  sword: "Sword / weapon item",
+  potion: "Potion / bottle item",
+  gem: "Gem / crystal item",
+  egg: "Egg / orb object",
+  trainer: "Trainer / character bust",
+  badge: "Badge / emblem"
 };
-
-const abilityMap = {
-  Ember: ["Magma Hide", "Ash Pulse", "Cinder Rush"],
-  Tide: ["Undertow Veil", "Mist Current", "Foam Bite"],
-  Storm: ["Volt Pounce", "Cloud Lash", "Tempest Coil"],
-  Venom: ["Spore Fang", "Toxin Bloom", "Bog Pulse"],
-  Bone: ["Grave Husk", "Rattle Ward", "Pale Feast"],
-  Crystal: ["Shard Shield", "Prism Burst", "Gem Resonance"],
-  Metal: ["Iron Core", "Gear Rush", "Scrap Armor"],
-  Solar: ["Sunflare Crest", "Radiant Roar", "Dawn Guard"],
-  Lunar: ["Night Fade", "Moon Tether", "Eclipse Gaze"],
-  Fungal: ["Spore Veil", "Mire Bloom", "Rot Root"],
-  Dream: ["Mirage Step", "Velvet Sleep", "Dream Echo"],
-  Static: ["Arc Snap", "Spark Skin", "Pulse Drive"],
-  Gravity: ["Weight Crush", "Void Pull", "Singularity Shell"]
-};
-
-const typePrefixes = {
-  Ember: ["Ash", "Cin", "Pyra", "Brim", "Scor"],
-  Tide: ["Mira", "Tide", "Aqua", "Cora", "Neru"],
-  Storm: ["Volt", "Temp", "Skyr", "Thun", "Raik"],
-  Venom: ["Vile", "Toxi", "Mire", "Noxa", "Spor"],
-  Bone: ["Grav", "Ossi", "Maro", "Skul", "Pale"],
-  Crystal: ["Crys", "Prism", "Shard", "Gleam", "Facet"],
-  Metal: ["Ferr", "Cog", "Steel", "Rivet", "Chrom"],
-  Solar: ["Sol", "Auri", "Heli", "Ray", "Lux"],
-  Lunar: ["Luna", "Nyx", "Sel", "Dusk", "Noct"],
-  Fungal: ["Mush", "Spora", "Mire", "Rot", "Myco"],
-  Dream: ["Vel", "Som", "Mira", "Lull", "Whisp"],
-  Static: ["Spark", "Zap", "Arc", "Pulse", "Jolt"],
-  Gravity: ["Grav", "Void", "Rift", "Pull", "Null"]
-};
-
-const typeSuffixes = ["mire", "drake", "ling", "thorn", "jaw", "geist", "mite", "horn", "maw", "shade", "coil", "beast", "flare", "crest"];
-
-const classes = ["Beast", "Amphibian", "Reptile", "Insectoid", "Avian", "Plantborn", "Mineral", "Spirit", "Machine", "Eldritch"];
-const types = ["Ember", "Tide", "Storm", "Venom", "Bone", "Crystal", "Metal", "Solar", "Lunar", "Fungal", "Dream", "Static", "Gravity"];
-const bodies = ["Quadruped", "Serpent", "Winged", "Slime", "Humanoid", "Shellback", "Orb", "Insect"];
-const rarities = ["Common", "Uncommon", "Rare", "Epic", "Legendary"];
-const moods = ["Aggressive", "Noble", "Curious", "Mischievous", "Ancient", "Cowardly", "Territorial", "Symbiotic"];
-const palettes = ["Auto", ...Object.keys(palettePresets)];
-const sizes = ["Tiny", "Small", "Medium", "Large", "Massive"];
 
 const VAULT_KEY = "logansCreations.assetVault.v1";
 const cards = document.querySelectorAll(".module-card");
@@ -151,28 +109,30 @@ const themeToggle = document.getElementById("themeToggle");
 
 const spriteSection = document.getElementById("spriteLab");
 const spriteStatus = document.getElementById("spriteStatus");
-const spritePreviewName = document.getElementById("spritePreviewName");
-const spriteSeedBadge = document.getElementById("spriteSeedBadge");
 const spriteCanvas = document.getElementById("spriteCanvas");
 const spriteIconCanvas = document.getElementById("spriteIconCanvas");
+const spritePreviewName = document.getElementById("spritePreviewName");
+const spriteSeedBadge = document.getElementById("spriteSeedBadge");
 const spriteStats = document.getElementById("spriteStats");
 const spriteTags = document.getElementById("spriteTags");
-const spriteAbility = document.getElementById("spriteAbility");
-const spriteHabitat = document.getElementById("spriteHabitat");
+const spriteUseCase = document.getElementById("spriteUseCase");
+const spriteStyleNotes = document.getElementById("spriteStyleNotes");
 const spriteDescription = document.getElementById("spriteDescription");
 const spriteNameInput = document.getElementById("spriteName");
-const spriteSeedInput = document.getElementById("spriteSeed");
-const spriteClassInput = document.getElementById("spriteClass");
-const spriteTypeInput = document.getElementById("spriteType");
-const spriteBodyInput = document.getElementById("spriteBody");
-const spriteRarityInput = document.getElementById("spriteRarity");
-const spriteMoodInput = document.getElementById("spriteMood");
+const spriteOutputSizeInput = document.getElementById("spriteOutputSize");
+const spriteKindInput = document.getElementById("spriteKind");
+const spriteTemplateInput = document.getElementById("spriteTemplate");
+const spriteThemeInput = document.getElementById("spriteTheme");
 const spritePaletteInput = document.getElementById("spritePalette");
-const spriteSizeInput = document.getElementById("spriteSize");
+const spritePromptInput = document.getElementById("spritePrompt");
+const spriteMainColorInput = document.getElementById("spriteMainColor");
+const spriteAccentColorInput = document.getElementById("spriteAccentColor");
+const spriteSeedInput = document.getElementById("spriteSeed");
+const spriteDetailInput = document.getElementById("spriteDetail");
 const generateSpriteBtn = document.getElementById("generateSpriteBtn");
 const randomizeSpriteBtn = document.getElementById("randomizeSpriteBtn");
-const rerollBodyBtn = document.getElementById("rerollBodyBtn");
-const rerollPaletteBtn = document.getElementById("rerollPaletteBtn");
+const rerollShapeBtn = document.getElementById("rerollShapeBtn");
+const rerollColorsBtn = document.getElementById("rerollColorsBtn");
 const downloadSpriteBtn = document.getElementById("downloadSpriteBtn");
 const downloadSpriteJsonBtn = document.getElementById("downloadSpriteJsonBtn");
 const saveSpriteBtn = document.getElementById("saveSpriteBtn");
@@ -192,30 +152,27 @@ let currentSprite = null;
 function selectModule(key) {
   const details = moduleDetails[key];
   if (!details) return;
-
   cards.forEach(card => card.classList.toggle("active", card.dataset.module === key));
   previewTitle.textContent = details.title;
   previewBadge.textContent = details.badge;
   previewText.textContent = details.text;
   previewOptions.innerHTML = details.options.map(option => `<span class="option-chip">${option}</span>`).join("");
-
   spriteSection.hidden = key !== "sprite-lab";
   vaultSection.hidden = key !== "asset-vault";
-
-  if (key === "asset-vault") showVault();
   if (key === "sprite-lab") showSpriteLab();
-}
-
-function showVault() {
-  vaultSection.hidden = false;
-  renderVault();
-  setTimeout(() => vaultSection.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+  if (key === "asset-vault") showVault();
 }
 
 function showSpriteLab() {
   spriteSection.hidden = false;
   if (!currentSprite) generateSprite();
   setTimeout(() => spriteSection.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+}
+
+function showVault() {
+  vaultSection.hidden = false;
+  renderVault();
+  setTimeout(() => vaultSection.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
 }
 
 function loadVault() {
@@ -258,16 +215,22 @@ function mulberry32(seed) {
   };
 }
 
-function createRng(seedString) {
-  return mulberry32(hashString(seedString));
+function rngFrom(value) {
+  return mulberry32(hashString(value));
 }
 
-function randomInt(rng, min, max) {
+function randInt(rng, min, max) {
   return Math.floor(rng() * (max - min + 1)) + min;
 }
 
-function choice(rng, values) {
+function pick(rng, values) {
   return values[Math.floor(rng() * values.length)];
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, char => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;"
+  }[char]));
 }
 
 function formatBytes(bytes = 0) {
@@ -277,29 +240,12 @@ function formatBytes(bytes = 0) {
   return `${(bytes / Math.pow(1024, index)).toFixed(index ? 1 : 0)} ${units[index]}`;
 }
 
-function escapeHtml(value) {
-  return String(value).replace(/[&<>'"]/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    "'": "&#39;",
-    "\"": "&quot;"
-  }[char]));
+function slugify(value) {
+  return String(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "sprite";
 }
 
 function assetIcon(type) {
-  const icons = {
-    sprite: "▣",
-    book: "✦",
-    culture: "◈",
-    language: "⌁",
-    model: "⬡",
-    sound: "≋",
-    comic: "▤",
-    factory: "▦",
-    file: "◆"
-  };
-  return icons[type] || "◆";
+  return { sprite: "▣", book: "✦", culture: "◈", language: "⌁", model: "⬡", sound: "≋", comic: "▤", factory: "▦", file: "◆" }[type] || "◆";
 }
 
 function renderVault() {
@@ -309,11 +255,9 @@ function renderVault() {
     const searchable = `${asset.name} ${asset.type} ${(asset.tags || []).join(" ")} ${asset.description || ""}`.toLowerCase();
     return (!type || asset.type === type) && (!query || searchable.includes(query));
   });
-
   const totalSize = vaultAssets.reduce((sum, asset) => sum + (asset.size || 0), 0);
   vaultStats.textContent = `${vaultAssets.length} stored · ${filtered.length} showing · ${formatBytes(totalSize)}`;
   vaultEmpty.hidden = filtered.length !== 0;
-
   vaultGrid.innerHTML = filtered.map(asset => `
     <article class="asset-card" data-id="${asset.id}">
       <div class="asset-card-top">
@@ -324,9 +268,7 @@ function renderVault() {
         </div>
       </div>
       <p class="asset-description">${escapeHtml(asset.description || "No description yet.")}</p>
-      <div class="asset-tags">
-        ${(asset.tags || []).map(tag => `<span>${escapeHtml(tag)}</span>`).join("")}
-      </div>
+      <div class="asset-tags">${(asset.tags || []).map(tag => `<span>${escapeHtml(tag)}</span>`).join("")}</div>
       <div class="asset-actions">
         <button type="button" data-vault-action="download" data-id="${asset.id}">Download</button>
         <button type="button" data-vault-action="duplicate" data-id="${asset.id}">Duplicate</button>
@@ -337,65 +279,22 @@ function renderVault() {
 }
 
 function addAsset(asset) {
-  vaultAssets.unshift({
-    tags: [],
-    ...asset,
-    id: makeId(),
-    createdAt: new Date().toISOString()
-  });
+  vaultAssets.unshift({ tags: [], ...asset, id: makeId(), createdAt: new Date().toISOString() });
   saveVault();
   renderVault();
 }
 
 function createDemoAsset() {
-  const demos = [
-    {
-      type: "sprite",
-      name: "Nether Ember Beast",
-      description: "Demo creature sprite entry ready for future generated PNG frames and stats.",
-      tags: ["sprite", "nether", "creature"],
-      filename: "nether-ember-beast.json",
-      mime: "application/json",
-      size: 622,
-      content: {
-        name: "Nether Ember Beast",
-        module: "Create Sprite",
-        palette: ["crimson", "blackstone", "lava orange", "portal purple"],
-        plannedFiles: ["front.png", "back.png", "idle-sheet.png", "creature.json"]
-      }
-    },
-    {
-      type: "culture",
-      name: "Ashglass Clan",
-      description: "Demo culture dossier entry for a Nether survival civilization.",
-      tags: ["culture", "clan", "nether"],
-      filename: "ashglass-clan.json",
-      mime: "application/json",
-      size: 784,
-      content: {
-        name: "Ashglass Clan",
-        value: "endurance through heat",
-        taboo: "wasting light",
-        symbols: ["obsidian fang", "red lantern", "cracked crown"]
-      }
-    },
-    {
-      type: "sound",
-      name: "Basalt Howler Cry",
-      description: "Demo monster sound profile. Future sound module will replace this with WAV data.",
-      tags: ["sound", "monster", "basalt"],
-      filename: "basalt-howler-cry.json",
-      mime: "application/json",
-      size: 538,
-      content: {
-        name: "Basalt Howler Cry",
-        layers: ["low rumble", "stone scrape", "echo tail"],
-        exportTarget: "wav"
-      }
-    }
-  ];
-
-  addAsset(demos[Math.floor(Math.random() * demos.length)]);
+  addAsset({
+    type: "sprite",
+    name: "Demo Vault Sprite",
+    description: "Demo entry for testing Asset Vault controls.",
+    tags: ["demo", "sprite"],
+    filename: "demo-vault-sprite.json",
+    mime: "application/json",
+    size: 300,
+    content: { demo: true, module: "Asset Vault" }
+  });
 }
 
 function downloadBlob(filename, blob) {
@@ -421,79 +320,36 @@ function dataUrlToBlob(dataUrl) {
 function downloadAsset(id) {
   const asset = vaultAssets.find(item => item.id === id);
   if (!asset) return;
-
-  if (asset.dataUrl) {
-    downloadBlob(asset.filename || `${asset.name}.asset`, dataUrlToBlob(asset.dataUrl));
-    return;
-  }
-
-  const content = asset.content || asset;
-  const blob = new Blob([JSON.stringify(content, null, 2)], { type: "application/json" });
-  downloadBlob(asset.filename || `${asset.name.replace(/\s+/g, "-").toLowerCase()}.json`, blob);
+  if (asset.dataUrl) return downloadBlob(asset.filename || `${asset.name}.asset`, dataUrlToBlob(asset.dataUrl));
+  const blob = new Blob([JSON.stringify(asset.content || asset, null, 2)], { type: "application/json" });
+  downloadBlob(asset.filename || `${slugify(asset.name)}.json`, blob);
 }
 
 function duplicateAsset(id) {
   const asset = vaultAssets.find(item => item.id === id);
   if (!asset) return;
   const { id: oldId, createdAt, ...copy } = asset;
-  addAsset({
-    ...copy,
-    name: `${asset.name} Copy`
-  });
+  addAsset({ ...copy, name: `${asset.name} Copy` });
 }
 
 function removeAsset(id) {
   const asset = vaultAssets.find(item => item.id === id);
-  if (!asset) return;
-  const confirmed = confirm(`Remove "${asset.name}" from the Asset Vault?`);
-  if (!confirmed) return;
+  if (!asset || !confirm(`Remove "${asset.name}" from the Asset Vault?`)) return;
   vaultAssets = vaultAssets.filter(item => item.id !== id);
   saveVault();
   renderVault();
 }
 
 function exportVault() {
-  const backup = {
-    app: "LoganCreations",
-    version: "0.4",
-    exportedAt: new Date().toISOString(),
-    assets: vaultAssets
-  };
-  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
-  downloadBlob("loganscreations-asset-vault-backup.json", blob);
+  const backup = { app: "LoganCreations", version: "0.5", exportedAt: new Date().toISOString(), assets: vaultAssets };
+  downloadBlob("loganscreations-asset-vault-backup.json", new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" }));
 }
 
 function clearVault() {
-  if (!vaultAssets.length) return;
-  const confirmed = confirm("Remove every asset from the Asset Vault on this device?");
-  if (!confirmed) return;
+  if (!vaultAssets.length || !confirm("Remove every asset from the Asset Vault on this device?")) return;
   vaultAssets = [];
   saveVault();
   renderVault();
-}
-
-function importFiles(files) {
-  [...files].forEach(file => {
-    if (file.size > 2.5 * 1024 * 1024) {
-      alert(`${file.name} is too large for this first localStorage vault. Keep files under 2.5 MB for now.`);
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      addAsset({
-        type: detectType(file),
-        name: file.name.replace(/\.[^/.]+$/, ""),
-        description: `Imported file: ${file.name}`,
-        tags: ["imported", file.name.split(".").pop()?.toLowerCase()].filter(Boolean),
-        filename: file.name,
-        mime: file.type || "application/octet-stream",
-        size: file.size,
-        dataUrl: reader.result
-      });
-    };
-    reader.readAsDataURL(file);
-  });
 }
 
 function detectType(file) {
@@ -504,6 +360,24 @@ function detectType(file) {
   if (name.endsWith(".md") || name.endsWith(".txt")) return "book";
   if (name.includes("comic")) return "comic";
   return "file";
+}
+
+function importFiles(files) {
+  [...files].forEach(file => {
+    if (file.size > 2.5 * 1024 * 1024) return alert(`${file.name} is too large for this first localStorage vault. Keep files under 2.5 MB for now.`);
+    const reader = new FileReader();
+    reader.onload = () => addAsset({
+      type: detectType(file),
+      name: file.name.replace(/\.[^/.]+$/, ""),
+      description: `Imported file: ${file.name}`,
+      tags: ["imported", file.name.split(".").pop()?.toLowerCase()].filter(Boolean),
+      filename: file.name,
+      mime: file.type || "application/octet-stream",
+      size: file.size,
+      dataUrl: reader.result
+    });
+    reader.readAsDataURL(file);
+  });
 }
 
 function restoreVault(file) {
@@ -525,476 +399,301 @@ function restoreVault(file) {
   reader.readAsText(file);
 }
 
-function randomizeSpriteControls() {
-  spriteNameInput.value = "";
-  spriteSeedInput.value = makeSeed();
-  spriteClassInput.value = choice(Math.random, classes);
-  spriteTypeInput.value = choice(Math.random, types);
-  spriteBodyInput.value = choice(Math.random, bodies);
-  spriteRarityInput.value = choice(Math.random, rarities);
-  spriteMoodInput.value = choice(Math.random, moods);
-  spritePaletteInput.value = choice(Math.random, palettes);
-  spriteSizeInput.value = choice(Math.random, sizes);
-  generateSprite();
-}
-
-function collectSpriteConfig() {
+function getSpriteConfig() {
   if (!spriteSeedInput.value.trim()) spriteSeedInput.value = makeSeed();
   return {
     name: spriteNameInput.value.trim(),
+    outputSize: Number(spriteOutputSizeInput.value),
+    kind: spriteKindInput.value,
+    template: spriteTemplateInput.value,
+    theme: spriteThemeInput.value,
+    paletteMode: spritePaletteInput.value,
+    prompt: spritePromptInput.value.trim(),
+    mainColor: spriteMainColorInput.value,
+    accentColor: spriteAccentColorInput.value,
     seed: spriteSeedInput.value.trim(),
-    className: spriteClassInput.value,
-    coreType: spriteTypeInput.value,
-    body: spriteBodyInput.value,
-    rarity: spriteRarityInput.value,
-    mood: spriteMoodInput.value,
-    paletteTheme: spritePaletteInput.value,
-    size: spriteSizeInput.value
+    detail: spriteDetailInput.value
   };
 }
 
-function autoGenerateName(rng, coreType, className) {
-  const prefix = choice(rng, typePrefixes[coreType] || [coreType.slice(0, 4)]);
-  const suffix = choice(rng, typeSuffixes);
-  const classTailMap = {
-    Beast: "",
-    Amphibian: "toad",
-    Reptile: "scale",
-    Insectoid: "bug",
-    Avian: "wing",
-    Plantborn: "bloom",
-    Mineral: "stone",
-    Spirit: "wisp",
-    Machine: "gear",
-    Eldritch: "void"
-  };
-  const tail = rng() > 0.62 ? choice(rng, [classTailMap[className], suffix]).replace(/^./, char => char) : suffix;
-  return `${prefix}${tail}`.replace(/(^.|[-\s].)/g, segment => segment.toUpperCase());
+function resolvedPalette(config) {
+  let base = themePalettes[config.theme] || themePalettes.Normal;
+  if (config.paletteMode === "nether") base = themePalettes.Nether;
+  if (config.paletteMode === "muted") base = [base[0], shade(base[2], -45), shade(base[2], -10), shade(base[3], -15), shade(base[4], -10)];
+  if (config.paletteMode === "bright") base = [base[0], shade(base[2], -35), base[2], shade(base[3], 20), base[4]];
+  if (config.paletteMode === "custom") base = ["#101010", shade(config.mainColor, -45), config.mainColor, config.accentColor, "#fff4cc"];
+  return { outline: base[0], shadow: base[1], mid: base[2], light: base[3], shine: base[4] };
 }
 
-function rarityMultiplier(rarity) {
-  return { Common: 0.92, Uncommon: 1, Rare: 1.08, Epic: 1.18, Legendary: 1.32 }[rarity] || 1;
+function shade(hex, amount) {
+  const n = parseInt(hex.replace("#", ""), 16);
+  const r = Math.max(0, Math.min(255, (n >> 16) + amount));
+  const g = Math.max(0, Math.min(255, ((n >> 8) & 255) + amount));
+  const b = Math.max(0, Math.min(255, (n & 255) + amount));
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
-function sizeMultiplier(size) {
-  return { Tiny: 0.86, Small: 0.95, Medium: 1, Large: 1.1, Massive: 1.24 }[size] || 1;
-}
-
-function classBaseStats(className) {
-  return {
-    Beast: { hp: 62, attack: 72, defense: 56, speed: 60 },
-    Amphibian: { hp: 58, attack: 54, defense: 56, speed: 63 },
-    Reptile: { hp: 64, attack: 66, defense: 61, speed: 52 },
-    Insectoid: { hp: 49, attack: 63, defense: 51, speed: 78 },
-    Avian: { hp: 54, attack: 59, defense: 46, speed: 84 },
-    Plantborn: { hp: 70, attack: 49, defense: 68, speed: 40 },
-    Mineral: { hp: 78, attack: 58, defense: 81, speed: 28 },
-    Spirit: { hp: 52, attack: 73, defense: 42, speed: 72 },
-    Machine: { hp: 66, attack: 68, defense: 74, speed: 41 },
-    Eldritch: { hp: 63, attack: 79, defense: 53, speed: 58 }
-  }[className];
-}
-
-function moodAdjustments(mood) {
-  return {
-    Aggressive: { attack: 9, speed: 3, defense: -2 },
-    Noble: { defense: 6, hp: 4 },
-    Curious: { speed: 6, attack: -1 },
-    Mischievous: { speed: 8, hp: -2 },
-    Ancient: { defense: 8, hp: 8, speed: -4 },
-    Cowardly: { speed: 5, attack: -4 },
-    Territorial: { attack: 5, defense: 5 },
-    Symbiotic: { hp: 6, defense: 4, attack: -1 }
-  }[mood] || {};
-}
-
-function generateStats(rng, config) {
-  const base = { ...classBaseStats(config.className) };
-  const mood = moodAdjustments(config.mood);
-  const rarity = rarityMultiplier(config.rarity);
-  const size = sizeMultiplier(config.size);
-
-  Object.entries(mood).forEach(([stat, value]) => {
-    base[stat] += value;
-  });
-
-  return Object.fromEntries(Object.entries(base).map(([stat, value]) => {
-    const variance = randomInt(rng, -6, 8);
-    return [stat, Math.max(12, Math.round((value + variance) * rarity * size))];
-  }));
-}
-
-function generateSpriteLore(rng, config, name, ability, habitat) {
-  const behaviors = {
-    Aggressive: "charges first and tests foes with reckless feints",
-    Noble: "guards its chosen territory like a sworn sentinel",
-    Curious: "studies intruders before striking",
-    Mischievous: "likes to toy with anything that enters its range",
-    Ancient: "moves with deliberate patience and frightening certainty",
-    Cowardly: "avoids direct danger until cornered",
-    Territorial: "erupts in force whenever its ground is challenged",
-    Symbiotic: "travels beside larger creatures and feeds from their leftovers"
-  };
-
-  return `${name} is a ${config.rarity.toLowerCase()} ${config.coreType.toLowerCase()} ${config.className.toLowerCase()} from the ${habitat}. It ${behaviors[config.mood] || "moves unpredictably"}, and channels ${ability.toLowerCase()} whenever it senses pressure.`;
-}
-
-function choosePalette(config) {
-  const paletteName = config.paletteTheme === "Auto" ? autoPalettes[config.coreType] || "Nether" : config.paletteTheme;
-  return { paletteName, colors: palettePresets[paletteName] || palettePresets.Nether };
-}
-
-function createGrid(size) {
+function makeGrid(size = 32) {
   return Array.from({ length: size }, () => Array(size).fill(null));
 }
 
-function setCell(grid, x, y, color) {
+function cell(grid, x, y, color) {
+  x = Math.round(x); y = Math.round(y);
   if (x < 0 || y < 0 || y >= grid.length || x >= grid[0].length) return;
   grid[y][x] = color;
 }
 
-function fillRect(grid, x, y, width, height, color) {
-  for (let py = y; py < y + height; py += 1) {
-    for (let px = x; px < x + width; px += 1) setCell(grid, px, py, color);
-  }
+function rect(grid, x, y, w, h, color) {
+  for (let py = y; py < y + h; py += 1) for (let px = x; px < x + w; px += 1) cell(grid, px, py, color);
 }
 
-function fillEllipse(grid, cx, cy, rx, ry, color) {
-  for (let y = Math.floor(cy - ry - 1); y <= Math.ceil(cy + ry + 1); y += 1) {
-    for (let x = Math.floor(cx - rx - 1); x <= Math.ceil(cx + rx + 1); x += 1) {
+function ellipse(grid, cx, cy, rx, ry, color) {
+  for (let y = Math.floor(cy - ry); y <= Math.ceil(cy + ry); y += 1) {
+    for (let x = Math.floor(cx - rx); x <= Math.ceil(cx + rx); x += 1) {
       const dx = (x - cx) / rx;
       const dy = (y - cy) / ry;
-      if (dx * dx + dy * dy <= 1) setCell(grid, x, y, color);
+      if (dx * dx + dy * dy <= 1) cell(grid, x, y, color);
     }
   }
 }
 
-function linePoints(x1, y1, x2, y2) {
-  const points = [];
-  const dx = Math.abs(x2 - x1);
-  const dy = -Math.abs(y2 - y1);
-  const sx = x1 < x2 ? 1 : -1;
-  const sy = y1 < y2 ? 1 : -1;
-  let err = dx + dy;
-  let x = x1;
-  let y = y1;
-  while (true) {
-    points.push([x, y]);
-    if (x === x2 && y === y2) break;
-    const e2 = 2 * err;
-    if (e2 >= dy) { err += dy; x += sx; }
-    if (e2 <= dx) { err += dx; y += sy; }
-  }
-  return points;
-}
-
-function drawLine(grid, x1, y1, x2, y2, color, thickness = 1) {
-  linePoints(x1, y1, x2, y2).forEach(([x, y]) => {
-    for (let oy = -Math.floor(thickness / 2); oy <= Math.floor(thickness / 2); oy += 1) {
-      for (let ox = -Math.floor(thickness / 2); ox <= Math.floor(thickness / 2); ox += 1) {
-        setCell(grid, x + ox, y + oy, color);
-      }
-    }
-  });
-}
-
-function drawFeature(grid, feature, color) {
-  feature.cells.forEach(([x, y]) => setCell(grid, x, y, color));
-}
-
-function drawBaseBody(grid, config, rng, colors) {
-  const scale = sizeMultiplier(config.size);
-  const rx = Math.max(2, Math.round(4.2 * scale));
-  const ry = Math.max(2, Math.round(3.7 * scale));
-  const face = { x: 15, y: 9 };
-
-  switch (config.body) {
-    case "Quadruped": {
-      fillEllipse(grid, 11, 12, rx + 1, ry, colors.body);
-      fillEllipse(grid, 16, 10, Math.max(2, rx - 1), Math.max(2, ry - 1), colors.body);
-      fillRect(grid, 7, 15, 2, 4, colors.shadow);
-      fillRect(grid, 11, 16, 2, 4, colors.shadow);
-      fillRect(grid, 14, 16, 2, 4, colors.shadow);
-      fillRect(grid, 18, 15, 2, 4, colors.shadow);
-      drawLine(grid, 5, 12, 2, 10, colors.accent);
-      return { faceX: 16, faceY: 9, bodyX: 11, bodyY: 12 };
-    }
-    case "Serpent": {
-      for (let i = 0; i < 5; i += 1) fillEllipse(grid, 6 + i * 3, 13 - (i % 2), 2 + (i < 2 ? 1 : 0), 2, i > 2 ? colors.shadow : colors.body);
-      fillEllipse(grid, 18, 11, 3, 3, colors.body);
-      drawLine(grid, 4, 14, 1, 17, colors.accent);
-      return { faceX: 18, faceY: 11, bodyX: 11, bodyY: 13 };
-    }
-    case "Winged": {
-      fillEllipse(grid, 12, 12, rx, ry, colors.body);
-      drawLine(grid, 10, 11, 4, 6, colors.shadow, 2);
-      drawLine(grid, 11, 12, 4, 12, colors.shadow, 2);
-      drawLine(grid, 13, 11, 19, 6, colors.shadow, 2);
-      drawLine(grid, 13, 12, 20, 12, colors.shadow, 2);
-      fillEllipse(grid, 12, 9, 3, 3, colors.body);
-      return { faceX: 12, faceY: 9, bodyX: 12, bodyY: 12 };
-    }
-    case "Slime": {
-      fillEllipse(grid, 12, 13, rx + 1, ry + 1, colors.body);
-      fillRect(grid, 9, 16, 1, 3, colors.shadow);
-      fillRect(grid, 15, 16, 1, 2, colors.shadow);
-      fillRect(grid, 12, 17, 1, 2, colors.shadow);
-      return { faceX: 12, faceY: 11, bodyX: 12, bodyY: 13 };
-    }
-    case "Humanoid": {
-      fillEllipse(grid, 12, 7, 3, 3, colors.body);
-      fillRect(grid, 10, 10, 5, 6, colors.body);
-      drawLine(grid, 10, 10, 7, 14, colors.shadow, 2);
-      drawLine(grid, 14, 10, 17, 14, colors.shadow, 2);
-      drawLine(grid, 11, 15, 9, 20, colors.shadow, 2);
-      drawLine(grid, 13, 15, 15, 20, colors.shadow, 2);
-      return { faceX: 12, faceY: 7, bodyX: 12, bodyY: 12 };
-    }
-    case "Shellback": {
-      fillEllipse(grid, 11, 12, rx + 1, ry, colors.body);
-      fillEllipse(grid, 11, 11, rx, ry - 1, colors.light);
-      fillEllipse(grid, 16, 11, 2, 2, colors.body);
-      fillRect(grid, 8, 16, 2, 3, colors.shadow);
-      fillRect(grid, 13, 16, 2, 3, colors.shadow);
-      return { faceX: 16, faceY: 11, bodyX: 11, bodyY: 12 };
-    }
-    case "Orb": {
-      fillEllipse(grid, 12, 12, rx + 1, ry + 1, colors.body);
-      drawLine(grid, 7, 7, 5, 5, colors.accent);
-      drawLine(grid, 17, 7, 19, 5, colors.accent);
-      drawLine(grid, 12, 17, 12, 20, colors.accent);
-      return { faceX: 12, faceY: 12, bodyX: 12, bodyY: 12 };
-    }
-    case "Insect": {
-      fillEllipse(grid, 9, 12, 3, 3, colors.shadow);
-      fillEllipse(grid, 13, 12, 4, 4, colors.body);
-      fillEllipse(grid, 18, 11, 3, 3, colors.body);
-      drawLine(grid, 6, 10, 3, 7, colors.shadow);
-      drawLine(grid, 6, 13, 2, 14, colors.shadow);
-      drawLine(grid, 20, 10, 22, 7, colors.shadow);
-      drawLine(grid, 20, 13, 22, 14, colors.shadow);
-      return { faceX: 18, faceY: 10, bodyX: 13, bodyY: 12 };
-    }
-    default:
-      fillEllipse(grid, 12, 12, rx, ry, colors.body);
-      return { faceX: 12, faceY: 11, bodyX: 12, bodyY: 12 };
+function line(grid, x1, y1, x2, y2, color, thickness = 1) {
+  const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+  for (let i = 0; i <= steps; i += 1) {
+    const x = x1 + (x2 - x1) * (i / steps);
+    const y = y1 + (y2 - y1) * (i / steps);
+    for (let oy = -Math.floor(thickness / 2); oy <= Math.floor(thickness / 2); oy += 1) for (let ox = -Math.floor(thickness / 2); ox <= Math.floor(thickness / 2); ox += 1) cell(grid, x + ox, y + oy, color);
   }
 }
 
-function applyTypeFeatures(grid, config, rng, colors, anchors) {
-  if (["Quadruped", "Winged", "Humanoid", "Shellback", "Orb"].includes(config.body) && rng() > 0.35) {
-    drawFeature(grid, { cells: [[anchors.faceX - 2, anchors.faceY - 2], [anchors.faceX - 3, anchors.faceY - 4], [anchors.faceX + 2, anchors.faceY - 2], [anchors.faceX + 3, anchors.faceY - 4]] }, colors.accent);
-  }
-
-  switch (config.coreType) {
-    case "Crystal":
-      drawLine(grid, anchors.bodyX - 2, anchors.bodyY - 2, anchors.bodyX - 4, anchors.bodyY - 5, colors.light, 2);
-      drawLine(grid, anchors.bodyX + 2, anchors.bodyY - 1, anchors.bodyX + 5, anchors.bodyY - 5, colors.light, 2);
-      break;
-    case "Ember":
-      drawLine(grid, anchors.bodyX - 4, anchors.bodyY + 3, anchors.bodyX - 6, anchors.bodyY + 1, colors.accent, 2);
-      drawLine(grid, anchors.bodyX + 4, anchors.bodyY + 3, anchors.bodyX + 6, anchors.bodyY + 1, colors.accent, 2);
-      break;
-    case "Tide":
-      drawLine(grid, anchors.bodyX - 5, anchors.bodyY + 1, anchors.bodyX - 7, anchors.bodyY + 3, colors.light, 2);
-      drawLine(grid, anchors.bodyX + 5, anchors.bodyY + 1, anchors.bodyX + 7, anchors.bodyY + 3, colors.light, 2);
-      break;
-    case "Storm":
-    case "Static":
-      drawFeature(grid, { cells: [[anchors.bodyX + 4, anchors.bodyY - 2], [anchors.bodyX + 5, anchors.bodyY - 1], [anchors.bodyX + 4, anchors.bodyY], [anchors.bodyX + 6, anchors.bodyY + 1]] }, colors.accent);
-      break;
-    case "Venom":
-    case "Fungal":
-      fillRect(grid, anchors.bodyX - 4, anchors.bodyY + 1, 2, 2, colors.accent);
-      fillRect(grid, anchors.bodyX + 3, anchors.bodyY + 2, 2, 2, colors.accent);
-      break;
-    case "Bone":
-      drawLine(grid, anchors.bodyX - 3, anchors.bodyY - 1, anchors.bodyX - 6, anchors.bodyY - 3, colors.light);
-      drawLine(grid, anchors.bodyX + 3, anchors.bodyY - 1, anchors.bodyX + 6, anchors.bodyY - 3, colors.light);
-      break;
-    case "Metal":
-      fillRect(grid, anchors.bodyX - 3, anchors.bodyY - 2, 7, 1, colors.light);
-      break;
-    case "Solar":
-      fillEllipse(grid, anchors.bodyX, anchors.bodyY - 1, 2, 2, colors.light);
-      break;
-    case "Lunar":
-      drawLine(grid, anchors.bodyX + 4, anchors.bodyY - 3, anchors.bodyX + 6, anchors.bodyY - 5, colors.accent);
-      break;
-    case "Dream":
-    case "Gravity":
-      fillRect(grid, anchors.bodyX - 1, anchors.bodyY + 4, 3, 1, colors.accent);
-      break;
+function tri(grid, points, color) {
+  const [a, b, c] = points;
+  const minX = Math.floor(Math.min(a[0], b[0], c[0]));
+  const maxX = Math.ceil(Math.max(a[0], b[0], c[0]));
+  const minY = Math.floor(Math.min(a[1], b[1], c[1]));
+  const maxY = Math.ceil(Math.max(a[1], b[1], c[1]));
+  const area = edge(a, b, c);
+  for (let y = minY; y <= maxY; y += 1) for (let x = minX; x <= maxX; x += 1) {
+    const p = [x, y];
+    const w0 = edge(b, c, p);
+    const w1 = edge(c, a, p);
+    const w2 = edge(a, b, p);
+    if ((w0 >= 0 && w1 >= 0 && w2 >= 0 && area >= 0) || (w0 <= 0 && w1 <= 0 && w2 <= 0 && area <= 0)) cell(grid, x, y, color);
   }
 }
 
-function addFace(grid, colors, anchors, mood) {
-  setCell(grid, anchors.faceX - 1, anchors.faceY, colors.eye);
-  setCell(grid, anchors.faceX + 1, anchors.faceY, colors.eye);
-  setCell(grid, anchors.faceX - 1, anchors.faceY + 1, colors.outline);
-  setCell(grid, anchors.faceX + 1, anchors.faceY + 1, colors.outline);
+function edge(a, b, c) {
+  return (c[0] - a[0]) * (b[1] - a[1]) - (c[1] - a[1]) * (b[0] - a[0]);
+}
 
-  if (mood === "Aggressive" || mood === "Territorial") {
-    setCell(grid, anchors.faceX, anchors.faceY + 2, colors.accent);
-  } else if (mood === "Mischievous") {
-    setCell(grid, anchors.faceX + 1, anchors.faceY + 2, colors.accent);
-  } else {
-    setCell(grid, anchors.faceX, anchors.faceY + 2, colors.shadow);
+function drawEyes(grid, x, y, colors) {
+  cell(grid, x - 1, y, colors.shine);
+  cell(grid, x + 1, y, colors.shine);
+  cell(grid, x - 1, y + 1, colors.outline);
+  cell(grid, x + 1, y + 1, colors.outline);
+}
+
+function addOutline(source, colors) {
+  const size = source.length;
+  const out = source.map(row => row.slice());
+  for (let y = 0; y < size; y += 1) for (let x = 0; x < size; x += 1) {
+    if (!source[y][x]) continue;
+    [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]].forEach(([ox, oy]) => {
+      const nx = x + ox, ny = y + oy;
+      if (nx >= 0 && ny >= 0 && nx < size && ny < size && !source[ny][nx]) out[ny][nx] = colors.outline;
+    });
+  }
+  return out;
+}
+
+function drawSparkles(grid, rng, colors, count) {
+  for (let i = 0; i < count; i += 1) {
+    const x = randInt(rng, 4, 27), y = randInt(rng, 4, 27);
+    cell(grid, x, y, colors.light);
+    if (rng() > 0.6) cell(grid, x + 1, y, colors.shine);
   }
 }
 
-function addShading(grid, anchors, colors) {
-  fillRect(grid, anchors.bodyX - 3, anchors.bodyY - 3, 3, 2, colors.light);
-  fillRect(grid, anchors.bodyX + 1, anchors.bodyY + 1, 4, 2, colors.shadow);
-}
-
-function renderGridToCanvas(grid, targetCanvas, scale, outlineColor = palettePresets.Nether.outline) {
-  const logical = grid.length;
-  const offscreen = document.createElement("canvas");
-  offscreen.width = logical;
-  offscreen.height = logical;
-  const ctx = offscreen.getContext("2d", { alpha: true });
-
-  ctx.clearRect(0, 0, logical, logical);
-
-  for (let y = 0; y < logical; y += 1) {
-    for (let x = 0; x < logical; x += 1) {
-      if (!grid[y][x]) continue;
-      for (let oy = -1; oy <= 1; oy += 1) {
-        for (let ox = -1; ox <= 1; ox += 1) {
-          const nx = x + ox;
-          const ny = y + oy;
-          if (nx < 0 || ny < 0 || nx >= logical || ny >= logical || !grid[ny][nx]) {
-            ctx.fillStyle = outlineColor;
-            ctx.fillRect(nx, ny, 1, 1);
-          }
-        }
-      }
-    }
+function drawTemplate(grid, config, rng, colors) {
+  const d = config.detail;
+  const high = d === "detailed";
+  switch (config.template) {
+    case "wolf":
+      ellipse(grid, 14, 18, 8, 5, colors.mid); ellipse(grid, 22, 14, 5, 4, colors.mid);
+      tri(grid, [[19,11],[21,6],[23,12]], colors.mid); tri(grid, [[23,11],[26,7],[26,14]], colors.mid);
+      line(grid, 7, 18, 2, 14, colors.shadow, 2); rect(grid, 8, 22, 3, 5, colors.shadow); rect(grid, 15, 22, 3, 5, colors.shadow); rect(grid, 20, 20, 3, 5, colors.shadow);
+      drawEyes(grid, 23, 14, colors); rect(grid, 16, 15, 5, 2, colors.light); break;
+    case "dragon":
+      ellipse(grid, 13, 18, 8, 4, colors.mid); ellipse(grid, 22, 14, 5, 4, colors.mid);
+      line(grid, 7, 19, 2, 23, colors.shadow, 2); line(grid, 13, 14, 8, 8, colors.shadow, 2); line(grid, 15, 14, 22, 7, colors.shadow, 2);
+      tri(grid, [[20,11],[21,6],[23,11]], colors.light); tri(grid, [[23,11],[26,7],[26,14]], colors.light); drawEyes(grid, 23, 14, colors); break;
+    case "bird":
+      ellipse(grid, 16, 17, 6, 7, colors.mid); ellipse(grid, 20, 11, 4, 4, colors.mid);
+      tri(grid, [[14,16],[5,10],[10,22]], colors.shadow); tri(grid, [[22,11],[28,13],[22,15]], colors.light); line(grid, 16, 23, 14, 28, colors.shadow, 2); line(grid, 18, 23, 20, 28, colors.shadow, 2); drawEyes(grid, 20, 10, colors); break;
+    case "fish":
+      ellipse(grid, 16, 16, 8, 5, colors.mid); tri(grid, [[7,16],[2,11],[2,21]], colors.shadow); tri(grid, [[17,12],[20,6],[22,13]], colors.light); tri(grid, [[17,20],[21,26],[22,19]], colors.light); drawEyes(grid, 21, 15, colors); break;
+    case "bug":
+      ellipse(grid, 10, 17, 4, 5, colors.shadow); ellipse(grid, 16, 16, 5, 6, colors.mid); ellipse(grid, 23, 15, 4, 4, colors.mid);
+      [8,12,18,22].forEach(x => { line(grid, x, 18, x - 4, 23, colors.shadow); line(grid, x, 14, x - 3, 9, colors.shadow); });
+      line(grid, 24, 12, 27, 7, colors.light); line(grid, 25, 13, 29, 10, colors.light); drawEyes(grid, 23, 14, colors); break;
+    case "slime":
+      ellipse(grid, 16, 19, 10, 8, colors.mid); ellipse(grid, 13, 14, 5, 4, colors.light); rect(grid, 8, 25, 5, 2, colors.shadow); rect(grid, 19, 25, 5, 2, colors.shadow); drawEyes(grid, 16, 18, colors); break;
+    case "ghost":
+      ellipse(grid, 16, 15, 8, 9, colors.mid); rect(grid, 8, 17, 16, 8, colors.mid); tri(grid, [[8,25],[11,30],[14,25]], colors.mid); tri(grid, [[14,25],[17,30],[20,25]], colors.mid); tri(grid, [[20,25],[24,30],[24,25]], colors.mid); drawEyes(grid, 16, 14, colors); break;
+    case "golem":
+      rect(grid, 10, 9, 12, 8, colors.mid); rect(grid, 8, 17, 16, 9, colors.shadow); rect(grid, 5, 18, 4, 8, colors.mid); rect(grid, 23, 18, 4, 8, colors.mid); rect(grid, 10, 26, 5, 4, colors.shadow); rect(grid, 18, 26, 5, 4, colors.shadow); drawEyes(grid, 16, 13, colors); break;
+    case "robot":
+      rect(grid, 10, 8, 12, 10, colors.mid); rect(grid, 9, 18, 14, 9, colors.shadow); rect(grid, 5, 20, 4, 5, colors.mid); rect(grid, 23, 20, 4, 5, colors.mid); line(grid, 13, 8, 10, 4, colors.light); line(grid, 19, 8, 22, 4, colors.light); drawEyes(grid, 16, 13, colors); break;
+    case "mushroom":
+      ellipse(grid, 16, 12, 10, 6, colors.mid); rect(grid, 12, 15, 8, 12, colors.light); ellipse(grid, 11, 10, 3, 2, colors.shine); ellipse(grid, 20, 13, 2, 2, colors.shine); drawEyes(grid, 16, 20, colors); break;
+    case "sword":
+      tri(grid, [[16,3],[12,18],[20,18]], colors.light); rect(grid, 14, 17, 4, 8, colors.mid); rect(grid, 9, 20, 14, 3, colors.shadow); rect(grid, 13, 25, 6, 4, colors.accent || colors.shine); break;
+    case "potion":
+      rect(grid, 14, 5, 5, 6, colors.light); ellipse(grid, 16, 18, 7, 9, colors.mid); rect(grid, 12, 11, 9, 2, colors.shadow); ellipse(grid, 18, 16, 2, 3, colors.shine); break;
+    case "gem":
+      tri(grid, [[16,3],[6,13],[26,13]], colors.light); tri(grid, [[6,13],[16,29],[26,13]], colors.mid); line(grid, 16, 4, 16, 28, colors.shine); line(grid, 6, 13, 26, 13, colors.shadow); break;
+    case "egg":
+      ellipse(grid, 16, 17, 8, 11, colors.mid); ellipse(grid, 13, 12, 3, 4, colors.light); rect(grid, 10, 21, 4, 3, colors.shadow); rect(grid, 19, 17, 3, 3, colors.accent || colors.shine); break;
+    case "trainer":
+      ellipse(grid, 16, 10, 6, 6, colors.light); rect(grid, 10, 16, 12, 11, colors.mid); rect(grid, 8, 13, 16, 3, colors.shadow); rect(grid, 12, 8, 8, 2, colors.shadow); drawEyes(grid, 16, 10, colors); break;
+    case "badge":
+      ellipse(grid, 16, 16, 10, 10, colors.mid); ellipse(grid, 16, 16, 6, 6, colors.light); tri(grid, [[16,5],[19,16],[16,27],[13,16]], colors.shadow); drawSparkles(grid, rng, colors, 8); break;
   }
+  if (high) drawSparkles(grid, rng, colors, 5);
+}
 
-  for (let y = 0; y < logical; y += 1) {
-    for (let x = 0; x < logical; x += 1) {
-      if (!grid[y][x]) continue;
-      ctx.fillStyle = grid[y][x];
-      ctx.fillRect(x, y, 1, 1);
-    }
+function renderGrid(grid, canvas, size, colors) {
+  const finalGrid = addOutline(grid, colors);
+  const logical = finalGrid.length;
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  ctx.clearRect(0, 0, size, size);
+  const pixel = size / logical;
+  for (let y = 0; y < logical; y += 1) for (let x = 0; x < logical; x += 1) {
+    if (!finalGrid[y][x]) continue;
+    ctx.fillStyle = finalGrid[y][x];
+    ctx.fillRect(Math.floor(x * pixel), Math.floor(y * pixel), Math.ceil(pixel), Math.ceil(pixel));
   }
-
-  const target = targetCanvas.getContext("2d", { alpha: true });
-  target.imageSmoothingEnabled = false;
-  target.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
-  target.drawImage(offscreen, 0, 0, logical, logical, 0, 0, logical * scale, logical * scale);
-
-  return targetCanvas.toDataURL("image/png");
+  return canvas.toDataURL("image/png");
 }
 
-function dataUrlSize(dataUrl) {
-  const base64 = dataUrl.split(",")[1] || "";
-  return Math.ceil((base64.length * 3) / 4);
+function previewDataUrl(dataUrl, canvas) {
+  const img = new Image();
+  img.onload = () => {
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  };
+  img.src = dataUrl;
 }
 
-function buildSpriteData(config) {
-  const seedComposite = `${config.seed}|${config.className}|${config.coreType}|${config.body}|${config.rarity}|${config.mood}|${config.paletteTheme}|${config.size}`;
-  const rng = createRng(seedComposite);
-  const paletteInfo = choosePalette(config);
-  const colors = paletteInfo.colors;
-  const name = config.name || autoGenerateName(rng, config.coreType, config.className);
-  const habitat = choice(rng, habitatMap[config.coreType] || ["unknown wilds"]);
-  const ability = choice(rng, abilityMap[config.coreType] || ["Wild Pulse"]);
-  const stats = generateStats(rng, config);
-  const grid = createGrid(24);
-  const anchors = drawBaseBody(grid, config, rng, colors);
-  addShading(grid, anchors, colors);
-  applyTypeFeatures(grid, config, rng, colors, anchors);
-  addFace(grid, colors, anchors, config.mood);
-  if (config.rarity === "Epic" || config.rarity === "Legendary") fillRect(grid, anchors.bodyX - 1, anchors.bodyY - 4, 3, 1, colors.accent);
+function autoName(config, rng) {
+  if (config.name) return config.name;
+  const first = {
+    Fire: ["Ash", "Cinder", "Flare"], Water: ["Ripple", "Mire", "Aqua"], Electric: ["Volt", "Spark", "Jolt"], Grass: ["Moss", "Thorn", "Leaf"], Ice: ["Frost", "Snow", "Glaze"], Poison: ["Vile", "Toxi", "Spore"], Ghost: ["Wisp", "Shade", "Hex"], Rock: ["Boulder", "Gravel", "Stone"], Steel: ["Iron", "Chrome", "Gear"], Dragon: ["Drake", "Fang", "Scale"], Fairy: ["Glimmer", "Charm", "Pix"], Dark: ["Night", "Umbra", "Gloom"], Normal: ["Nim", "Pip", "Taro"], Nether: ["Ash", "Basalt", "Magma"], Custom: ["Nova", "Rune", "Flux"]
+  }[config.theme] || ["Nova"];
+  const last = { creature: ["cub", "ling", "fang", "moth", "drake"], item: ["stone", "blade", "orb", "vial"], trainer: ["hero", "rival", "scout"], badge: ["badge", "crest", "sigil"] }[config.kind];
+  return `${pick(rng, first)}${pick(rng, last)}`.replace(/^./, c => c.toUpperCase());
+}
 
-  const dataUrl = renderGridToCanvas(grid, spriteCanvas, 4, colors.outline);
-  const iconDataUrl = renderGridToCanvas(grid, spriteIconCanvas, 2, colors.outline);
-  const description = generateSpriteLore(rng, config, name, ability, habitat);
+function buildSprite() {
+  const config = getSpriteConfig();
+  const rng = rngFrom(`${config.seed}|${config.kind}|${config.template}|${config.theme}|${config.paletteMode}|${config.detail}|${config.prompt}`);
+  const colors = resolvedPalette(config);
+  colors.accent = config.accentColor;
+  const grid = makeGrid(32);
+  drawTemplate(grid, config, rng, colors);
+  const outputCanvas = document.createElement("canvas");
+  const dataUrl = renderGrid(grid, outputCanvas, config.outputSize, colors);
+  previewDataUrl(dataUrl, spriteCanvas);
+  previewDataUrl(dataUrl, spriteIconCanvas);
+  const name = autoName(config, rng);
+  const useCase = `${config.outputSize}x${config.outputSize} ${config.kind} PNG`;
+  const styleNotes = `${templates[config.template]} · ${config.theme} theme · ${config.detail} detail`;
+  const desc = config.prompt ? `${name}: ${config.prompt}` : `${name} is a ${config.theme.toLowerCase()} themed ${templates[config.template].toLowerCase()} made for a custom monster/RPG project.`;
   const exportData = {
     app: "LoganCreations",
+    version: "0.5",
     module: "Create Sprite",
-    version: "0.4",
     name,
+    kind: config.kind,
+    template: config.template,
+    theme: config.theme,
+    paletteMode: config.paletteMode,
+    outputSize: config.outputSize,
     seed: config.seed,
-    className: config.className,
-    coreType: config.coreType,
-    body: config.body,
-    rarity: config.rarity,
-    mood: config.mood,
-    palette: paletteInfo.paletteName,
-    size: config.size,
-    ability,
-    habitat,
-    stats,
-    description,
-    tags: [config.className.toLowerCase(), config.coreType.toLowerCase(), config.rarity.toLowerCase(), config.body.toLowerCase()],
-    image: {
-      filename: `${slugify(name)}.png`,
-      width: 96,
-      height: 96
-    }
+    detail: config.detail,
+    prompt: config.prompt,
+    useCase,
+    styleNotes,
+    description: desc,
+    filename: `${slugify(name)}.png`
   };
-
-  return { name, dataUrl, iconDataUrl, ability, habitat, description, stats, paletteName: paletteInfo.paletteName, exportData };
-}
-
-function slugify(value) {
-  return String(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "sprite";
-}
-
-function updateSpriteUi(spriteData, config) {
-  spritePreviewName.textContent = spriteData.name;
-  spriteSeedBadge.textContent = `Seed ${config.seed}`;
-  spriteStatus.textContent = `${config.rarity} ${config.coreType} ${config.className}`;
-  spriteAbility.textContent = spriteData.ability;
-  spriteHabitat.textContent = spriteData.habitat;
-  spriteDescription.textContent = spriteData.description;
-
-  spriteTags.innerHTML = [config.className, config.coreType, config.body, config.rarity, config.mood, spriteData.paletteName]
-    .map(tag => `<span class="option-chip">${escapeHtml(tag)}</span>`)
-    .join("");
-
-  spriteStats.innerHTML = Object.entries(spriteData.stats).map(([stat, value]) => {
-    const width = Math.min(100, Math.round(value / 1.4));
-    return `
-      <div class="stat-row">
-        <span>${stat.toUpperCase()}</span>
-        <div class="stat-bar"><i style="width:${width}%"></i></div>
-        <strong>${value}</strong>
-      </div>
-    `;
-  }).join("");
-}
-
-function generateSprite() {
-  const config = collectSpriteConfig();
-  const spriteData = buildSpriteData(config);
   currentSprite = {
-    ...spriteData,
-    config,
-    filename: `${slugify(spriteData.name)}.png`,
-    jsonFilename: `${slugify(spriteData.name)}.json`,
-    size: dataUrlSize(spriteData.dataUrl)
+    name,
+    dataUrl,
+    filename: `${slugify(name)}.png`,
+    jsonFilename: `${slugify(name)}.json`,
+    size: Math.ceil(((dataUrl.split(",")[1] || "").length * 3) / 4),
+    exportData,
+    description: desc,
+    tags: [config.kind, config.template, config.theme.toLowerCase(), `${config.outputSize}x${config.outputSize}`]
   };
-  if (!spriteNameInput.value.trim()) spriteNameInput.value = currentSprite.name;
-  updateSpriteUi(currentSprite, config);
+  if (!spriteNameInput.value.trim()) spriteNameInput.value = name;
+  updateSpriteUi(config);
 }
 
-function rerollBody() {
+function updateSpriteUi(config) {
+  spritePreviewName.textContent = currentSprite.name;
+  spriteSeedBadge.textContent = `Seed ${config.seed}`;
+  spriteStatus.textContent = `${config.outputSize}x${config.outputSize} ${config.kind}`;
+  spriteUseCase.textContent = currentSprite.exportData.useCase;
+  spriteStyleNotes.textContent = currentSprite.exportData.styleNotes;
+  spriteDescription.textContent = currentSprite.description;
+  spriteTags.innerHTML = currentSprite.tags.map(tag => `<span class="option-chip">${escapeHtml(tag)}</span>`).join("");
+  spriteStats.innerHTML = [
+    ["SIZE", `${config.outputSize}x${config.outputSize}`],
+    ["KIND", config.kind],
+    ["SHAPE", templates[config.template].split(" /")[0]],
+    ["THEME", config.theme]
+  ].map(([label, value]) => `<div class="stat-row sprite-detail-row"><span>${label}</span><strong>${escapeHtml(value)}</strong></div>`).join("");
+}
+
+function randomizeSprite() {
+  const kind = pick(Math.random, ["creature", "item", "trainer", "badge"]);
+  spriteKindInput.value = kind;
+  syncTemplateOptions();
+  spriteTemplateInput.value = pick(Math.random, templateGroups[kind]);
+  spriteThemeInput.value = pick(Math.random, Object.keys(themePalettes));
+  spritePaletteInput.value = pick(Math.random, ["auto", "bright", "muted", "nether"]);
+  spriteOutputSizeInput.value = pick(Math.random, ["32", "64", "96"]);
+  spriteDetailInput.value = pick(Math.random, ["clean", "detailed", "icon"]);
+  spriteNameInput.value = "";
   spriteSeedInput.value = makeSeed();
-  const remaining = bodies.filter(value => value !== spriteBodyInput.value);
-  spriteBodyInput.value = choice(Math.random, remaining);
   generateSprite();
 }
 
-function rerollPalette() {
+function rerollShape() {
+  const values = templateGroups[spriteKindInput.value] || templateGroups.creature;
+  const available = values.filter(value => value !== spriteTemplateInput.value);
+  spriteTemplateInput.value = pick(Math.random, available.length ? available : values);
   spriteSeedInput.value = makeSeed();
-  const remaining = palettes.filter(value => value !== spritePaletteInput.value);
-  spritePaletteInput.value = choice(Math.random, remaining);
   generateSprite();
+}
+
+function rerollColors() {
+  const names = Object.keys(themePalettes).filter(name => name !== spriteThemeInput.value);
+  spriteThemeInput.value = pick(Math.random, names);
+  spriteSeedInput.value = makeSeed();
+  generateSprite();
+}
+
+function syncTemplateOptions() {
+  const values = templateGroups[spriteKindInput.value] || templateGroups.creature;
+  spriteTemplateInput.innerHTML = values.map(value => `<option value="${value}">${templates[value]}</option>`).join("");
 }
 
 function downloadCurrentSprite() {
@@ -1004,8 +703,7 @@ function downloadCurrentSprite() {
 
 function downloadCurrentSpriteJson() {
   if (!currentSprite) return;
-  const blob = new Blob([JSON.stringify(currentSprite.exportData, null, 2)], { type: "application/json" });
-  downloadBlob(currentSprite.jsonFilename, blob);
+  downloadBlob(currentSprite.jsonFilename, new Blob([JSON.stringify(currentSprite.exportData, null, 2)], { type: "application/json" }));
 }
 
 function saveCurrentSpriteToVault() {
@@ -1014,7 +712,7 @@ function saveCurrentSpriteToVault() {
     type: "sprite",
     name: currentSprite.name,
     description: currentSprite.description,
-    tags: currentSprite.exportData.tags,
+    tags: currentSprite.tags,
     filename: currentSprite.filename,
     mime: "image/png",
     size: currentSprite.size,
@@ -1024,15 +722,12 @@ function saveCurrentSpriteToVault() {
   spriteStatus.textContent = `${currentSprite.name} saved to Asset Vault`;
 }
 
-cards.forEach(card => {
-  card.addEventListener("click", () => selectModule(card.dataset.module));
-});
+cards.forEach(card => card.addEventListener("click", () => selectModule(card.dataset.module)));
 
 document.querySelectorAll("[data-action]").forEach(button => {
   button.addEventListener("click", () => {
-    const action = button.dataset.action;
-    if (action === "new-project") selectModule("sprite-lab");
-    if (action === "open-library") selectModule("asset-vault");
+    if (button.dataset.action === "new-project") selectModule("sprite-lab");
+    if (button.dataset.action === "open-library") selectModule("asset-vault");
   });
 });
 
@@ -1050,38 +745,28 @@ document.querySelectorAll("[data-vault-command]").forEach(button => {
 vaultGrid.addEventListener("click", event => {
   const button = event.target.closest("[data-vault-action]");
   if (!button) return;
-  const action = button.dataset.vaultAction;
-  const id = button.dataset.id;
-  if (action === "download") downloadAsset(id);
-  if (action === "duplicate") duplicateAsset(id);
-  if (action === "remove") removeAsset(id);
+  if (button.dataset.vaultAction === "download") downloadAsset(button.dataset.id);
+  if (button.dataset.vaultAction === "duplicate") duplicateAsset(button.dataset.id);
+  if (button.dataset.vaultAction === "remove") removeAsset(button.dataset.id);
 });
 
 [vaultSearch, vaultType].forEach(input => input.addEventListener("input", renderVault));
-importInput.addEventListener("change", () => {
-  importFiles(importInput.files);
-  importInput.value = "";
-});
-restoreInput.addEventListener("change", () => {
-  const [file] = restoreInput.files;
-  if (file) restoreVault(file);
-  restoreInput.value = "";
-});
+importInput.addEventListener("change", () => { importFiles(importInput.files); importInput.value = ""; });
+restoreInput.addEventListener("change", () => { const [file] = restoreInput.files; if (file) restoreVault(file); restoreInput.value = ""; });
 
-generateSpriteBtn.addEventListener("click", generateSprite);
-randomizeSpriteBtn.addEventListener("click", randomizeSpriteControls);
-rerollBodyBtn.addEventListener("click", rerollBody);
-rerollPaletteBtn.addEventListener("click", rerollPalette);
+generateSpriteBtn.addEventListener("click", buildSprite);
+randomizeSpriteBtn.addEventListener("click", randomizeSprite);
+rerollShapeBtn.addEventListener("click", rerollShape);
+rerollColorsBtn.addEventListener("click", rerollColors);
 downloadSpriteBtn.addEventListener("click", downloadCurrentSprite);
 downloadSpriteJsonBtn.addEventListener("click", downloadCurrentSpriteJson);
 saveSpriteBtn.addEventListener("click", saveCurrentSpriteToVault);
 
-[spriteClassInput, spriteTypeInput, spriteBodyInput, spriteRarityInput, spriteMoodInput, spritePaletteInput, spriteSizeInput].forEach(input => {
-  input.addEventListener("change", generateSprite);
-});
-
-spriteNameInput.addEventListener("change", generateSprite);
-spriteSeedInput.addEventListener("change", generateSprite);
+[spriteOutputSizeInput, spriteTemplateInput, spriteThemeInput, spritePaletteInput, spriteMainColorInput, spriteAccentColorInput, spriteDetailInput].forEach(input => input.addEventListener("change", buildSprite));
+spritePromptInput.addEventListener("change", buildSprite);
+spriteNameInput.addEventListener("change", buildSprite);
+spriteSeedInput.addEventListener("change", buildSprite);
+spriteKindInput.addEventListener("change", () => { syncTemplateOptions(); buildSprite(); });
 
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("light-mode");
@@ -1089,6 +774,7 @@ themeToggle.addEventListener("click", () => {
 });
 
 if (!spriteSeedInput.value.trim()) spriteSeedInput.value = makeSeed();
-generateSprite();
+syncTemplateOptions();
+buildSprite();
 renderVault();
 selectModule("sprite-lab");

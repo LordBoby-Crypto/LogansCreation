@@ -4,19 +4,33 @@ A Nether-themed GitHub Pages creative forge for sprites, books, cultures, langua
 
 ## Current version
 
-**v0.4** adds the first working **Create Sprite** system and keeps **Asset Vault** fully working.
+**v0.5** rebuilds **Create Sprite** after feedback: clearer options, practical templates, real output sizing, stronger pixel rendering, and no abstract rarity/mood/class controls.
 
-### Create Sprite features
+### Create Sprite changes in v0.5
 
-- Seed-based pixel sprite generation
-- Creature class, core type, body form, rarity, mood, palette theme, and size controls
-- Auto-generated or custom creature names
-- Generated stats, ability, habitat, and description
+- Removed confusing Creature Class, Core Type, Body Form, Rarity, and Mood controls
+- Replaced them with practical sprite controls:
+  - What Are You Making?
+  - Silhouette Template
+  - Type / Theme
+  - Palette Style
+  - Idea / Prompt
+  - Output Size
+  - Detail Level
+- Output Size now actually changes the exported PNG size
+- Better pixel-art templates for creatures, items, trainers, and badges
 - PNG export
-- JSON export
+- JSON metadata export
 - Save generated sprites directly into Asset Vault
-- Reroll body and reroll palette controls
-- Randomize-all option
+- Reroll shape and reroll colors controls
+
+### Important quality note
+
+This is still an offline browser generator. It can make cleaner procedural sprites, but the highest-quality future version should use either:
+
+1. a curated handmade sprite-part library, or
+2. an optional AI/image service, or
+3. an import-reference workflow where the app pixelates and edits an uploaded image.
 
 ### Asset Vault features
 
