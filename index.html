@@ -14,341 +14,61 @@
 </head>
 <body>
   <div class="nether-scene" aria-hidden="true">
-    <div class="lava-sky"></div>
-    <div class="portal-rift portal-left"></div>
-    <div class="portal-rift portal-right"></div>
-    <div class="embers embers-a"></div>
-    <div class="embers embers-b"></div>
-    <div class="fortress"></div>
-    <div class="basalt"></div>
-    <div class="lava-river"></div>
-    <div class="block-floor"></div>
+    <div class="lava-sky"></div><div class="portal-rift portal-left"></div><div class="portal-rift portal-right"></div>
+    <div class="embers embers-a"></div><div class="embers embers-b"></div><div class="fortress"></div><div class="basalt"></div><div class="lava-river"></div><div class="block-floor"></div>
   </div>
 
   <div class="app-shell">
     <header class="hero">
-      <div class="hero-topline">
-        <span class="status-pill">Nether Build v0.6</span>
-        <button class="ghost-button" id="effectToggle" type="button" aria-label="Toggle background effects">✦</button>
-      </div>
-
-      <div class="brand-block">
-        <div class="brand-mark" aria-hidden="true">LC</div>
-        <div>
-          <h1>LoganCreations</h1>
-          <p class="hero-subtitle">A Nether-styled mobile creative forge for sprites, books, cultures, sounds, comics, models, and asset packs.</p>
-        </div>
-      </div>
-
-      <div class="quick-actions">
-        <button class="primary-action" type="button" data-open="sprite">Create Sprite</button>
-        <button class="secondary-action" type="button" data-open="vault">Asset Vault</button>
-      </div>
+      <div class="hero-topline"><span class="status-pill">Loganmon Build v0.7</span><button class="ghost-button" id="effectToggle" type="button">✦</button></div>
+      <div class="brand-block"><div class="brand-mark">LC</div><div><h1>LoganCreations</h1><p class="hero-subtitle">A Nether-styled creator suite. Create Sprite is now a Loganmon design studio built from your Pokédex list instead of the trash random shape generator.</p></div></div>
+      <div class="quick-actions"><button class="primary-action" type="button" data-open="studio">Loganmon Sprite Studio</button><button class="secondary-action" type="button" data-open="vault">Asset Vault</button></div>
     </header>
 
     <main>
-      <section class="panel intro-panel">
-        <p class="eyebrow">Creation modules</p>
-        <h2>Choose what to build</h2>
-        <p>Create Sprite and Asset Vault are working. The other buttons are placeholders for the next tools.</p>
-      </section>
+      <section class="panel intro-panel"><p class="eyebrow">Important change</p><h2>Sprite generation was replaced with design direction</h2><p>The quality target you showed cannot be reached by random canvas blobs. This version creates a serious 64x64 FireRed-style sprite brief from the Loganmon name, type, evolution stage, rarity/replacement slot, and optional custom notes. Use these briefs for drawing or AI/image generation, then store finished sprites in the vault.</p></section>
 
       <section class="module-grid">
-        <button class="module-card module-hot" type="button" data-open="sprite">
-          <span class="module-icon">▣</span>
-          <span class="module-title">Create Sprite</span>
-          <span class="module-desc">Generate cleaner pixel-style sprites from real choices: kind, template, type/theme, prompt, colors, and output size.</span>
-          <span class="module-meta">working · PNG · JSON</span>
-        </button>
-
-        <button class="module-card module-vault" type="button" data-open="vault">
-          <span class="module-icon">▥</span>
-          <span class="module-title">Asset Vault</span>
-          <span class="module-desc">Store generated assets locally, download them, duplicate them, remove them, and export backups.</span>
-          <span class="module-meta">working · storage · backup</span>
-        </button>
-
-        <button class="module-card" type="button" data-placeholder="Sprite Factory">
-          <span class="module-icon">▦</span>
-          <span class="module-title">Sprite Factory</span>
-          <span class="module-desc">Later: generate full themed asset packs with many sprites, icons, and sprite sheets.</span>
-          <span class="module-meta">planned</span>
-        </button>
-
-        <button class="module-card" type="button" data-placeholder="Book / Novel Generator">
-          <span class="module-icon">✦</span>
-          <span class="module-title">Book / Novel Generator</span>
-          <span class="module-desc">Later: create story bibles, casts, outlines, chapters, and exportable book packages.</span>
-          <span class="module-meta">planned</span>
-        </button>
-
-        <button class="module-card" type="button" data-placeholder="Culture Generator">
-          <span class="module-icon">◈</span>
-          <span class="module-title">Culture Generator</span>
-          <span class="module-desc">Later: create civilizations, laws, rituals, symbols, myths, factions, and dossiers.</span>
-          <span class="module-meta">planned</span>
-        </button>
-
-        <button class="module-card" type="button" data-placeholder="Language / Name Engine">
-          <span class="module-icon">⌁</span>
-          <span class="module-title">Language / Name Engine</span>
-          <span class="module-desc">Later: generate consistent names, roots, dictionaries, and naming rules.</span>
-          <span class="module-meta">planned</span>
-        </button>
-
-        <button class="module-card" type="button" data-placeholder="3D Model Generator">
-          <span class="module-icon">⬡</span>
-          <span class="module-title">3D Model Generator</span>
-          <span class="module-desc">Later: make procedural relics, weapons, crystals, masks, props, and renders.</span>
-          <span class="module-meta">planned</span>
-        </button>
-
-        <button class="module-card" type="button" data-placeholder="Monster Sound Generator">
-          <span class="module-icon">≋</span>
-          <span class="module-title">Monster Sound Generator</span>
-          <span class="module-desc">Later: synthesize roars, hisses, clicks, impacts, and WAV files.</span>
-          <span class="module-meta">planned</span>
-        </button>
-
-        <button class="module-card" type="button" data-placeholder="Comic Generator">
-          <span class="module-icon">▤</span>
-          <span class="module-title">Comic Generator</span>
-          <span class="module-desc">Later: create panels, speech bubbles, captions, and comic page exports.</span>
-          <span class="module-meta">planned</span>
-        </button>
+        <button class="module-card module-hot" type="button" data-open="studio"><span class="module-icon">▣</span><span class="module-title">Loganmon Sprite Studio</span><span class="module-desc">Pick a Loganmon. The app infers rarity from the FireRed replacement slot and creates a polished front battle sprite design brief.</span><span class="module-meta">working · design brief · 64x64</span></button>
+        <button class="module-card module-vault" type="button" data-open="vault"><span class="module-icon">▥</span><span class="module-title">Asset Vault</span><span class="module-desc">Store design briefs, imported sprite images, and backups locally on this device/browser.</span><span class="module-meta">working · storage · backup</span></button>
+        <button class="module-card" type="button" data-placeholder="Sprite Factory"><span class="module-icon">▦</span><span class="module-title">Sprite Factory</span><span class="module-desc">Later: batch generate/download all design briefs and sprite-pack folders.</span><span class="module-meta">planned</span></button>
+        <button class="module-card" type="button" data-placeholder="Image-to-Sprite Converter"><span class="module-icon">◫</span><span class="module-title">Image-to-Sprite Converter</span><span class="module-desc">Later: upload finished art/reference image, crop it, pixelize, palette-reduce, outline, and export.</span><span class="module-meta">planned</span></button>
       </section>
 
-      <section class="panel preview-panel" id="previewPanel">
-        <div class="preview-header">
-          <div>
-            <p class="eyebrow">Selected module</p>
-            <h2 id="previewTitle">Create Sprite</h2>
-          </div>
-          <span class="preview-badge" id="previewBadge">Working</span>
-        </div>
-        <p id="previewText">Use the Create Sprite panel below to generate and export a sprite.</p>
-      </section>
-
-      <section class="panel sprite-panel" id="spritePanel">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Working system</p>
-            <h2>Create Sprite</h2>
-            <p>This version uses clearer options and a more deliberate renderer. Output Size changes the exported PNG. The prompt affects added details and naming metadata.</p>
-          </div>
-          <span class="vault-stats" id="spriteStatus">Ready</span>
-        </div>
-
-        <div class="sprite-layout">
-          <div class="sprite-controls">
+      <section class="panel studio-panel" id="studioPanel">
+        <div class="section-heading"><div><p class="eyebrow">Working system</p><h2>Loganmon Sprite Studio</h2><p>Pick a Loganmon from your Pokédex order. The replacement Pokémon slot is used only to infer rarity/role and the broad gameplay silhouette, not to copy its design.</p></div><span class="vault-stats" id="studioStatus">151 loaded</span></div>
+        <div class="studio-layout">
+          <div class="studio-controls">
             <div class="form-grid">
-              <label>
-                <span>Sprite Name</span>
-                <input id="spriteName" type="text" maxlength="36" placeholder="Example: Lava Cub" />
-              </label>
-
-              <label>
-                <span>Output Size</span>
-                <select id="spriteSize">
-                  <option value="32">32x32 icon</option>
-                  <option value="64" selected>64x64 sprite</option>
-                  <option value="96">96x96 large sprite</option>
-                  <option value="128">128x128 display sprite</option>
-                </select>
-              </label>
-
-              <label>
-                <span>What Are You Making?</span>
-                <select id="spriteKind">
-                  <option value="creature" selected>Creature / monster</option>
-                  <option value="item">Item / object</option>
-                  <option value="trainer">Trainer / character</option>
-                  <option value="badge">Badge / emblem</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Silhouette Template</span>
-                <select id="spriteTemplate">
-                  <option value="wolf" selected>Wolf / cat</option>
-                  <option value="dragon">Dragon / lizard</option>
-                  <option value="bird">Bird / winged</option>
-                  <option value="fish">Fish / aquatic</option>
-                  <option value="bug">Bug / insect</option>
-                  <option value="slime">Slime / blob</option>
-                  <option value="ghost">Ghost / spirit</option>
-                  <option value="golem">Rock / golem</option>
-                  <option value="robot">Robot / machine</option>
-                  <option value="mushroom">Mushroom / plant</option>
-                  <option value="sword">Sword / weapon</option>
-                  <option value="potion">Potion / bottle</option>
-                  <option value="gem">Gem / crystal</option>
-                  <option value="egg">Egg / orb</option>
-                  <option value="trainer">Trainer bust</option>
-                  <option value="badge">Badge emblem</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Type / Theme</span>
-                <select id="spriteTheme">
-                  <option>Fire</option>
-                  <option>Water</option>
-                  <option>Electric</option>
-                  <option>Grass</option>
-                  <option>Ice</option>
-                  <option>Poison</option>
-                  <option>Ghost</option>
-                  <option>Rock</option>
-                  <option>Steel</option>
-                  <option>Dragon</option>
-                  <option>Fairy</option>
-                  <option>Dark</option>
-                  <option>Normal</option>
-                  <option selected>Nether</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Palette Style</span>
-                <select id="spritePaletteStyle">
-                  <option value="auto" selected>Auto from theme</option>
-                  <option value="bright">Bright RPG</option>
-                  <option value="muted">Muted pixel art</option>
-                  <option value="nether">Nether lava</option>
-                  <option value="custom">Use custom colors</option>
-                </select>
-              </label>
-
-              <label>
-                <span>Main Color</span>
-                <input id="spriteMainColor" type="color" value="#d9481f" />
-              </label>
-
-              <label>
-                <span>Accent Color</span>
-                <input id="spriteAccentColor" type="color" value="#ffd166" />
-              </label>
-
-              <label>
-                <span>Seed</span>
-                <input id="spriteSeed" type="text" maxlength="24" placeholder="Auto" />
-              </label>
-
-              <label>
-                <span>Detail Level</span>
-                <select id="spriteDetail">
-                  <option value="simple">Simple</option>
-                  <option value="detailed" selected>Detailed</option>
-                  <option value="extra">Extra details</option>
-                </select>
-              </label>
-
-              <label class="wide-field">
-                <span>Idea / Prompt</span>
-                <textarea id="spritePrompt" maxlength="180" placeholder="Example: small lava wolf with blackstone armor, glowing eyes, and cracked magma markings"></textarea>
-              </label>
+              <label class="wide-field"><span>Loganmon</span><select id="speciesSelect"></select></label>
+              <label><span>Output Target</span><select id="spriteTarget"><option value="64x64 front battle" selected>64x64 FireRed front battle sprite</option><option value="64x64 back battle">64x64 back battle sprite</option><option value="96x96 concept master">96x96 concept master</option></select></label>
+              <label><span>View / Pose</span><select id="spriteView"><option selected>3/4 front battle view</option><option>side-facing battle view</option><option>front heroic pose</option><option>low aggressive pose</option><option>cute mascot pose</option></select></label>
+              <label><span>Style Intensity</span><select id="styleLevel"><option value="FireRed clean">FireRed clean</option><option value="High-detail reference style" selected>High-detail reference style</option><option value="Simplified icon-like">Simplified icon-like</option></select></label>
+              <label><span>Manual Base Creature</span><input id="manualBase" type="text" placeholder="Optional, e.g. schnauzer, beetle, raven" /></label>
+              <label><span>Manual Rarity Override</span><input id="manualRarity" type="text" placeholder="Optional" /></label>
+              <label class="wide-field"><span>Extra Design Notes</span><textarea id="extraNotes" maxlength="260" placeholder="Optional: beard, crystal armor, scary, cute, bulky, floating, etc."></textarea></label>
             </div>
-
-            <div class="command-row">
-              <button class="primary-action" id="generateSprite" type="button">Generate Sprite</button>
-              <button type="button" id="surpriseSprite">Surprise Me</button>
-              <button type="button" id="rerollSeed">Reroll Seed</button>
-              <button type="button" id="downloadPng">Download PNG</button>
-              <button type="button" id="downloadJson">Download JSON</button>
-              <button type="button" id="saveToVault">Save to Asset Vault</button>
-            </div>
+            <div class="command-row"><button class="primary-action" type="button" id="generateBrief">Generate Design Brief</button><button type="button" id="copyPrompt">Copy Art Prompt</button><button type="button" id="downloadBrief">Download JSON</button><button type="button" id="downloadMarkdown">Download Markdown</button><button type="button" id="saveBrief">Save to Asset Vault</button><button type="button" id="downloadAll">Download All Briefs JSON</button></div>
           </div>
-
-          <div class="sprite-output">
-            <div class="preview-header">
-              <div>
-                <p class="eyebrow">Sprite preview</p>
-                <h3 id="spriteTitle">Not generated yet</h3>
-              </div>
-              <span class="preview-badge" id="seedBadge">Seed —</span>
-            </div>
-
-            <div class="canvas-row">
-              <div class="canvas-stage">
-                <canvas id="spriteCanvas" width="192" height="192"></canvas>
-              </div>
-              <div class="side-preview">
-                <div class="mini-box">
-                  <span>Actual export</span>
-                  <canvas id="exportCanvas" width="64" height="64"></canvas>
-                </div>
-                <div class="mini-box">
-                  <span>Details</span>
-                  <div id="spriteDetails" class="details-list"></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="chip-row" id="spriteTags"></div>
-
-            <div class="info-grid">
-              <div>
-                <h4>Use Case</h4>
-                <p id="spriteUse">—</p>
-              </div>
-              <div>
-                <h4>Style Notes</h4>
-                <p id="spriteNotes">—</p>
-              </div>
-              <div class="wide-info">
-                <h4>Description</h4>
-                <p id="spriteDescription">Choose options and press Generate Sprite.</p>
-              </div>
-            </div>
+          <div class="brief-output">
+            <div class="preview-header"><div><p class="eyebrow">Current brief</p><h3 id="briefTitle">No brief generated yet</h3></div><span class="preview-badge" id="briefBadge">Ready</span></div>
+            <div class="dex-card"><div><b>Dex</b><span id="dexNumber">—</span></div><div><b>Type</b><span id="dexType">—</span></div><div><b>Replacing</b><span id="dexReplace">—</span></div><div><b>Rarity</b><span id="dexRarity">—</span></div><div><b>Evolution</b><span id="dexEvolution">—</span></div></div>
+            <div class="chip-row" id="briefTags"></div>
+            <div class="brief-sections" id="briefSections"></div>
+            <label class="prompt-box"><span>Sprite Art Prompt</span><textarea id="artPrompt" readonly></textarea></label>
           </div>
         </div>
       </section>
 
       <section class="panel vault-panel" id="vaultPanel" hidden>
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Working system</p>
-            <h2>Asset Vault</h2>
-            <p>Saved sprites and imported files stay on this device/browser. Export a backup JSON if you want to move them.</p>
-          </div>
-          <span class="vault-stats" id="vaultStats">0 stored</span>
-        </div>
-
-        <div class="vault-toolbar">
-          <input id="vaultSearch" type="search" placeholder="Search vault..." autocomplete="off" />
-          <select id="vaultType">
-            <option value="">All types</option>
-            <option value="sprite">Sprites / images</option>
-            <option value="file">Other files</option>
-          </select>
-        </div>
-
-        <div class="command-row">
-          <button type="button" id="importFile">Import File</button>
-          <button type="button" id="exportVault">Export Vault Backup</button>
-          <button type="button" id="restoreVaultBtn">Restore Backup</button>
-          <button type="button" class="danger-action" id="clearVault">Clear Vault</button>
-        </div>
-
-        <input id="fileInput" type="file" multiple hidden />
-        <input id="restoreInput" type="file" accept="application/json,.json" hidden />
-
-        <div class="vault-empty" id="vaultEmpty">
-          <strong>No assets stored yet.</strong>
-          <span>Generate a sprite and save it, or import a file.</span>
-        </div>
-
-        <div class="vault-grid" id="vaultGrid"></div>
+        <div class="section-heading"><div><p class="eyebrow">Working system</p><h2>Asset Vault</h2><p>Saved briefs and imported files stay on this browser. Export a backup JSON if you want to move them.</p></div><span class="vault-stats" id="vaultStats">0 stored</span></div>
+        <div class="vault-toolbar"><input id="vaultSearch" type="search" placeholder="Search vault..." autocomplete="off" /><select id="vaultType"><option value="">All types</option><option value="design-brief">Design briefs</option><option value="sprite">Sprites / images</option><option value="file">Other files</option></select></div>
+        <div class="command-row"><button type="button" id="importFile">Import File</button><button type="button" id="exportVault">Export Vault Backup</button><button type="button" id="restoreVaultBtn">Restore Backup</button><button type="button" class="danger-action" id="clearVault">Clear Vault</button></div>
+        <input id="fileInput" type="file" multiple hidden /><input id="restoreInput" type="file" accept="application/json,.json" hidden />
+        <div class="vault-empty" id="vaultEmpty"><strong>No assets stored yet.</strong><span>Generate a design brief and save it, or import a sprite/reference file.</span></div><div class="vault-grid" id="vaultGrid"></div>
       </section>
     </main>
-
-    <footer>
-      <p>Made for <strong>LogansCreations</strong>.</p>
-      <p class="repo-url">https://lordboby-crypto.github.io/LogansCreations/</p>
-    </footer>
+    <footer><p>Made for <strong>LogansCreations</strong>.</p><p class="repo-url">https://lordboby-crypto.github.io/LogansCreations/</p></footer>
   </div>
-
   <script src="app.js"></script>
-</body>
-</html>
+</body></html>

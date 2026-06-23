@@ -1,44 +1,23 @@
 # LoganCreations
 
-Nether-themed GitHub Pages creative forge.
+## v0.7
 
-## Current version
+Create Sprite has been replaced with **Loganmon Sprite Studio**.
 
-**v0.6** fixes the broken v0.5 file mismatch and rebuilds Create Sprite as a working practical sprite designer.
+This version loads all 151 Loganmon from the uploaded Pokédex spreadsheet and creates design briefs based on:
 
-## Working modules
+- Loganmon name
+- Loganmon type
+- Pokédex position
+- FireRed replacement slot
+- inferred rarity/role
+- evolution stage
+- optional custom notes
 
-### Create Sprite
+Important: this does not pretend to generate final art locally. The reference quality requires a real artist, an image model/API, or an image-to-sprite workflow. This version creates strong design direction and art prompts so the output can reach the quality target.
 
-- Generate button works
-- Clearer options
-- Output size changes exported PNG
-- Creature, item, trainer, and badge modes
-- Silhouette templates
-- Type/theme palette system
-- Custom colors
-- Prompt field affects metadata and details
-- Download PNG
-- Download JSON
-- Save to Asset Vault
-
-### Asset Vault
-
-- Save generated sprites
-- Import files
-- Search/filter assets
-- Download assets
-- Duplicate assets
-- Remove assets
-- Export backup JSON
-- Restore backup JSON
-
-## Upload files
-
-Upload all files from this folder to the root of your `LogansCreations` GitHub repo.
-
-Open with:
+Open after upload:
 
 ```text
-https://lordboby-crypto.github.io/LogansCreations/?v=6
+https://lordboby-crypto.github.io/LogansCreations/?v=7
 ```

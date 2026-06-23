@@ -1,591 +1,64 @@
-const VAULT_KEY = "logansCreations.assetVault.v2";
+const LOGANDEX = [{"dex":1,"name":"Ruby","type":"Armor","evolvesAt":"Level 16","evolvesInto":"Rubivine","evolutionType":"Armor","nextEvolution":"Level 32","notes":"","replaces":"Bulbasaur","rarity":"Starter line"},{"dex":2,"name":"Rubivine","type":"Armor","evolvesAt":"Level 32","evolvesInto":"Rubycrown","evolutionType":"Armor","nextEvolution":"None","notes":"","replaces":"Ivysaur","rarity":"Starter line"},{"dex":3,"name":"Rubycrown","type":"Armor","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Venusaur","rarity":"Starter line"},{"dex":4,"name":"Rox","type":"Redstone","evolvesAt":"Level 16","evolvesInto":"Roxember","evolutionType":"Redstone","nextEvolution":"Level 36","notes":"","replaces":"Charmander","rarity":"Starter line"},{"dex":5,"name":"Roxember","type":"Redstone","evolvesAt":"Level 36","evolvesInto":"Roxdrake","evolutionType":"Redstone/Beast","nextEvolution":"None","notes":"","replaces":"Charmeleon","rarity":"Starter line"},{"dex":6,"name":"Roxdrake","type":"Redstone/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Charizard","rarity":"Starter line"},{"dex":7,"name":"Axeo","type":"Aqua","evolvesAt":"Level 16","evolvesInto":"Axerill","evolutionType":"Aqua","nextEvolution":"Level 36","notes":"","replaces":"Squirtle","rarity":"Starter line"},{"dex":8,"name":"Axerill","type":"Aqua","evolvesAt":"Level 36","evolvesInto":"Axalord","evolutionType":"Aqua","nextEvolution":"None","notes":"","replaces":"Wartortle","rarity":"Starter line"},{"dex":9,"name":"Axalord","type":"Aqua","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Blastoise","rarity":"Starter line"},{"dex":10,"name":"Worm","type":"Grass","evolvesAt":"Level 7","evolvesInto":"Meta","evolutionType":"Grass","nextEvolution":"Level 10","notes":"","replaces":"Caterpie","rarity":"Early-route common line"},{"dex":11,"name":"Meta","type":"Grass","evolvesAt":"Level 10","evolvesInto":"ButterMate","evolutionType":"Grass/Beast","nextEvolution":"None","notes":"","replaces":"Metapod","rarity":"Early-route common line"},{"dex":12,"name":"ButterMate","type":"Grass/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Butterfree","rarity":"Early-route common line"},{"dex":13,"name":"Cater","type":"Grass/Swamp","evolvesAt":"Level 7","evolvesInto":"Kak","evolutionType":"Grass/Swamp","nextEvolution":"Level 10","notes":"","replaces":"Weedle","rarity":"Early-route common line"},{"dex":14,"name":"Kak","type":"Grass/Swamp","evolvesAt":"Level 10","evolvesInto":"Kakrill","evolutionType":"Grass/Swamp","nextEvolution":"None","notes":"","replaces":"Kakuna","rarity":"Early-route common line"},{"dex":15,"name":"Kakrill","type":"Grass/Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Beedrill","rarity":"Early-route common line"},{"dex":16,"name":"Raven","type":"Earth/Beast","evolvesAt":"Level 18","evolvesInto":"Ravenotto","evolutionType":"Earth/Beast","nextEvolution":"Level 36","notes":"","replaces":"Pidgey","rarity":"Early-route common line"},{"dex":17,"name":"Ravenotto","type":"Earth/Beast","evolvesAt":"Level 36","evolvesInto":"Ravenote","evolutionType":"Earth/Beast","nextEvolution":"None","notes":"","replaces":"Pidgeotto","rarity":"Early-route common line"},{"dex":18,"name":"Ravenote","type":"Earth/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Pidgeot","rarity":"Early-route common line"},{"dex":19,"name":"Silverfiche","type":"Earth","evolvesAt":"Level 20","evolvesInto":"Silvercate","evolutionType":"Earth","nextEvolution":"None","notes":"","replaces":"Rattata","rarity":"Early-route common line"},{"dex":20,"name":"Silvercate","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Raticate","rarity":"Early-route common line"},{"dex":21,"name":"Dustwing","type":"Earth/Beast","evolvesAt":"Level 20","evolvesInto":"Dustcrow","evolutionType":"Earth/Beast","nextEvolution":"None","notes":"","replaces":"Spearow","rarity":"Early-route common line"},{"dex":22,"name":"Dustcrow","type":"Earth/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Fearow","rarity":"Early-route common line"},{"dex":23,"name":"Snake","type":"Swamp","evolvesAt":"Level 22","evolvesInto":"Snok","evolutionType":"Swamp","nextEvolution":"None","notes":"","replaces":"Ekans","rarity":"Early-route common line"},{"dex":24,"name":"Snok","type":"Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Arbok","rarity":"Early-route common line"},{"dex":25,"name":"Buzz","type":"Star","evolvesAt":"Thunder Stone","evolvesInto":"Buzzchu","evolutionType":"Star","nextEvolution":"None","notes":"","replaces":"Pikachu","rarity":"Iconic mascot line"},{"dex":26,"name":"Buzzchu","type":"Star","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Raichu","rarity":"Iconic mascot line"},{"dex":27,"name":"Sandy","type":"Iron","evolvesAt":"Level 22","evolvesInto":"Sandy-ash","evolutionType":"Iron","nextEvolution":"None","notes":"","replaces":"Sandshrew","rarity":"Early-to-mid route uncommon"},{"dex":28,"name":"Sandy-ash","type":"Iron","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Sandslash","rarity":"Early-to-mid route uncommon"},{"dex":29,"name":"Rabburn","type":"Swamp","evolvesAt":"Level 16","evolvesInto":"Raborina","evolutionType":"Swamp","nextEvolution":"Moon Stone","notes":"","replaces":"Nidoran F","rarity":"Early-to-mid route uncommon"},{"dex":30,"name":"Raborina","type":"Swamp","evolvesAt":"Moon Stone","evolvesInto":"Raboqueen","evolutionType":"Swamp/Iron","nextEvolution":"None","notes":"","replaces":"Nidorina","rarity":"Stone-evolution special"},{"dex":31,"name":"Raboqueen","type":"Swamp/Iron","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Nidoqueen","rarity":"Early-to-mid route uncommon"},{"dex":32,"name":"Rabbore","type":"Swamp","evolvesAt":"Level 16","evolvesInto":"Raborino","evolutionType":"Swamp","nextEvolution":"Moon Stone","notes":"","replaces":"Nidoran M","rarity":"Early-to-mid route uncommon"},{"dex":33,"name":"Raborino","type":"Swamp","evolvesAt":"Moon Stone","evolvesInto":"Raboking","evolutionType":"Swamp/Iron","nextEvolution":"None","notes":"","replaces":"Nidorino","rarity":"Stone-evolution special"},{"dex":34,"name":"Raboking","type":"Swamp/Iron","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Nidoking","rarity":"Early-to-mid route uncommon"},{"dex":35,"name":"Moonmote","type":"Earth","evolvesAt":"Moon Stone","evolvesInto":"Moonmajest","evolutionType":"Earth","nextEvolution":"None","notes":"","replaces":"Clefairy","rarity":"Stone-evolution special"},{"dex":36,"name":"Moonmajest","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Clefable","rarity":"Early-to-mid route uncommon"},{"dex":37,"name":"Emberkit","type":"Redstone","evolvesAt":"Fire Stone","evolvesInto":"Cindertail","evolutionType":"Redstone","nextEvolution":"None","notes":"","replaces":"Vulpix","rarity":"Stone-evolution special"},{"dex":38,"name":"Cindertail","type":"Redstone","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Ninetales","rarity":"Early-to-mid route uncommon"},{"dex":39,"name":"Puffpod","type":"Earth","evolvesAt":"Moon Stone","evolvesInto":"Puffaloom","evolutionType":"Earth","nextEvolution":"None","notes":"","replaces":"Jigglypuff","rarity":"Stone-evolution special"},{"dex":40,"name":"Puffaloom","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Wigglytuff","rarity":"Early-to-mid route uncommon"},{"dex":41,"name":"Mirewing","type":"Swamp/Beast","evolvesAt":"Level 22","evolvesInto":"Mirefang","evolutionType":"Swamp/Beast","nextEvolution":"High Friendship after National Dex","notes":"","replaces":"Zubat","rarity":"Early-to-mid route uncommon"},{"dex":42,"name":"Mirefang","type":"Swamp/Beast","evolvesAt":"High Friendship after National Dex","evolvesInto":"Nightmire","evolutionType":"Swamp/Beast","nextEvolution":"None","notes":"","replaces":"Golbat","rarity":"Early-to-mid route uncommon"},{"dex":43,"name":"Mossmuck","type":"Armor/Swamp","evolvesAt":"Level 21","evolvesInto":"Gloamroot","evolutionType":"Armor/Swamp","nextEvolution":"Leaf Stone","notes":"","replaces":"Oddish","rarity":"Early-to-mid route uncommon"},{"dex":44,"name":"Gloamroot","type":"Armor/Swamp","evolvesAt":"Leaf Stone","evolvesInto":"Bloomire","evolutionType":"Armor/Swamp","nextEvolution":"None","notes":"","replaces":"Gloom","rarity":"Stone-evolution special"},{"dex":45,"name":"Bloomire","type":"Armor/Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Vileplume","rarity":"Early-to-mid route uncommon"},{"dex":46,"name":"Shroomite","type":"Grass/Armor","evolvesAt":"Level 24","evolvesInto":"Shroomguard","evolutionType":"Grass/Armor","nextEvolution":"None","notes":"","replaces":"Paras","rarity":"Early-to-mid route uncommon"},{"dex":47,"name":"Shroomguard","type":"Grass/Armor","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Parasect","rarity":"Early-to-mid route uncommon"},{"dex":48,"name":"Fuzzmire","type":"Grass/Swamp","evolvesAt":"Level 31","evolvesInto":"Mosshade","evolutionType":"Grass/Swamp","nextEvolution":"None","notes":"","replaces":"Venonat","rarity":"Early-to-mid route uncommon"},{"dex":49,"name":"Mosshade","type":"Grass/Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Venomoth","rarity":"Early-to-mid route uncommon"},{"dex":50,"name":"Drillbit","type":"Iron","evolvesAt":"Level 26","evolvesInto":"Drilltrove","evolutionType":"Iron","nextEvolution":"None","notes":"","replaces":"Diglett","rarity":"Midgame common/uncommon"},{"dex":51,"name":"Drilltrove","type":"Iron","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Dugtrio","rarity":"Midgame common/uncommon"},{"dex":52,"name":"Coinkit","type":"Earth","evolvesAt":"Level 28","evolvesInto":"Coinclaw","evolutionType":"Earth","nextEvolution":"None","notes":"","replaces":"Meowth","rarity":"Midgame common/uncommon"},{"dex":53,"name":"Coinclaw","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Persian","rarity":"Midgame common/uncommon"},{"dex":54,"name":"Dizzduck","type":"Aqua","evolvesAt":"Level 33","evolvesInto":"Minduck","evolutionType":"Aqua","nextEvolution":"None","notes":"","replaces":"Psyduck","rarity":"Midgame common/uncommon"},{"dex":55,"name":"Minduck","type":"Aqua","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Golduck","rarity":"Midgame common/uncommon"},{"dex":56,"name":"Grumpkin","type":"Construct","evolvesAt":"Level 28","evolvesInto":"Ragebrick","evolutionType":"Construct","nextEvolution":"None","notes":"","replaces":"Mankey","rarity":"Midgame common/uncommon"},{"dex":57,"name":"Ragebrick","type":"Construct","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Primeape","rarity":"Midgame common/uncommon"},{"dex":58,"name":"Sparkpup","type":"Redstone","evolvesAt":"Fire Stone","evolvesInto":"Cindermaw","evolutionType":"Redstone","nextEvolution":"None","notes":"","replaces":"Growlithe","rarity":"Stone-evolution special"},{"dex":59,"name":"Cindermaw","type":"Redstone","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Arcanine","rarity":"Midgame common/uncommon"},{"dex":60,"name":"Swirlpool","type":"Aqua","evolvesAt":"Level 25","evolvesInto":"Whirlwart","evolutionType":"Aqua","nextEvolution":"Water Stone","notes":"","replaces":"Poliwag","rarity":"Midgame common/uncommon"},{"dex":61,"name":"Whirlwart","type":"Aqua","evolvesAt":"Water Stone","evolvesInto":"Wrathpool","evolutionType":"Aqua/Construct","nextEvolution":"None","notes":"","replaces":"Poliwhirl","rarity":"Stone-evolution special"},{"dex":62,"name":"Wrathpool","type":"Aqua/Construct","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Poliwrath","rarity":"Midgame common/uncommon"},{"dex":63,"name":"Blinkit","type":"Void","evolvesAt":"Level 16","evolvesInto":"Warpcast","evolutionType":"Void","nextEvolution":"Trade","notes":"","replaces":"Abra","rarity":"Midgame common/uncommon"},{"dex":64,"name":"Warpcast","type":"Void","evolvesAt":"Trade","evolvesInto":"Mindlock","evolutionType":"Void","nextEvolution":"None","notes":"","replaces":"Kadabra","rarity":"Trade-evolution rare"},{"dex":65,"name":"Mindlock","type":"Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Alakazam","rarity":"Midgame common/uncommon"},{"dex":66,"name":"Chiselkin","type":"Construct","evolvesAt":"Level 28","evolvesInto":"Brutoke","evolutionType":"Construct","nextEvolution":"Trade","notes":"","replaces":"Machop","rarity":"Midgame common/uncommon"},{"dex":67,"name":"Brutoke","type":"Construct","evolvesAt":"Trade","evolvesInto":"Colossarm","evolutionType":"Construct","nextEvolution":"None","notes":"","replaces":"Machoke","rarity":"Trade-evolution rare"},{"dex":68,"name":"Colossarm","type":"Construct","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Machamp","rarity":"Midgame common/uncommon"},{"dex":69,"name":"Bellroot","type":"Armor/Swamp","evolvesAt":"Level 21","evolvesInto":"Wiltbell","evolutionType":"Armor/Swamp","nextEvolution":"Leaf Stone","notes":"","replaces":"Bellsprout","rarity":"Midgame common/uncommon"},{"dex":70,"name":"Wiltbell","type":"Armor/Swamp","evolvesAt":"Leaf Stone","evolvesInto":"Trapbell","evolutionType":"Armor/Swamp","nextEvolution":"None","notes":"","replaces":"Weepinbell","rarity":"Stone-evolution special"},{"dex":71,"name":"Trapbell","type":"Armor/Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Victreebel","rarity":"Midgame common/uncommon"},{"dex":72,"name":"Driftent","type":"Aqua/Swamp","evolvesAt":"Level 30","evolvesInto":"Mirekrak","evolutionType":"Aqua/Swamp","nextEvolution":"None","notes":"","replaces":"Tentacool","rarity":"Midgame common/uncommon"},{"dex":73,"name":"Mirekrak","type":"Aqua/Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Tentacruel","rarity":"Midgame common/uncommon"},{"dex":74,"name":"Rockie","type":"Stone/Iron","evolvesAt":"Level 25","evolvesInto":"Rockler","evolutionType":"Stone/Iron","nextEvolution":"Trade","notes":"","replaces":"Geodude","rarity":"Midgame common/uncommon"},{"dex":75,"name":"Rockler","type":"Stone/Iron","evolvesAt":"Trade","evolvesInto":"Rolem","evolutionType":"Stone/Iron","nextEvolution":"None","notes":"","replaces":"Graveler","rarity":"Trade-evolution rare"},{"dex":76,"name":"Rolem","type":"Stone/Iron","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Golem","rarity":"Midgame common/uncommon"},{"dex":77,"name":"Sparkfoal","type":"Redstone","evolvesAt":"Level 40","evolvesInto":"Blazemane","evolutionType":"Redstone","nextEvolution":"None","notes":"","replaces":"Ponyta","rarity":"Midgame common/uncommon"},{"dex":78,"name":"Blazemane","type":"Redstone","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Rapidash","rarity":"Midgame common/uncommon"},{"dex":79,"name":"Driftmuse","type":"Aqua/Void","evolvesAt":"Level 37","evolvesInto":"Driftbulk","evolutionType":"Aqua/Void","nextEvolution":"None","notes":"","replaces":"Slowpoke","rarity":"Midgame common/uncommon"},{"dex":80,"name":"Driftbulk","type":"Aqua/Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Slowbro","rarity":"Midgame common/uncommon"},{"dex":81,"name":"Voltore","type":"Star/Lava","evolvesAt":"Level 30","evolvesInto":"Voltcluster","evolutionType":"Star/Lava","nextEvolution":"None","notes":"","replaces":"Magnemite","rarity":"Midgame common/uncommon"},{"dex":82,"name":"Voltcluster","type":"Star/Lava","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Magneton","rarity":"Midgame common/uncommon"},{"dex":83,"name":"Stalkwing","type":"Earth/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Farfetchd","rarity":"Midgame common/uncommon"},{"dex":84,"name":"Twinstrut","type":"Earth/Beast","evolvesAt":"Level 31","evolvesInto":"Tripstrut","evolutionType":"Earth/Beast","nextEvolution":"None","notes":"","replaces":"Doduo","rarity":"Midgame common/uncommon"},{"dex":85,"name":"Tripstrut","type":"Earth/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Dodrio","rarity":"Midgame common/uncommon"},{"dex":86,"name":"Frostfin","type":"Aqua","evolvesAt":"Level 34","evolvesInto":"Glacifin","evolutionType":"Aqua/Frost","nextEvolution":"None","notes":"","replaces":"Seel","rarity":"Midgame common/uncommon"},{"dex":87,"name":"Glacifin","type":"Aqua/Frost","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Dewgong","rarity":"Midgame common/uncommon"},{"dex":88,"name":"Sludgeling","type":"Swamp","evolvesAt":"Level 38","evolvesInto":"Sludgemaw","evolutionType":"Swamp","nextEvolution":"None","notes":"","replaces":"Grimer","rarity":"Midgame common/uncommon"},{"dex":89,"name":"Sludgemaw","type":"Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Muk","rarity":"Midgame common/uncommon"},{"dex":90,"name":"Clamlet","type":"Aqua","evolvesAt":"Water Stone","evolvesInto":"Frostvault","evolutionType":"Aqua/Frost","nextEvolution":"None","notes":"","replaces":"Shellder","rarity":"Stone-evolution special"},{"dex":91,"name":"Frostvault","type":"Aqua/Frost","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Cloyster","rarity":"Midgame common/uncommon"},{"dex":92,"name":"Enderwisp","type":"Ender/Swamp","evolvesAt":"Level 25","evolvesInto":"Murkhaunt","evolutionType":"Ender/Swamp","nextEvolution":"Trade","notes":"","replaces":"Gastly","rarity":"Dungeon or special encounter"},{"dex":93,"name":"Murkhaunt","type":"Ender/Swamp","evolvesAt":"Trade","evolvesInto":"Grinshade","evolutionType":"Ender/Swamp","nextEvolution":"None","notes":"","replaces":"Haunter","rarity":"Trade-evolution rare"},{"dex":94,"name":"Grinshade","type":"Ender/Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Gengar","rarity":"Dungeon or special encounter"},{"dex":95,"name":"Ava","type":"Stone/Iron","evolvesAt":"Trade holding Metal Coat after National Dex","evolvesInto":"Avlix","evolutionType":"Lava/Iron","nextEvolution":"None","notes":"","replaces":"Onix","rarity":"Trade-evolution rare"},{"dex":96,"name":"Dreamsnout","type":"Void","evolvesAt":"Level 26","evolvesInto":"Trancetusk","evolutionType":"Void","nextEvolution":"None","notes":"","replaces":"Drowzee","rarity":"Dungeon or special encounter"},{"dex":97,"name":"Trancetusk","type":"Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Hypno","rarity":"Dungeon or special encounter"},{"dex":98,"name":"Clawlet","type":"Aqua","evolvesAt":"Level 28","evolvesInto":"Crownclaw","evolutionType":"Aqua","nextEvolution":"None","notes":"","replaces":"Krabby","rarity":"Dungeon or special encounter"},{"dex":99,"name":"Crownclaw","type":"Aqua","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Kingler","rarity":"Dungeon or special encounter"},{"dex":100,"name":"Sparkorb","type":"Star","evolvesAt":"Level 30","evolvesInto":"Boomcore","evolutionType":"Star","nextEvolution":"None","notes":"","replaces":"Voltorb","rarity":"Dungeon or special encounter"},{"dex":101,"name":"Boomcore","type":"Star","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Electrode","rarity":"Dungeon or special encounter"},{"dex":102,"name":"Seedcluster","type":"Armor/Void","evolvesAt":"Leaf Stone","evolvesInto":"Palmcrown","evolutionType":"Armor/Void","nextEvolution":"None","notes":"","replaces":"Exeggcute","rarity":"Stone-evolution special"},{"dex":103,"name":"Palmcrown","type":"Armor/Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Exeggutor","rarity":"Dungeon or special encounter"},{"dex":104,"name":"Boneling","type":"Iron","evolvesAt":"Level 28","evolvesInto":"Skullguard","evolutionType":"Iron","nextEvolution":"None","notes":"","replaces":"Cubone","rarity":"Dungeon or special encounter"},{"dex":105,"name":"Skullguard","type":"Iron","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Marowak","rarity":"Dungeon or special encounter"},{"dex":106,"name":"Kicksmith","type":"Construct","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Hitmonlee","rarity":"Rare single/gift/special slot"},{"dex":107,"name":"Punchsmith","type":"Construct","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Hitmonchan","rarity":"Rare single/gift/special slot"},{"dex":108,"name":"Tongrumble","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Lickitung","rarity":"Mid-late route/water encounter"},{"dex":109,"name":"Smogorb","type":"Swamp","evolvesAt":"Level 35","evolvesInto":"Smogstack","evolutionType":"Swamp","nextEvolution":"None","notes":"","replaces":"Koffing","rarity":"Mid-late route/water encounter"},{"dex":110,"name":"Smogstack","type":"Swamp","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Weezing","rarity":"Mid-late route/water encounter"},{"dex":111,"name":"Hornslab","type":"Iron/Stone","evolvesAt":"Level 42","evolvesInto":"Rhinolith","evolutionType":"Iron/Stone","nextEvolution":"None","notes":"","replaces":"Rhyhorn","rarity":"Mid-late route/water encounter"},{"dex":112,"name":"Rhinolith","type":"Iron/Stone","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Rhydon","rarity":"Mid-late route/water encounter"},{"dex":113,"name":"Kindegg","type":"Earth","evolvesAt":"High Friendship after National Dex","evolvesInto":"Warmwell","evolutionType":"Earth","nextEvolution":"None","notes":"","replaces":"Chansey","rarity":"Rare single/gift/special slot"},{"dex":114,"name":"Vineknot","type":"Armor","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Tangela","rarity":"Rare single/gift/special slot"},{"dex":115,"name":"Pouchmaw","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Kangaskhan","rarity":"Rare single/gift/special slot"},{"dex":116,"name":"Tideseed","type":"Aqua","evolvesAt":"Level 32","evolvesInto":"Sealance","evolutionType":"Aqua","nextEvolution":"Trade holding Dragon Scale after National Dex","notes":"","replaces":"Horsea","rarity":"Mid-late route/water encounter"},{"dex":117,"name":"Sealance","type":"Aqua","evolvesAt":"Trade holding Dragon Scale after National Dex","evolvesInto":"Tidewyrm","evolutionType":"Aqua/Apex","nextEvolution":"None","notes":"","replaces":"Seadra","rarity":"Trade-evolution rare"},{"dex":118,"name":"Goldfin","type":"Aqua","evolvesAt":"Level 33","evolvesInto":"Crowntail","evolutionType":"Aqua","nextEvolution":"None","notes":"","replaces":"Goldeen","rarity":"Mid-late route/water encounter"},{"dex":119,"name":"Crowntail","type":"Aqua","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Seaking","rarity":"Mid-late route/water encounter"},{"dex":120,"name":"Starfloat","type":"Aqua","evolvesAt":"Water Stone","evolvesInto":"Astraloom","evolutionType":"Aqua/Void","nextEvolution":"None","notes":"","replaces":"Staryu","rarity":"Stone-evolution special"},{"dex":121,"name":"Astraloom","type":"Aqua/Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Starmie","rarity":"Mid-late route/water encounter"},{"dex":122,"name":"Mimicade","type":"Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Mr. Mime","rarity":"Rare single/gift/special slot"},{"dex":123,"name":"Bladewing","type":"Grass/Beast","evolvesAt":"Trade holding Metal Coat after National Dex","evolvesInto":"Moltblade","evolutionType":"Grass/Lava","nextEvolution":"None","notes":"","replaces":"Scyther","rarity":"Rare single/gift/special slot"},{"dex":124,"name":"Frosthex","type":"Frost/Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Jynx","rarity":"Rare single/gift/special slot"},{"dex":125,"name":"Voltbrute","type":"Star","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Electabuzz","rarity":"Rare single/gift/special slot"},{"dex":126,"name":"Magmaw","type":"Redstone","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Magmar","rarity":"Rare single/gift/special slot"},{"dex":127,"name":"Clampor","type":"Grass","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Pinsir","rarity":"Rare single/gift/special slot"},{"dex":128,"name":"Hornrush","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Tauros","rarity":"Rare single/gift/special slot"},{"dex":129,"name":"Flopfin","type":"Aqua","evolvesAt":"Level 20","evolvesInto":"Ragefin","evolutionType":"Aqua/Beast","nextEvolution":"None","notes":"","replaces":"Magikarp","rarity":"Late-game rare"},{"dex":130,"name":"Ragefin","type":"Aqua/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Gyarados","rarity":"Late-game rare"},{"dex":131,"name":"Frostferry","type":"Aqua/Frost","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Lapras","rarity":"Rare single/gift/special slot"},{"dex":132,"name":"Mimblob","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Ditto","rarity":"Rare single/gift/special slot"},{"dex":133,"name":"Adaptkit","type":"Earth","evolvesAt":"Water Stone / Thunder Stone / Fire Stone","evolvesInto":"Vaporeon / Jolteon / Flareon","evolutionType":"Aqua/Star/Redstone","nextEvolution":"None","notes":"","replaces":"Eevee","rarity":"Rare single/gift/special slot"},{"dex":134,"name":"Mistail","type":"Aqua","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Vaporeon","rarity":"Rare single/gift/special slot"},{"dex":135,"name":"Jolttail","type":"Star","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Jolteon","rarity":"Rare single/gift/special slot"},{"dex":136,"name":"Flaretail","type":"Redstone","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Flareon","rarity":"Rare single/gift/special slot"},{"dex":137,"name":"Voxelbit","type":"Earth","evolvesAt":"Trade holding Up-Grade after National Dex","evolvesInto":"Voxelbit-2","evolutionType":"Normal","nextEvolution":"None","notes":"","replaces":"Porygon","rarity":"Rare single/gift/special slot"},{"dex":138,"name":"Spiralith","type":"Stone/Aqua","evolvesAt":"Level 40","evolvesInto":"Shellspire","evolutionType":"Stone/Aqua","nextEvolution":"None","notes":"","replaces":"Omanyte","rarity":"Fossil / ancient rare"},{"dex":139,"name":"Shellspire","type":"Stone/Aqua","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Omastar","rarity":"Fossil / ancient rare"},{"dex":140,"name":"Scarabite","type":"Stone/Aqua","evolvesAt":"Level 40","evolvesInto":"Scarablad","evolutionType":"Stone/Aqua","nextEvolution":"None","notes":"","replaces":"Kabuto","rarity":"Fossil / ancient rare"},{"dex":141,"name":"Scarablad","type":"Stone/Aqua","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Kabutops","rarity":"Fossil / ancient rare"},{"dex":142,"name":"Stonewyvern","type":"Stone/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Aerodactyl","rarity":"Fossil / ancient rare"},{"dex":143,"name":"Drowsehill","type":"Earth","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Snorlax","rarity":"Static roadblock rare"},{"dex":144,"name":"Frostquill","type":"Frost/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Articuno","rarity":"Legendary bird slot"},{"dex":145,"name":"Stormquill","type":"Star/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Zapdos","rarity":"Legendary bird slot"},{"dex":146,"name":"Emberquill","type":"Redstone/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Moltres","rarity":"Legendary bird slot"},{"dex":147,"name":"Wyrmling","type":"Apex","evolvesAt":"Level 30","evolvesInto":"Wyrmstream","evolutionType":"Apex","nextEvolution":"Level 55","notes":"","replaces":"Dratini","rarity":"Pseudo-legendary dragon slot"},{"dex":148,"name":"Wyrmstream","type":"Apex","evolvesAt":"Level 55","evolvesInto":"Wyrmcrest","evolutionType":"Apex/Beast","nextEvolution":"None","notes":"","replaces":"Dragonair","rarity":"Pseudo-legendary dragon slot"},{"dex":149,"name":"Wyrmcrest","type":"Apex/Beast","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Dragonite","rarity":"Pseudo-legendary dragon slot"},{"dex":150,"name":"Voidclone","type":"Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Mewtwo","rarity":"Legendary boss slot"},{"dex":151,"name":"Originmote","type":"Void","evolvesAt":"None","evolvesInto":"","evolutionType":"","nextEvolution":"","notes":"Final evolution","replaces":"Mew","rarity":"Mythic secret slot"}];
+const VAULT_KEY="logansCreations.assetVault.v3";
+const $=id=>document.getElementById(id);
+let vault=loadVault();
+let currentBrief=null;
 
-const themePalettes = {
-  Fire: ["#351006", "#9a2312", "#e24a21", "#ff9d32", "#ffe08a"],
-  Water: ["#061a2c", "#125a8a", "#1fa5d8", "#8ee8ff", "#e7ffff"],
-  Electric: ["#16121d", "#5542a5", "#ffd447", "#fff49a", "#72f7ff"],
-  Grass: ["#0f2511", "#2d6b2f", "#62b947", "#b7ef77", "#fff6b5"],
-  Ice: ["#0b2030", "#2e7aa1", "#7ed8ff", "#d2f7ff", "#ffffff"],
-  Poison: ["#16121c", "#50247f", "#8b39b3", "#9ee23a", "#e7ff84"],
-  Ghost: ["#0c0a14", "#33275a", "#7d5cc4", "#d4b8ff", "#ffffff"],
-  Rock: ["#17110d", "#4c3323", "#826042", "#c8a476", "#f1dbb2"],
-  Steel: ["#111317", "#454c56", "#87909d", "#d9e1e8", "#ff934d"],
-  Dragon: ["#120c1d", "#3d215f", "#7f3fbf", "#e25252", "#ffd36a"],
-  Fairy: ["#21101f", "#af4fa3", "#ff9ee7", "#ffe1fb", "#fff4b8"],
-  Dark: ["#050508", "#181827", "#46415f", "#8b75c9", "#f2e9ff"],
-  Normal: ["#17130f", "#665247", "#b99a86", "#ead4bd", "#ffffff"],
-  Nether: ["#120303", "#4c0b07", "#b52516", "#ff7a18", "#ffd166"]
+const typeData={
+ Earth:{colors:"warm gray, sand, silver, soil brown",motifs:"grounded stance, stone dust, sturdy paws/claws, natural armor"},
+ Beast:{colors:"deep fur tones, sharp white highlights, intense eye glow",motifs:"fangs, talons, mane/ruff, dynamic predator pose"},
+ Grass:{colors:"leaf green, moss, pale yellow highlights",motifs:"leaves, vines, petals, bark plates, organic growth"},
+ Swamp:{colors:"moss green, muddy purple, toxin yellow",motifs:"mud, bubbles, slick skin, bog moss, poison droplets"},
+ Construct:{colors:"iron gray, brass, concrete, warning-glow accents",motifs:"built joints, heavy limbs, rivets, blocky plates"},
+ Aqua:{colors:"clear blue, aqua, pearl, soft pink highlights",motifs:"fins, bubbles, water ribbons, smooth amphibian skin"},
+ Shadow:{colors:"black, smoky purple, muted blue",motifs:"wisps, dark feathers, torn silhouettes, glowing marks"},
+ Void:{colors:"black-violet, psychic magenta, pale blue glow",motifs:"warped edges, floating parts, eye motifs, impossible geometry"},
+ Ender:{colors:"black, ender purple, sickly teal",motifs:"ghost trails, spectral vapor, hollow eyes, jagged aura"},
+ Apex:{colors:"royal violet, dragon blue, gold/white highlights",motifs:"horns, crests, long body flow, ancient power signs"},
+ Star:{colors:"gold, electric blue, white sparkle",motifs:"star sparks, charge orbs, comet tails, light bursts"},
+ Redstone:{colors:"red crystal, lava orange, dark charcoal",motifs:"crystal plates, redstone cracks, glowing circuitry, ember particles"},
+ Iron:{colors:"steel gray, blue-white shine, dark graphite",motifs:"metal armor, bolts, blades, mineral ridges, heavy claws"},
+ Lava:{colors:"obsidian, molten orange, hot red, yellow-white glow",motifs:"magma seams, heat shimmer, black crust, glowing vents"},
+ Frost:{colors:"ice blue, white, lavender shadows",motifs:"ice crystals, snow dust, glassy fins, frozen breath"},
+ Armor:{colors:"charcoal, silver, white fur, jewel accents",motifs:"plate armor, shields, crests, beard/fur armor, defensive bulk"},
+ Stone:{colors:"slate, tan rock, quartz highlights",motifs:"rock plates, crystals, fossils, rugged cracked surface"}
 };
 
-const templateDefaults = {
-  creature: "wolf",
-  item: "sword",
-  trainer: "trainer",
-  badge: "badge"
+const replacementRole={
+ Bulbasaur:"small starter creature; squat quadruped with plant growth",Ivysaur:"middle-stage starter; larger quadruped with heavier plant back",Venusaur:"final starter; massive quadruped boss silhouette",
+ Charmander:"small starter lizard/fox role; nimble fire-line silhouette",Charmeleon:"middle-stage aggressive reptile/fox role",Charizard:"final starter dragon/beast role with wings or major crest",
+ Squirtle:"small starter turtle/amphibian role",Wartortle:"middle-stage aqua guardian role",Blastoise:"final starter armored aqua boss role",
+ Caterpie:"tiny early caterpillar role",Metapod:"cocoon transition role",Butterfree:"final butterfly/moth role",Weedle:"early stinging larva role",Kakuna:"sharp cocoon role",Beedrill:"final aggressive bug role",
+ Pidgey:"early common bird",Pidgeotto:"middle bird predator",Pidgeot:"final majestic bird",Rattata:"early common small mammal",Raticate:"bigger early mammal evolution",
+ Spearow:"sharp small bird",Fearow:"long-beaked aggressive bird",Ekans:"snake",Arbok:"cobra/serpent",Pikachu:"iconic small mascot",Raichu:"evolved mascot",
+ Sandshrew:"burrowing armored mammal",Sandslash:"spined burrowing mammal",'Nidoran F':"small horned swamp/rodent role",Nidorina:"middle horned quadruped",Nidoqueen:"queen-like bulky monster",'Nidoran M':"small horned male monster",Nidorino:"aggressive horned quadruped",Nidoking:"king-like bulky monster",
+ Clefairy:"moon/fairy mascot",Clefable:"larger moon mascot",Vulpix:"small fox",Ninetales:"elegant mystical fox",Jigglypuff:"round cute singer",Wigglytuff:"larger round cute creature",Zubat:"cave bat",Golbat:"larger cave bat",Oddish:"small plant sprout",Gloom:"drooping plant",Vileplume:"large flower monster",Paras:"bug with mushroom",Parasect:"bug controlled by large mushroom",Venonat:"fuzzy bug",Venomoth:"moth",Diglett:"burrower",Dugtrio:"multi-burrower",Meowth:"coin cat",Persian:"sleek cat",Psyduck:"confused duck",Golduck:"strong aquatic duck",Mankey:"angry primate",Primeape:"raging primate",Growlithe:"loyal dog",Arcanine:"large noble dog",Poliwag:"tadpole",Poliwhirl:"round amphibian",Poliwrath:"muscular amphibian",Abra:"sleepy psychic small creature",Kadabra:"psychic caster",Alakazam:"master caster",Machop:"small fighter",Machoke:"strong fighter",Machamp:"many-armed powerhouse",Bellsprout:"bell plant",Weepinbell:"hanging plant",Victreebel:"trap plant",Tentacool:"jellyfish",Tentacruel:"large jellyfish",Geodude:"small rock golem",Graveler:"larger rock golem",Golem:"rolling boulder beast",Ponyta:"fire horse",Rapidash:"majestic horse",Slowpoke:"dopey aquatic mammal",Slowbro:"armored slow aquatic",Magnemite:"floating magnet",Magneton:"clustered magnet",Farfetchd:"rare single bird",Doduo:"two-headed runner bird",Dodrio:"three-headed runner bird",Seel:"seal",Dewgong:"larger seal",Grimer:"sludge blob",Muk:"large sludge mass",Shellder:"clam",Cloyster:"armored clam",Gastly:"small ghost",Haunter:"larger ghost",Gengar:"final ghost",Onix:"giant rock serpent",Drowzee:"dream tapir",Hypno:"hypnotist",Krabby:"crab",Kingler:"large crab",Voltorb:"orb mimic",Electrode:"large orb mimic",Exeggcute:"clustered seeds/eggs",Exeggutor:"palm/tree monster",Cubone:"bone guardian",Marowak:"bone warrior",Hitmonlee:"kicking fighter",Hitmonchan:"punching fighter",Lickitung:"tongue monster",Koffing:"gas orb",Weezing:"gas cluster",Rhyhorn:"horned armored beast",Rhydon:"large armored rhino",Chansey:"rare healer",Tangela:"vine mass",Kangaskhan:"large pouch beast",Horsea:"seahorse",Seadra:"spined seahorse",Goldeen:"goldfish",Seaking:"large goldfish",Staryu:"starfish",Starmie:"gem starfish",'Mr. Mime':"mime/clown humanoid",Scyther:"blade insect",Jynx:"mystic dancer",Electabuzz:"electric brute",Magmar:"magma brute",Pinsir:"horned beetle",Tauros:"charging bull",Magikarp:"weak fish",Gyarados:"rage sea serpent",Lapras:"rare gentle transport creature",Ditto:"mimic blob",Eevee:"adaptive fox/cat",Vaporeon:"water evolution",Jolteon:"star/electric evolution",Flareon:"redstone/fire evolution",Porygon:"digital/artificial creature",Omanyte:"spiral fossil",Omastar:"large spiral fossil",Kabuto:"scarab fossil",Kabutops:"blade scarab fossil",Aerodactyl:"ancient winged beast",Snorlax:"huge sleeping roadblock",Articuno:"frost legendary bird",Zapdos:"star storm legendary bird",Moltres:"redstone legendary bird",Dratini:"baby dragon",Dragonair:"elegant serpent dragon",Dragonite:"final dragon",Mewtwo:"created legendary clone",Mew:"origin mythical mote"
 };
+const known={Ruby:"stocky armored schnauzer dog with huge white beard, heavy paws, gray/black coat, shield-like chest gem",Rubivine:"larger armored schnauzer dog with vine-like armor trims and longer beard plates",Rubycrown:"regal giant armored schnauzer guardian with crown crest, huge beard, silver claws, shield chest",Rox:"small red crystal fox with sharp ruby plates and glowing orange eyes",Roxember:"larger ember fox with blackstone legs, red crystal mane, lava seams",Roxdrake:"final redstone fox-dragon with crystal tail fan, draconic horns, molten cracks",Axeo:"cute aqua axolotl with pink gills, blue markings, gem collar, friendly eyes",Axerill:"sleeker axolotl guardian with larger gills, blue tail fin, aqua jewelry",Axalord:"majestic aqua axolotl lord with flowing fins, ceremonial crest, powerful tail",Raven:"dark raven battle sprite with purple glyph glow and smoky feather trails",Ravenotto:"larger raven with longer tail feathers, sharper beak, stronger earth/beast talons",Ravenote:"final majestic raven with layered black feathers, purple/earth runes, long spectral tail trails",Silverfiche:"armored silverfish/centipede with segmented plates, pale crystals, glowing blue eyes"};
 
-const kindUse = {
-  creature: "game creature, battle sprite, enemy, companion, monster index",
-  item: "inventory icon, loot item, weapon, relic, pickup",
-  trainer: "character profile, NPC, trainer portrait, dialogue icon",
-  badge: "achievement badge, faction mark, gym-style emblem, logo icon"
-};
+function typeList(t){return String(t).split('/').map(x=>x.trim()).filter(Boolean)}
+function cap(s){return String(s||'').charAt(0).toUpperCase()+String(s||'').slice(1)}
+function getSpecies(){return LOGANDEX.find(x=>x.dex===Number($('speciesSelect').value))||LOGANDEX[0]}
+function evoStage(s){if(s.dex<=9)return s.dex%3===1?'starter first stage':s.dex%3===2?'starter middle stage':'starter final stage'; if(String(s.notes).includes('Final'))return 'final evolution'; if(s.evolvesInto)return 'base or middle evolution'; return 'single-stage'}
+function inferBase(s){return $('manualBase').value.trim()||known[s.name]||replacementRole[s.replaces]||'original monster silhouette'}
+function motifs(types){return types.map(t=>`${t}: ${(typeData[t]||{}).motifs||'strong type motif'}`).join('; ')}
+function colors(types){return types.map(t=>(typeData[t]||{}).colors||'balanced game palette').join(' + ')}
+function generateBriefObject(species){const types=typeList(species.type); const rarity=$('manualRarity').value.trim()||species.rarity; const base=inferBase(species); const target=$('spriteTarget').value; const view=$('spriteView').value; const style=$('styleLevel').value; const extras=$('extraNotes').value.trim(); const stage=evoStage(species); const silhouette=`${cap(species.name)} should read instantly as ${base}. Use the ${species.replaces} slot only for rarity/gameplay role, not as a copied design. It should have a strong ${view}, with the head/eyes readable at 64x64 and the main body shape visible in one glance.`; const palette=`Use ${colors(types)}. Keep a dark readable outline, 4-7 major color clusters, bright highlights only on focal parts like eyes, crystals, gems, claws, or energy marks.`; const details=`Type motifs: ${motifs(types)}. Rarity role: ${rarity}. Evolution stage: ${stage}. ${extras?`Extra requested details: ${extras}.`:''}`; const prompt=`Create an original high-quality pixel-art monster battle sprite for a FireRed-style monster-catching game. Species name: ${species.name}. Type: ${species.type}. Replacement/rarity role: ${species.replaces} slot, ${rarity}. Design base: ${base}. View: ${view}. Target: ${target}. Style: ${style}, like polished creature sprite references with strong silhouette, intentional anatomy, clean pixel clusters, dramatic shading, and no blurry edges. Palette: ${colors(types)}. Details: ${details}. Make it original, not a copy of any existing Pokémon.`; return {app:'LoganCreations',version:'0.7',module:'Loganmon Sprite Studio',dex:species.dex,name:species.name,type:species.type,replaces:species.replaces,rarity,stage,evolvesAt:species.evolvesAt,evolvesInto:species.evolvesInto,nextEvolution:species.nextEvolution,target,view,style,baseCreature:base,silhouette,palette,details,prompt,tags:[`dex-${species.dex}`,species.type,rarity,stage]};}
+function renderBrief(){const s=getSpecies(); currentBrief=generateBriefObject(s); $('briefTitle').textContent=`#${s.dex} ${s.name}`; $('briefBadge').textContent=currentBrief.stage; $('dexNumber').textContent=s.dex; $('dexType').textContent=s.type; $('dexReplace').textContent=s.replaces; $('dexRarity').textContent=currentBrief.rarity; $('dexEvolution').textContent=s.evolvesInto?`${s.evolvesAt} → ${s.evolvesInto}`:'None'; $('briefTags').innerHTML=currentBrief.tags.map(t=>`<span>${escapeHtml(t)}</span>`).join(''); $('briefSections').innerHTML=`<section><h4>Silhouette / Anatomy</h4><p>${escapeHtml(currentBrief.silhouette)}</p></section><section><h4>Palette / Finish</h4><p>${escapeHtml(currentBrief.palette)}</p></section><section><h4>Design Details</h4><p>${escapeHtml(currentBrief.details)}</p></section>`; $('artPrompt').value=currentBrief.prompt; $('studioStatus').textContent=`#${s.dex} ${s.name} ready`;}
+function initSpecies(){const select=$('speciesSelect'); select.innerHTML=LOGANDEX.map(s=>`<option value="${s.dex}">#${s.dex.toString().padStart(3,'0')} ${s.name} — ${s.type} — replaces ${s.replaces}</option>`).join(''); select.addEventListener('change',renderBrief);}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function slug(v){return String(v||'brief').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')||'brief'}
+function downloadBlob(name,blob){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url)}
+function markdown(b=currentBrief){return `# ${b.name} Sprite Design Brief\n\nDex: ${b.dex}\nType: ${b.type}\nReplaces: ${b.replaces}\nRarity: ${b.rarity}\nStage: ${b.stage}\nTarget: ${b.target}\nView: ${b.view}\n\n## Silhouette / Anatomy\n${b.silhouette}\n\n## Palette / Finish\n${b.palette}\n\n## Design Details\n${b.details}\n\n## Sprite Art Prompt\n${b.prompt}\n`;}
+function loadVault(){try{return JSON.parse(localStorage.getItem(VAULT_KEY)||'[]')}catch{return[]}}
+function saveVault(){localStorage.setItem(VAULT_KEY,JSON.stringify(vault))}
+function addAsset(a){vault.unshift({id:`asset_${Date.now()}_${Math.random().toString(16).slice(2,8)}`,createdAt:new Date().toISOString(),...a});saveVault();renderVault()}
+function formatBytes(bytes=0){if(!bytes)return'0 B';const u=['B','KB','MB','GB'];const i=Math.min(Math.floor(Math.log(bytes)/Math.log(1024)),u.length-1);return`${(bytes/Math.pow(1024,i)).toFixed(i?1:0)} ${u[i]}`}
+function renderVault(){const q=$('vaultSearch').value.toLowerCase().trim(),type=$('vaultType').value;const filtered=vault.filter(a=>(!type||a.type===type)&&(!q||`${a.name} ${a.description} ${(a.tags||[]).join(' ')}`.toLowerCase().includes(q)));$('vaultStats').textContent=`${vault.length} stored · ${filtered.length} showing`;$('vaultEmpty').hidden=filtered.length>0;$('vaultGrid').innerHTML=filtered.map(a=>`<article class="asset-card"><div class="asset-top"><div class="asset-icon">${a.type==='design-brief'?'▣':'◆'}</div><div><h3>${escapeHtml(a.name)}</h3><p>${escapeHtml(a.type)} · ${formatBytes(a.size)} · ${new Date(a.createdAt).toLocaleDateString()}</p></div></div><p>${escapeHtml(a.description||'')}</p><div class="asset-tags">${(a.tags||[]).map(t=>`<span>${escapeHtml(t)}</span>`).join('')}</div><div class="asset-actions"><button type="button" data-download="${a.id}">Download</button><button type="button" data-copy="${a.id}">Duplicate</button><button type="button" class="danger-action" data-remove="${a.id}">Remove</button></div></article>`).join('')}
+function openSection(section){$('studioPanel').hidden=section!=='studio';$('vaultPanel').hidden=section!=='vault';if(section==='studio'){$('studioPanel').scrollIntoView({behavior:'smooth',block:'start'})}else{renderVault();$('vaultPanel').scrollIntoView({behavior:'smooth',block:'start'})}}
+function dataUrlToBlob(dataUrl){const[head,b64]=dataUrl.split(','),mime=head.match(/data:(.*?);/)?.[1]||'application/octet-stream',bin=atob(b64),bytes=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)bytes[i]=bin.charCodeAt(i);return new Blob([bytes],{type:mime})}
 
-let vault = loadVault();
-let currentSprite = null;
-
-const $ = id => document.getElementById(id);
-const spritePanel = $("spritePanel");
-const vaultPanel = $("vaultPanel");
-const previewTitle = $("previewTitle");
-const previewBadge = $("previewBadge");
-const previewText = $("previewText");
-
-const canvas = $("spriteCanvas");
-const exportCanvas = $("exportCanvas");
-const ctx = canvas.getContext("2d");
-const exportCtx = exportCanvas.getContext("2d");
-
-function hashString(value) {
-  let h = 2166136261;
-  for (let i = 0; i < value.length; i++) {
-    h ^= value.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function rngFromSeed(seed) {
-  let a = hashString(seed || "logan");
-  return function() {
-    a += 0x6D2B79F5;
-    let t = a;
-    t = Math.imul(t ^ t >>> 15, t | 1);
-    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-}
-
-function pick(rng, arr) {
-  return arr[Math.floor(rng() * arr.length)];
-}
-
-function rand(rng, min, max) {
-  return min + rng() * (max - min);
-}
-
-function makeSeed() {
-  return "LC-" + Math.random().toString(36).slice(2, 6).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
-}
-
-function slug(value) {
-  return String(value || "sprite").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "sprite";
-}
-
-function lighten(hex, amt) {
-  const n = parseInt(hex.slice(1), 16);
-  let r = (n >> 16) + amt;
-  let g = ((n >> 8) & 255) + amt;
-  let b = (n & 255) + amt;
-  return "#" + [r,g,b].map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0")).join("");
-}
-
-function paletteFromControls() {
-  const theme = $("spriteTheme").value;
-  const style = $("spritePaletteStyle").value;
-  if (style === "custom") {
-    const main = $("spriteMainColor").value;
-    const accent = $("spriteAccentColor").value;
-    return ["#120303", lighten(main, -70), main, accent, lighten(accent, 45)];
-  }
-  if (style === "bright") {
-    const p = themePalettes[theme] || themePalettes.Nether;
-    return [p[0], p[1], lighten(p[2], 10), lighten(p[3], 20), p[4]];
-  }
-  if (style === "muted") {
-    const p = themePalettes[theme] || themePalettes.Nether;
-    return [p[0], lighten(p[1], -18), lighten(p[2], -22), lighten(p[3], -18), p[4]];
-  }
-  if (style === "nether") return themePalettes.Nether;
-  return themePalettes[theme] || themePalettes.Nether;
-}
-
-function ensureSeed() {
-  if (!$("spriteSeed").value.trim()) $("spriteSeed").value = makeSeed();
-  return $("spriteSeed").value.trim();
-}
-
-function getConfig() {
-  return {
-    name: $("spriteName").value.trim(),
-    size: Number($("spriteSize").value),
-    kind: $("spriteKind").value,
-    template: $("spriteTemplate").value,
-    theme: $("spriteTheme").value,
-    paletteStyle: $("spritePaletteStyle").value,
-    mainColor: $("spriteMainColor").value,
-    accentColor: $("spriteAccentColor").value,
-    seed: ensureSeed(),
-    detail: $("spriteDetail").value,
-    prompt: $("spritePrompt").value.trim()
-  };
-}
-
-function autoName(config, rng) {
-  const prefix = {
-    Fire:["Cinder","Ash","Flare","Magma"], Water:["Tide","Mira","Coral","Aqua"], Electric:["Volt","Jolt","Spark","Arc"],
-    Grass:["Moss","Leaf","Root","Fern"], Ice:["Frost","Glacier","Snow","Shard"], Poison:["Vile","Mire","Toxi","Spore"],
-    Ghost:["Shade","Wisp","Noct","Phantom"], Rock:["Boulder","Slate","Pebble","Basalt"], Steel:["Iron","Gear","Rivet","Chrome"],
-    Dragon:["Drake","Scale","Fang","Wyvern"], Fairy:["Glimmer","Pix","Charm","Rose"], Dark:["Night","Umbra","Dusk","Raven"],
-    Normal:["Tama","Nobi","Milo","Pip"], Nether:["Brim","Ash","Basalt","Cinder"]
-  }[config.theme] || ["Logan"];
-  const suffix = {
-    creature:["cub","moth","fang","pup","ling","beast"], item:["blade","charm","stone","relic","core"], trainer:["keeper","smith","rider","sage"], badge:["mark","crest","seal","badge","sigil"]
-  }[config.kind] || ["sprite"];
-  return pick(rng, prefix) + pick(rng, suffix).replace(/^./, c => c.toUpperCase());
-}
-
-function clearAll(c, size) {
-  c.clearRect(0, 0, size, size);
-  c.imageSmoothingEnabled = false;
-}
-
-function pixelSetup(size) {
-  canvas.width = 192;
-  canvas.height = 192;
-  exportCanvas.width = size;
-  exportCanvas.height = size;
-  clearAll(ctx, 192);
-  clearAll(exportCtx, size);
-  const work = document.createElement("canvas");
-  work.width = size;
-  work.height = size;
-  const wctx = work.getContext("2d");
-  wctx.imageSmoothingEnabled = false;
-  return { work, wctx, size, unit: size / 64 };
-}
-
-function px(v, unit) { return Math.round(v * unit); }
-
-function ellipse(c, unit, x, y, w, h, fill, stroke, line=2) {
-  c.fillStyle = fill;
-  c.strokeStyle = stroke;
-  c.lineWidth = Math.max(1, px(line, unit));
-  c.beginPath();
-  c.ellipse(px(x,unit), px(y,unit), px(w,unit), px(h,unit), 0, 0, Math.PI*2);
-  c.fill();
-  c.stroke();
-}
-
-function rect(c, unit, x, y, w, h, fill, stroke, line=2) {
-  c.fillStyle = fill;
-  c.strokeStyle = stroke;
-  c.lineWidth = Math.max(1, px(line, unit));
-  c.fillRect(px(x,unit), px(y,unit), px(w,unit), px(h,unit));
-  c.strokeRect(px(x,unit), px(y,unit), px(w,unit), px(h,unit));
-}
-
-function poly(c, unit, points, fill, stroke, line=2) {
-  c.fillStyle = fill;
-  c.strokeStyle = stroke;
-  c.lineWidth = Math.max(1, px(line, unit));
-  c.beginPath();
-  points.forEach(([x,y], i) => i ? c.lineTo(px(x,unit), px(y,unit)) : c.moveTo(px(x,unit), px(y,unit)));
-  c.closePath();
-  c.fill();
-  c.stroke();
-}
-
-function line(c, unit, x1, y1, x2, y2, color, width=2) {
-  c.strokeStyle = color;
-  c.lineWidth = Math.max(1, px(width, unit));
-  c.beginPath();
-  c.moveTo(px(x1,unit), px(y1,unit));
-  c.lineTo(px(x2,unit), px(y2,unit));
-  c.stroke();
-}
-
-function eye(c, unit, x, y, color) {
-  rect(c, unit, x, y, 3, 3, color, "#171008", 1);
-  rect(c, unit, x+1, y, 1, 1, "#ffffff", "#ffffff", 0);
-}
-
-function addThemeDetails(c, unit, config, p, rng) {
-  const accent = p[4];
-  if (config.detail === "simple") return;
-  const prompt = config.prompt.toLowerCase();
-  const count = config.detail === "extra" ? 7 : 4;
-  for (let i = 0; i < count; i++) {
-    const x = rand(rng, 20, 45);
-    const y = rand(rng, 20, 45);
-    if (prompt.includes("armor") || config.theme === "Steel" || config.theme === "Rock") rect(c, unit, x, y, rand(rng,3,6), rand(rng,2,4), p[1], "#171008", 1);
-    else if (prompt.includes("crack") || config.theme === "Fire" || config.theme === "Nether") line(c, unit, x, y, x+rand(rng,-4,4), y+rand(rng,3,6), accent, 1);
-    else ellipse(c, unit, x, y, rand(rng,1,2), rand(rng,1,2), accent, "#171008", 1);
-  }
-}
-
-function drawCreature(c, unit, config, p, rng) {
-  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
-  switch (config.template) {
-    case "dragon":
-      ellipse(c,unit,34,35,15,10,body,o); ellipse(c,unit,47,28,10,8,body,o);
-      poly(c,unit,[[45,20],[50,9],[52,22]],accent,o); poly(c,unit,[[52,21],[60,17],[55,27]],light,o);
-      line(c,unit,21,38,8,48,dark,5); line(c,unit,26,44,22,56,dark,4); line(c,unit,39,44,42,56,dark,4);
-      poly(c,unit,[[29,30],[16,14],[22,35]],dark,o); poly(c,unit,[[36,28],[48,13],[43,35]],dark,o);
-      eye(c,unit,49,26,accent); break;
-    case "bird":
-      ellipse(c,unit,33,35,13,12,body,o); ellipse(c,unit,44,25,8,7,body,o);
-      poly(c,unit,[[51,24],[62,28],[51,31]],accent,o); poly(c,unit,[[31,32],[10,20],[19,43]],dark,o);
-      poly(c,unit,[[35,32],[55,17],[48,43]],light,o); line(c,unit,31,46,27,57,dark,3); line(c,unit,37,46,39,57,dark,3);
-      eye(c,unit,44,24,accent); break;
-    case "fish":
-      ellipse(c,unit,33,33,17,11,body,o); poly(c,unit,[[17,32],[4,21],[6,44]],dark,o);
-      poly(c,unit,[[38,21],[45,8],[48,26]],accent,o); poly(c,unit,[[37,45],[45,56],[48,40]],light,o);
-      eye(c,unit,45,30,accent); line(c,unit,24,29,42,29,light,2); break;
-    case "bug":
-      ellipse(c,unit,25,35,9,10,dark,o); ellipse(c,unit,37,34,12,12,body,o); ellipse(c,unit,50,31,8,8,body,o);
-      for (let y of [28,35,42]) { line(c,unit,28,y,14,y-7,dark,3); line(c,unit,44,y,58,y-7,dark,3); }
-      line(c,unit,50,24,56,15,accent,2); line(c,unit,52,24,62,19,accent,2); eye(c,unit,50,30,accent); break;
-    case "slime":
-      ellipse(c,unit,32,39,18,15,body,o); ellipse(c,unit,26,30,8,8,light,o); ellipse(c,unit,43,31,7,7,body,o);
-      eye(c,unit,25,36,accent); eye(c,unit,38,36,accent); rect(c,unit,30,45,8,3,dark,o,1); break;
-    case "ghost":
-      ellipse(c,unit,32,29,15,14,body,o); poly(c,unit,[[17,34],[20,55],[28,47],[34,56],[42,47],[48,56],[47,34]],body,o);
-      eye(c,unit,26,27,accent); eye(c,unit,37,27,accent); ellipse(c,unit,32,39,4,5,dark,o,1); break;
-    case "golem":
-      rect(c,unit,21,25,25,22,body,o); rect(c,unit,17,18,18,13,light,o); rect(c,unit,38,20,12,12,dark,o);
-      rect(c,unit,13,36,8,16,dark,o); rect(c,unit,46,35,8,17,dark,o); rect(c,unit,24,47,8,12,dark,o); rect(c,unit,37,47,8,12,dark,o);
-      eye(c,unit,29,28,accent); eye(c,unit,39,28,accent); break;
-    case "robot":
-      rect(c,unit,21,20,25,18,body,o); rect(c,unit,24,38,19,16,dark,o); line(c,unit,32,20,32,12,accent,2);
-      rect(c,unit,14,39,8,12,body,o); rect(c,unit,45,39,8,12,body,o); rect(c,unit,25,54,7,7,dark,o); rect(c,unit,36,54,7,7,dark,o);
-      eye(c,unit,27,27,accent); eye(c,unit,38,27,accent); break;
-    case "mushroom":
-      ellipse(c,unit,32,26,18,11,accent,o); rect(c,unit,25,31,14,24,body,o); ellipse(c,unit,25,24,3,2,light,o,1); ellipse(c,unit,38,26,4,3,light,o,1);
-      eye(c,unit,28,41,dark); eye(c,unit,36,41,dark); break;
-    case "wolf":
-    default:
-      ellipse(c,unit,32,38,16,10,body,o); ellipse(c,unit,46,30,10,8,body,o);
-      poly(c,unit,[[41,24],[43,12],[49,25]],body,o); poly(c,unit,[[49,24],[55,14],[55,29]],dark,o);
-      line(c,unit,18,39,8,34,dark,5); line(c,unit,24,46,21,58,dark,4); line(c,unit,37,46,39,58,dark,4);
-      eye(c,unit,47,29,accent); rect(c,unit,55,32,3,2,o,o,1); break;
-  }
-  addThemeDetails(c, unit, config, p, rng);
-}
-
-function drawItem(c, unit, config, p, rng) {
-  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
-  if (config.template === "potion") {
-    rect(c,unit,25,16,14,9,light,o); ellipse(c,unit,32,40,15,17,body,o); rect(c,unit,28,14,8,8,dark,o);
-    ellipse(c,unit,37,34,4,5,accent,o,1); line(c,unit,24,48,41,28,light,2);
-  } else if (config.template === "gem") {
-    poly(c,unit,[[32,8],[49,22],[43,53],[22,53],[15,22]],body,o);
-    poly(c,unit,[[32,8],[38,22],[32,53],[26,22]],light,o,1); poly(c,unit,[[15,22],[26,22],[22,53]],dark,o,1);
-  } else if (config.template === "egg") {
-    ellipse(c,unit,32,35,16,22,body,o); ellipse(c,unit,27,27,4,3,light,o,1); ellipse(c,unit,38,42,5,4,accent,o,1);
-  } else {
-    poly(c,unit,[[35,5],[45,16],[35,45],[29,45],[23,16]],light,o);
-    rect(c,unit,28,42,11,7,accent,o); rect(c,unit,30,49,7,12,dark,o);
-    line(c,unit,36,12,31,42,body,2);
-  }
-}
-
-function drawTrainer(c, unit, config, p, rng) {
-  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
-  ellipse(c,unit,32,22,11,12,light,o); rect(c,unit,20,34,24,24,body,o);
-  poly(c,unit,[[20,18],[29,8],[44,15],[43,21],[24,21]],accent,o);
-  rect(c,unit,18,40,7,16,dark,o); rect(c,unit,39,40,7,16,dark,o);
-  eye(c,unit,27,22,o); eye(c,unit,36,22,o); line(c,unit,29,30,36,30,o,1);
-}
-
-function drawBadge(c, unit, config, p, rng) {
-  const o = p[0], dark = p[1], body = p[2], light = p[3], accent = p[4];
-  if (config.template === "badge") {
-    poly(c,unit,[[32,6],[52,18],[48,45],[32,58],[16,45],[12,18]],body,o);
-    poly(c,unit,[[32,14],[44,22],[41,41],[32,49],[23,41],[20,22]],dark,o,1);
-    poly(c,unit,[[32,19],[38,32],[32,45],[26,32]],accent,o,1);
-  } else {
-    ellipse(c,unit,32,32,22,22,body,o); ellipse(c,unit,32,32,13,13,dark,o,1);
-    poly(c,unit,[[32,12],[37,27],[53,27],[40,36],[45,52],[32,42],[19,52],[24,36],[11,27],[27,27]],accent,o,1);
-  }
-}
-
-function drawSprite(config) {
-  const rng = rngFromSeed(JSON.stringify(config));
-  const p = paletteFromControls();
-  const { work, wctx, size, unit } = pixelSetup(config.size);
-  wctx.imageSmoothingEnabled = false;
-
-  if (config.kind === "item") drawItem(wctx, unit, config, p, rng);
-  else if (config.kind === "trainer") drawTrainer(wctx, unit, config, p, rng);
-  else if (config.kind === "badge") drawBadge(wctx, unit, config, p, rng);
-  else drawCreature(wctx, unit, config, p, rng);
-
-  exportCtx.clearRect(0,0,size,size);
-  exportCtx.imageSmoothingEnabled = false;
-  exportCtx.drawImage(work,0,0);
-
-  ctx.clearRect(0,0,192,192);
-  ctx.imageSmoothingEnabled = false;
-  ctx.drawImage(work,0,0,size,size,0,0,192,192);
-
-  return exportCanvas.toDataURL("image/png");
-}
-
-function spriteMeta(config, dataUrl) {
-  const rng = rngFromSeed(config.seed + config.theme + config.template);
-  const name = config.name || autoName(config, rng);
-  const detailText = config.detail === "extra" ? "extra detail" : config.detail;
-  const desc = config.prompt
-    ? `${name} is a ${config.theme.toLowerCase()} ${config.kind} sprite based on: ${config.prompt}.`
-    : `${name} is a ${config.theme.toLowerCase()} ${config.kind} sprite using the ${config.template} template.`;
-  return {
-    app: "LoganCreations",
-    version: "0.6",
-    module: "Create Sprite",
-    name,
-    kind: config.kind,
-    template: config.template,
-    theme: config.theme,
-    paletteStyle: config.paletteStyle,
-    outputSize: `${config.size}x${config.size}`,
-    detailLevel: detailText,
-    prompt: config.prompt,
-    seed: config.seed,
-    description: desc,
-    useCase: kindUse[config.kind],
-    styleNotes: `${config.size}x${config.size} pixel-style PNG, ${config.theme} theme, ${detailText} renderer.`,
-    tags: [config.kind, config.template, config.theme.toLowerCase(), `${config.size}x${config.size}`],
-    imageDataUrl: dataUrl
-  };
-}
-
-function generateSprite() {
-  const config = getConfig();
-  const dataUrl = drawSprite(config);
-  const meta = spriteMeta(config, dataUrl);
-  currentSprite = { config, meta, dataUrl };
-
-  if (!$("spriteName").value.trim()) $("spriteName").value = meta.name;
-  $("spriteTitle").textContent = meta.name;
-  $("seedBadge").textContent = `Seed ${config.seed}`;
-  $("spriteStatus").textContent = `${config.size}x${config.size} ${config.kind}`;
-  $("spriteUse").textContent = meta.useCase;
-  $("spriteNotes").textContent = meta.styleNotes;
-  $("spriteDescription").textContent = meta.description;
-  $("spriteTags").innerHTML = meta.tags.map(t => `<span>${escapeHtml(t)}</span>`).join("");
-  $("spriteDetails").innerHTML = [
-    ["Kind", config.kind],
-    ["Template", config.template],
-    ["Theme", config.theme],
-    ["Size", `${config.size}x${config.size}`],
-    ["Detail", config.detail]
-  ].map(([a,b]) => `<div><b>${a}</b><span>${b}</span></div>`).join("");
-}
-
-function escapeHtml(v) {
-  return String(v).replace(/[&<>"']/g, ch => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[ch]));
-}
-
-function downloadBlob(filename, blob) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = filename;
-  document.body.appendChild(a); a.click(); a.remove();
-  URL.revokeObjectURL(url);
-}
-
-function dataUrlToBlob(dataUrl) {
-  const [head, b64] = dataUrl.split(",");
-  const mime = head.match(/data:(.*?);/)?.[1] || "application/octet-stream";
-  const bin = atob(b64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
-  return new Blob([bytes], { type: mime });
-}
-
-function loadVault() {
-  try { return JSON.parse(localStorage.getItem(VAULT_KEY) || "[]"); }
-  catch { return []; }
-}
-
-function saveVault() {
-  localStorage.setItem(VAULT_KEY, JSON.stringify(vault));
-}
-
-function addAsset(asset) {
-  vault.unshift({ id: `asset_${Date.now()}_${Math.random().toString(16).slice(2,8)}`, createdAt: new Date().toISOString(), ...asset });
-  saveVault();
-  renderVault();
-}
-
-function formatBytes(bytes=0) {
-  if (!bytes) return "0 B";
-  const u = ["B","KB","MB","GB"];
-  const i = Math.min(Math.floor(Math.log(bytes)/Math.log(1024)), u.length-1);
-  return `${(bytes/Math.pow(1024,i)).toFixed(i?1:0)} ${u[i]}`;
-}
-
-function renderVault() {
-  const q = $("vaultSearch").value.toLowerCase().trim();
-  const type = $("vaultType").value;
-  const filtered = vault.filter(a => (!type || a.type === type) && (!q || `${a.name} ${a.description} ${(a.tags||[]).join(" ")}`.toLowerCase().includes(q)));
-  $("vaultStats").textContent = `${vault.length} stored · ${filtered.length} showing`;
-  $("vaultEmpty").hidden = filtered.length > 0;
-  $("vaultGrid").innerHTML = filtered.map(a => `
-    <article class="asset-card">
-      <div class="asset-top">
-        ${a.dataUrl && a.mime && a.mime.startsWith("image/") ? `<img class="asset-thumb" src="${a.dataUrl}" alt="">` : `<div class="asset-icon">◆</div>`}
-        <div>
-          <h3>${escapeHtml(a.name)}</h3>
-          <p>${escapeHtml(a.type)} · ${formatBytes(a.size)} · ${new Date(a.createdAt).toLocaleDateString()}</p>
-        </div>
-      </div>
-      <p>${escapeHtml(a.description || "")}</p>
-      <div class="asset-tags">${(a.tags||[]).map(t=>`<span>${escapeHtml(t)}</span>`).join("")}</div>
-      <div class="asset-actions">
-        <button type="button" data-download="${a.id}">Download</button>
-        <button type="button" data-copy="${a.id}">Duplicate</button>
-        <button type="button" class="danger-action" data-remove="${a.id}">Remove</button>
-      </div>
-    </article>
-  `).join("");
-}
-
-function saveSpriteToVault() {
-  if (!currentSprite) generateSprite();
-  const meta = { ...currentSprite.meta };
-  delete meta.imageDataUrl;
-  const blob = dataUrlToBlob(currentSprite.dataUrl);
-  addAsset({
-    type: "sprite",
-    name: currentSprite.meta.name,
-    description: currentSprite.meta.description,
-    tags: currentSprite.meta.tags,
-    filename: `${slug(currentSprite.meta.name)}.png`,
-    mime: "image/png",
-    size: blob.size,
-    dataUrl: currentSprite.dataUrl,
-    content: meta
-  });
-  $("spriteStatus").textContent = "Saved to Asset Vault";
-}
-
-function openSection(section) {
-  spritePanel.hidden = section !== "sprite";
-  vaultPanel.hidden = section !== "vault";
-  if (section === "sprite") {
-    previewTitle.textContent = "Create Sprite";
-    previewBadge.textContent = "Working";
-    previewText.textContent = "Use the sprite designer to generate, export, and save sprites.";
-    spritePanel.scrollIntoView({ behavior: "smooth", block: "start" });
-  } else {
-    previewTitle.textContent = "Asset Vault";
-    previewBadge.textContent = "Working";
-    previewText.textContent = "Stored assets can be downloaded, duplicated, removed, backed up, and restored.";
-    renderVault();
-    vaultPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-  }
-}
-
-document.querySelectorAll("[data-open]").forEach(btn => btn.addEventListener("click", () => openSection(btn.dataset.open)));
-document.querySelectorAll("[data-placeholder]").forEach(btn => btn.addEventListener("click", () => {
-  previewTitle.textContent = btn.dataset.placeholder;
-  previewBadge.textContent = "Planned";
-  previewText.textContent = `${btn.dataset.placeholder} is not built yet. Create Sprite and Asset Vault are the working modules right now.`;
-}));
-
-$("effectToggle").addEventListener("click", () => document.body.classList.toggle("low-effects"));
-$("generateSprite").addEventListener("click", generateSprite);
-$("surpriseSprite").addEventListener("click", () => {
-  const kinds = ["creature","item","trainer","badge"];
-  const templates = ["wolf","dragon","bird","fish","bug","slime","ghost","golem","robot","mushroom","sword","potion","gem","egg","trainer","badge"];
-  const themes = Object.keys(themePalettes);
-  $("spriteName").value = "";
-  $("spriteKind").value = pick(Math.random, kinds);
-  $("spriteTemplate").value = pick(Math.random, templates);
-  $("spriteTheme").value = pick(Math.random, themes);
-  $("spritePaletteStyle").value = pick(Math.random, ["auto","bright","muted","nether"]);
-  $("spriteDetail").value = pick(Math.random, ["simple","detailed","extra"]);
-  $("spriteSeed").value = makeSeed();
-  generateSprite();
-});
-$("rerollSeed").addEventListener("click", () => { $("spriteSeed").value = makeSeed(); generateSprite(); });
-$("downloadPng").addEventListener("click", () => {
-  if (!currentSprite) generateSprite();
-  downloadBlob(`${slug(currentSprite.meta.name)}.png`, dataUrlToBlob(currentSprite.dataUrl));
-});
-$("downloadJson").addEventListener("click", () => {
-  if (!currentSprite) generateSprite();
-  const meta = { ...currentSprite.meta };
-  delete meta.imageDataUrl;
-  downloadBlob(`${slug(meta.name)}.json`, new Blob([JSON.stringify(meta,null,2)], { type:"application/json" }));
-});
-$("saveToVault").addEventListener("click", saveSpriteToVault);
-$("spriteKind").addEventListener("change", () => { $("spriteTemplate").value = templateDefaults[$("spriteKind").value]; });
-
-$("importFile").addEventListener("click", () => $("fileInput").click());
-$("fileInput").addEventListener("change", () => {
-  [...$("fileInput").files].forEach(file => {
-    if (file.size > 2.5 * 1024 * 1024) return alert(`${file.name} is too large for this local vault.`);
-    const reader = new FileReader();
-    reader.onload = () => addAsset({
-      type: file.type.startsWith("image/") ? "sprite" : "file",
-      name: file.name.replace(/\.[^/.]+$/, ""),
-      description: `Imported file: ${file.name}`,
-      tags: ["imported"],
-      filename: file.name,
-      mime: file.type || "application/octet-stream",
-      size: file.size,
-      dataUrl: reader.result
-    });
-    reader.readAsDataURL(file);
-  });
-  $("fileInput").value = "";
-});
-$("exportVault").addEventListener("click", () => downloadBlob("loganscreations-vault-backup.json", new Blob([JSON.stringify({app:"LoganCreations",version:"0.6",assets:vault},null,2)], { type:"application/json" })));
-$("restoreVaultBtn").addEventListener("click", () => $("restoreInput").click());
-$("restoreInput").addEventListener("change", () => {
-  const file = $("restoreInput").files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try {
-      const parsed = JSON.parse(reader.result);
-      vault = Array.isArray(parsed) ? parsed : parsed.assets;
-      if (!Array.isArray(vault)) throw new Error("No assets array.");
-      saveVault(); renderVault(); openSection("vault");
-    } catch { alert("Could not restore that JSON backup."); }
-  };
-  reader.readAsText(file);
-});
-$("clearVault").addEventListener("click", () => {
-  if (vault.length && confirm("Remove every asset from this device vault?")) {
-    vault = []; saveVault(); renderVault();
-  }
-});
-$("vaultSearch").addEventListener("input", renderVault);
-$("vaultType").addEventListener("input", renderVault);
-$("vaultGrid").addEventListener("click", e => {
-  const d = e.target.closest("[data-download]");
-  const c = e.target.closest("[data-copy]");
-  const r = e.target.closest("[data-remove]");
-  if (d) {
-    const a = vault.find(x => x.id === d.dataset.download);
-    if (a) downloadBlob(a.filename || `${slug(a.name)}.asset`, a.dataUrl ? dataUrlToBlob(a.dataUrl) : new Blob([JSON.stringify(a.content || a,null,2)], { type:"application/json" }));
-  }
-  if (c) {
-    const a = vault.find(x => x.id === c.dataset.copy);
-    if (a) addAsset({ ...a, id: undefined, createdAt: undefined, name: `${a.name} Copy` });
-  }
-  if (r) {
-    const a = vault.find(x => x.id === r.dataset.remove);
-    if (a && confirm(`Remove "${a.name}"?`)) {
-      vault = vault.filter(x => x.id !== a.id); saveVault(); renderVault();
-    }
-  }
-});
-
-if (!$("spriteSeed").value.trim()) $("spriteSeed").value = makeSeed();
-generateSprite();
-renderVault();
+document.querySelectorAll('[data-open]').forEach(btn=>btn.addEventListener('click',()=>openSection(btn.dataset.open)));document.querySelectorAll('[data-placeholder]').forEach(btn=>btn.addEventListener('click',()=>alert(`${btn.dataset.placeholder} is planned. Loganmon Sprite Studio and Asset Vault are working now.`)));$('effectToggle').addEventListener('click',()=>document.body.classList.toggle('low-effects'));
+['spriteTarget','spriteView','styleLevel','manualBase','manualRarity','extraNotes'].forEach(id=>$(id).addEventListener('input',renderBrief));$('generateBrief').addEventListener('click',renderBrief);$('copyPrompt').addEventListener('click',async()=>{if(!currentBrief)renderBrief();await navigator.clipboard.writeText(currentBrief.prompt);$('studioStatus').textContent='Prompt copied'});$('downloadBrief').addEventListener('click',()=>{if(!currentBrief)renderBrief();downloadBlob(`${slug(currentBrief.name)}-sprite-brief.json`,new Blob([JSON.stringify(currentBrief,null,2)],{type:'application/json'}))});$('downloadMarkdown').addEventListener('click',()=>{if(!currentBrief)renderBrief();downloadBlob(`${slug(currentBrief.name)}-sprite-brief.md`,new Blob([markdown()],{type:'text/markdown'}))});$('saveBrief').addEventListener('click',()=>{if(!currentBrief)renderBrief();const content=JSON.stringify(currentBrief,null,2);addAsset({type:'design-brief',name:`${currentBrief.name} Sprite Brief`,description:`Design brief for #${currentBrief.dex} ${currentBrief.name}.`,tags:currentBrief.tags,filename:`${slug(currentBrief.name)}-sprite-brief.json`,mime:'application/json',size:content.length,content:currentBrief});$('studioStatus').textContent='Saved to Asset Vault'});$('downloadAll').addEventListener('click',()=>{const all=LOGANDEX.map(s=>generateBriefObject(s));downloadBlob('loganscreations-all-loganmon-sprite-briefs.json',new Blob([JSON.stringify(all,null,2)],{type:'application/json'}))});
+$('importFile').addEventListener('click',()=>$('fileInput').click());$('fileInput').addEventListener('change',()=>{[...$('fileInput').files].forEach(file=>{if(file.size>2.5*1024*1024)return alert(`${file.name} is too large for this local vault.`);const reader=new FileReader();reader.onload=()=>addAsset({type:file.type.startsWith('image/')?'sprite':'file',name:file.name.replace(/\.[^/.]+$/,''),description:`Imported file: ${file.name}`,tags:['imported'],filename:file.name,mime:file.type||'application/octet-stream',size:file.size,dataUrl:reader.result});reader.readAsDataURL(file)});$('fileInput').value=''});$('exportVault').addEventListener('click',()=>downloadBlob('loganscreations-vault-backup.json',new Blob([JSON.stringify({app:'LoganCreations',version:'0.7',assets:vault},null,2)],{type:'application/json'})));$('restoreVaultBtn').addEventListener('click',()=>$('restoreInput').click());$('restoreInput').addEventListener('change',()=>{const file=$('restoreInput').files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const parsed=JSON.parse(reader.result);vault=Array.isArray(parsed)?parsed:parsed.assets;if(!Array.isArray(vault))throw new Error('No assets');saveVault();renderVault();openSection('vault')}catch{alert('Could not restore that JSON backup.')}};reader.readAsText(file)});$('clearVault').addEventListener('click',()=>{if(vault.length&&confirm('Remove every asset from this device vault?')){vault=[];saveVault();renderVault()}});$('vaultSearch').addEventListener('input',renderVault);$('vaultType').addEventListener('input',renderVault);$('vaultGrid').addEventListener('click',e=>{const d=e.target.closest('[data-download]'),c=e.target.closest('[data-copy]'),r=e.target.closest('[data-remove]');if(d){const a=vault.find(x=>x.id===d.dataset.download);if(a){downloadBlob(a.filename||`${slug(a.name)}.json`,a.dataUrl?dataUrlToBlob(a.dataUrl):new Blob([JSON.stringify(a.content||a,null,2)],{type:'application/json'}))}}if(c){const a=vault.find(x=>x.id===c.dataset.copy);if(a)addAsset({...a,id:undefined,createdAt:undefined,name:`${a.name} Copy`})}if(r){const a=vault.find(x=>x.id===r.dataset.remove);if(a&&confirm(`Remove "${a.name}"?`)){vault=vault.filter(x=>x.id!==a.id);saveVault();renderVault()}}});
+initSpecies();renderBrief();renderVault();

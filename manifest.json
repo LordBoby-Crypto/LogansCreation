@@ -1,7 +1,7 @@
 {
   "name": "LoganCreations",
   "short_name": "LoganCreations",
-  "description": "Nether-themed creative forge with a working Create Sprite tool and Asset Vault.",
+  "description": "Nether-themed Loganmon design studio and asset vault.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#090202",
