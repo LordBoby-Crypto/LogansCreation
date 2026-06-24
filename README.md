@@ -1,13 +1,14 @@
-# LogansCreations v1.6
+# LogansCreations v1.7
 
-Crisper battle-sprite converter correction pass.
+Major readability-focused sprite converter pass.
 
-## New in v1.6
-- backs off the over-brightening from v1.5
-- better dark-fur preservation
-- crisper cleanup pass for less fuzzy 64x64 output
-- reduced smoothing in the downscale pipeline
-- new Crisp Sprite preset
-- cleaner defaults for FireRed-style battle sprites
+## New in v1.7
+- recognition-first 64x64 cleanup
+- fewer muddy colors at small size
+- stronger internal feature separation
+- lightness banding for clearer sprite shading
+- selective region cleanup to remove fuzzy/off-color noise
+- Crisp Sprite preset re-tuned
+- new Recognition Boost preset
 
-Open with `?v=16`.
+Open with `?v=17`.

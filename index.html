@@ -21,7 +21,7 @@
   <div class="app-shell">
     <header class="hero">
       <div class="hero-topline">
-        <span class="status-pill">Sprite Pipeline v1.6</span>
+        <span class="status-pill">Sprite Pipeline v1.7</span>
         <button class="ghost-button" id="effectToggle" type="button" aria-label="Toggle background effects">✦</button>
       </div>
       <div class="brand-block">
@@ -116,7 +116,7 @@
 
         <div class="section-divider"></div>
         <div class="section-heading">
-          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter now focuses on crisper battle-sprite readability: less fuzz, darker shadow protection, cleaner edge definition, and a less washed-out 64x64 FireRed-style output.</p></div>
+          <div><p class="eyebrow">Step 3</p><h2>Image → FireRed Sprite Converter</h2><p>Use the AI image or upload a reference image. This upgraded converter now focuses on recognizability first: fewer muddy pixels, cleaner shape reading, stronger internal feature separation, and a less fuzzy 64x64 FireRed-style output.</p></div>
           <span class="vault-stats" id="spriteStatus">64x64 target</span>
         </div>
 
@@ -155,6 +155,7 @@
               <button type="button" data-converter-preset="colors">Keep Source Colors</button>
               <button type="button" data-converter-preset="cleanmode">Clean Sprite</button>
               <button type="button" data-converter-preset="crisp">Crisp Sprite</button>
+              <button type="button" data-converter-preset="recognition">Recognition Boost</button>
               <button type="button" data-converter-preset="muted">Muted Palette</button>
               <button type="button" data-converter-preset="facepriority">Face Priority</button>
               <button type="button" data-converter-preset="sharp">Sharpen Sprite</button>
@@ -162,7 +163,7 @@
               <button type="button" data-converter-preset="master96">96x96 Master</button>
             </div>
             <div class="command-row"><button type="button" id="autoFitBtn">Auto Fit Subject</button><button type="button" id="resetConverterBtn">Reset Converter</button><button class="primary-action" type="button" id="convertSpriteBtn">Convert to Sprite</button><button type="button" id="downloadSpriteBtn">Download Sprite PNG</button><button type="button" id="saveSpriteBtn">Save Sprite</button></div>
-            <p class="small-warning">Tip: press FireRed Auto first. Then try Crisp Sprite if the output looks fuzzy, Clean Sprite for a cleaner 64x64, Keep Source Colors if the hues drift, and Face Priority if the head needs more presence.</p>
+            <p class="small-warning">Tip: press FireRed Auto first. Then try Recognition Boost if the sprite is muddy or unreadable, Crisp Sprite if it still looks fuzzy, Keep Source Colors if the hues drift, and Face Priority if the head needs more presence.</p>
           </div>
 
           <div class="converter-card">
