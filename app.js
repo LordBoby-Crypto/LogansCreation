@@ -147,7 +147,7 @@ ${custom ? `Extra user notes: ${custom}
 Art direction: original creature only, not an existing Pokemon, high-quality monster battler design, front 3/4 battle view, full body, centered, strong readable silhouette, clean outline, expressive face, appealing proportions, simple light or transparent background, no trainer, no text, no logo, no UI. Make it polished enough to later convert into a 64x64 FireRed-compatible battle sprite. Preserve the species identity and make the design clearly match its name, type, rarity, and evolution stage.`;
   currentBrief = {
     app: "LoganCreations",
-    version: "1.5",
+    version: "1.4",
     module: "Loganmon Brief Builder",
     species: mon,
     rarityRole: rarityRole(mon),
@@ -285,11 +285,11 @@ function resetConverter() {
   $("offsetY").value = "0";
   $("subjectFill").value = "89";
   $("battleBias").value = "-6";
-  $("simplifyDetails").value = "2";
+  $("simplifyDetails").value = "1";
   $("colorSteps").value = "0";
   $("outlineStrength").value = "1";
-  $("contrast").value = "104";
-  $("saturation").value = "95";
+  $("contrast").value = "108";
+  $("saturation").value = "94";
   $("converterMode").value = "clean";
   $("removeBg").checked = true;
   $("transparentBg").checked = true;
@@ -300,7 +300,6 @@ function resetConverter() {
   if ($("protectEyes")) $("protectEyes").checked = true;
   if ($("cleanSpriteMode")) $("cleanSpriteMode").checked = true;
   if ($("mutedPalette")) $("mutedPalette").checked = true;
-  if ($("battleSpriteBrighten")) $("battleSpriteBrighten").checked = true;
   drawSourcePreview();
   updateSliderValues();
   convertSprite();
@@ -582,11 +581,11 @@ function paletteAwarePass(ctx, size) {
       g *= 0.99;
       b *= 0.93;
     }
-    // preserve dark fur with cooler shadows
+    // preserve dark fur without blue-washing it
     else if (l <= 0.34 && s <= 0.28) {
-      r *= 0.96;
+      r *= 0.97;
       g *= 0.98;
-      b *= 1.03;
+      b *= 0.98;
     }
     // amber / gold eyes and highlights
     else if (h >= 24 && h <= 58 && s >= 0.35 && l >= 0.30) {
@@ -681,8 +680,8 @@ function mutedPalettePass(ctx, size) {
       s *= 0.78;
       l *= 0.98;
     } else if (l <= 0.36 && s <= 0.32) {
-      s *= 0.92;
-      l *= 0.96;
+      s *= 0.95;
+      l *= 0.99;
     } else {
       s *= 0.95;
     }
@@ -778,66 +777,27 @@ function controlledSharpenSprite(ctx, size, amount = 0.14) {
   ctx.putImageData(img,0,0);
 }
 
-function shadowLiftPass(ctx, size) {
+function shadowGuardPass(ctx, size) {
   const img = ctx.getImageData(0,0,size,size);
   const d = img.data;
-  let sumL = 0, count = 0;
-  for (let i=0; i<d.length; i+=4) {
-    if (d[i+3] < 24) continue;
-    const [, , l] = rgbToHsl(d[i], d[i+1], d[i+2]);
-    sumL += l;
-    count++;
-  }
-  if (!count) return;
-  const avgL = sumL / count;
-  const needLift = avgL < 0.43;
   for (let i=0; i<d.length; i+=4) {
     if (d[i+3] < 24) continue;
     let [h,s,l] = rgbToHsl(d[i], d[i+1], d[i+2]);
-    if (l < 0.20) l += (0.24 - l) * 0.55;
-    else if (l < 0.32) l += (0.36 - l) * 0.32;
-    if (needLift && l < 0.42) l += (0.44 - l) * 0.18;
-    if (h >= 70 && h <= 155 && l < 0.55) { l += 0.018; s *= 0.97; }
-    if (l <= 0.30 && s <= 0.28) { s *= 0.96; }
+    if (l <= 0.30 && s <= 0.30) {
+      l *= 0.96;
+      if (h >= 190 && h <= 260) h = 220;
+      s *= 0.94;
+    } else if (h >= 70 && h <= 160 && l < 0.46) {
+      s *= 0.97;
+      l *= 0.98;
+    }
     const [r,g,b] = hslToRgb(h, Math.max(0, Math.min(1,s)), Math.max(0, Math.min(1,l)));
     d[i]=r; d[i+1]=g; d[i+2]=b;
   }
   ctx.putImageData(img,0,0);
 }
 
-function faceReadabilityPass(ctx, size) {
-  const img = ctx.getImageData(0,0,size,size);
-  const src = new Uint8ClampedArray(img.data);
-  const d = img.data;
-  const cx = size * 0.44;
-  const cy = size * 0.34;
-  const rx = size * 0.30;
-  const ry = size * 0.24;
-  for (let y=1; y<size-1; y++) {
-    for (let x=1; x<size-1; x++) {
-      const i=(y*size+x)*4;
-      if (src[i+3] < 24) continue;
-      const nx=(x-cx)/rx, ny=(y-cy)/ry;
-      const inside=(nx*nx + ny*ny) <= 1.0;
-      if (!inside) continue;
-      const r=src[i], g=src[i+1], b=src[i+2];
-      const [h,s,l] = rgbToHsl(r,g,b);
-      const lum = 0.299*r + 0.587*g + 0.114*b;
-      const left=((y)*size+x-1)*4, right=((y)*size+x+1)*4, up=((y-1)*size+x)*4, down=((y+1)*size+x)*4;
-      const edge = Math.abs(lum - (0.299*src[left]+0.587*src[left+1]+0.114*src[left+2])) + Math.abs(lum - (0.299*src[right]+0.587*src[right+1]+0.114*src[right+2])) + Math.abs(lum - (0.299*src[up]+0.587*src[up+1]+0.114*src[up+2])) + Math.abs(lum - (0.299*src[down]+0.587*src[down+1]+0.114*src[down+2]));
-      let nl = l;
-      if (l < 0.38) nl += 0.04;
-      if (edge > 70) nl += 0.02;
-      let ns = s;
-      if (h >= 18 && h <= 60 && s >= 0.22) { nl += 0.03; ns *= 1.03; }
-      const [nr,ng,nb] = hslToRgb(h, Math.max(0, Math.min(1,ns)), Math.max(0, Math.min(1,nl)));
-      d[i]=nr; d[i+1]=ng; d[i+2]=nb;
-    }
-  }
-  ctx.putImageData(img,0,0);
-}
-
-function silhouetteDefinitionPass(ctx, size) {
+function crispCleanupPass(ctx, size, edgeAmount = 0.16) {
   const img = ctx.getImageData(0,0,size,size);
   const src = new Uint8ClampedArray(img.data);
   const d = img.data;
@@ -845,16 +805,30 @@ function silhouetteDefinitionPass(ctx, size) {
     for (let x=1; x<size-1; x++) {
       const i=(y*size+x)*4;
       if (src[i+3] < 24) continue;
-      let transparentNear = 0;
+      let transparentNear = false;
+      const rs=[], gs=[], bs=[];
+      let sumR=0, sumG=0, sumB=0, count=0;
       for (let oy=-1; oy<=1; oy++) for (let ox=-1; ox<=1; ox++) {
         if (!ox && !oy) continue;
         const ni=((y+oy)*size+(x+ox))*4;
-        if (src[ni+3] < 24) transparentNear++;
+        if (src[ni+3] < 24) { transparentNear = true; continue; }
+        const r=src[ni], g=src[ni+1], b=src[ni+2];
+        rs.push(r); gs.push(g); bs.push(b);
+        sumR += r; sumG += g; sumB += b; count++;
       }
-      if (transparentNear === 0) continue;
-      d[i] = Math.max(0, Math.round(src[i] * 0.93));
-      d[i+1] = Math.max(0, Math.round(src[i+1] * 0.93));
-      d[i+2] = Math.max(0, Math.round(src[i+2] * 0.95));
+      if (!count) continue;
+      const avgR=sumR/count, avgG=sumG/count, avgB=sumB/count;
+      const medR=channelMedian(rs), medG=channelMedian(gs), medB=channelMedian(bs);
+      const edgeScore=Math.abs(src[i]-avgR)+Math.abs(src[i+1]-avgG)+Math.abs(src[i+2]-avgB);
+      if (!transparentNear && edgeScore < 24) {
+        d[i] = Math.round(src[i] * 0.72 + medR * 0.28);
+        d[i+1] = Math.round(src[i+1] * 0.72 + medG * 0.28);
+        d[i+2] = Math.round(src[i+2] * 0.72 + medB * 0.28);
+      } else if (transparentNear || edgeScore > 42) {
+        d[i] = Math.max(0, Math.min(255, Math.round(src[i] + (src[i] - avgR) * edgeAmount)));
+        d[i+1] = Math.max(0, Math.min(255, Math.round(src[i+1] + (src[i+1] - avgG) * edgeAmount)));
+        d[i+2] = Math.max(0, Math.min(255, Math.round(src[i+2] + (src[i+2] - avgB) * edgeAmount)));
+      }
     }
   }
   ctx.putImageData(img,0,0);
@@ -869,7 +843,6 @@ function processSpritePixels(ctx, size) {
   const sat = (Number($("saturation").value) || 100) / 100;
   const cleanMode = $("cleanSpriteMode")?.checked;
   const mutedMode = $("mutedPalette")?.checked;
-  const brightenMode = $("battleSpriteBrighten")?.checked;
   const forcedSteps = mode === "gba" ? 10 : mode === "pixel" ? Math.max(steps, 8) : steps;
   for (let i=0; i<d.length; i+=4) {
     if (d[i+3] < 16) continue;
@@ -898,12 +871,9 @@ function processSpritePixels(ctx, size) {
   if ($("protectPalette")?.checked) paletteAwarePass(ctx, size);
   if (mutedMode) mutedPalettePass(ctx, size);
   if (cleanMode) {
-    medianInteriorPass(ctx, size, simplify > 1 ? 2 : 1);
+    if (simplify > 1) medianInteriorPass(ctx, size, 1);
     removeColorNoise(ctx, size);
-  }
-  if (brightenMode) {
-    shadowLiftPass(ctx, size);
-    faceReadabilityPass(ctx, size);
+    crispCleanupPass(ctx, size, 0.08);
   }
   if ($("protectEyes")?.checked) protectEyeHighlights(ctx, size);
   if ($("cleanSpeckles").checked && simplify > 0) cleanupSprite(ctx, size, simplify > 2 ? 2 : 1);
@@ -920,7 +890,7 @@ function convertSprite() {
 
   const crop = clampCropToSource(activeCrop());
   const simplify = Number($("simplifyDetails").value || 0);
-  const superScale = mode === "clean" ? 7 : mode === "gba" ? 6 : 5;
+  const superScale = mode === "clean" ? 5 : mode === "gba" ? 4 : 4;
   const hiSize = Math.max(outSize * superScale, 256);
   const hi = document.createElement("canvas");
   hi.width = hiSize; hi.height = hiSize;
@@ -933,11 +903,11 @@ function convertSprite() {
   frameAlphaSubject(h, hiSize);
 
   const mid = document.createElement("canvas");
-  const midSize = Math.max(outSize * 4, outSize * 2.5 + simplify * outSize / 1.7);
+  const midSize = Math.max(outSize * 2, Math.round(outSize * 2 + simplify * outSize / 4));
   mid.width = midSize; mid.height = midSize;
   const m = mid.getContext("2d", { willReadFrequently: true });
   m.imageSmoothingEnabled = true;
-  m.imageSmoothingQuality = "high";
+  m.imageSmoothingQuality = "medium";
   if (!$("transparentBg").checked) { m.fillStyle = "#f8efe2"; m.fillRect(0,0,midSize,midSize); }
   m.drawImage(hi, 0, 0, hiSize, hiSize, 0, 0, midSize, midSize);
 
@@ -953,17 +923,16 @@ function convertSprite() {
     polishSpriteEdges(w, outSize, Math.max(1, simplify));
     if ($("cleanSpriteMode")?.checked) {
       removeColorNoise(w, outSize);
-      if ($("battleSpriteBrighten")?.checked) shadowLiftPass(w, outSize);
-      controlledSharpenSprite(w, outSize, simplify > 1 ? 0.11 : 0.09);
+      crispCleanupPass(w, outSize, simplify > 1 ? 0.14 : 0.12);
+      controlledSharpenSprite(w, outSize, simplify > 1 ? 0.16 : 0.14);
     } else {
-      if ($("battleSpriteBrighten")?.checked) shadowLiftPass(w, outSize);
+      crispCleanupPass(w, outSize, simplify > 0 ? 0.16 : 0.14);
       sharpenSprite(w, outSize, simplify > 0 ? 0.14 : 0.10);
     }
-    if ($("battleSpriteBrighten")?.checked) faceReadabilityPass(w, outSize);
     if ($("protectPalette")?.checked) paletteAwarePass(w, outSize);
+    shadowGuardPass(w, outSize);
     if ($("mutedPalette")?.checked) mutedPalettePass(w, outSize);
     if ($("protectEyes")?.checked) protectEyeHighlights(w, outSize);
-    silhouetteDefinitionPass(w, outSize);
   }
   const outline = Number($("outlineStrength").value || 0);
   if (outline > 0) addOutsideOutline(w, outSize, outline);
@@ -1052,12 +1021,11 @@ function setConverterPreset(name) {
     set("converterMode", "clean");
     set("subjectFill", 89);
     set("battleBias", -6);
-    set("simplifyDetails", 2);
+    set("simplifyDetails", 1);
     set("colorSteps", 0);
     set("outlineStrength", 1);
-    set("contrast", 104);
-    set("saturation", 95);
-    if ($("battleSpriteBrighten")) $("battleSpriteBrighten").checked = true;
+    set("contrast", 108);
+    set("saturation", 94);
   }
   if (name === "fullbody") {
     set("spriteSize", "64");
@@ -1090,11 +1058,11 @@ function setConverterPreset(name) {
     set("saturation", 96);
   }
   if (name === "sharp") {
-    set("simplifyDetails", 1);
+    set("simplifyDetails", 0);
     set("colorSteps", 0);
     set("outlineStrength", 1);
-    set("contrast", 112);
-    set("saturation", 98);
+    set("contrast", 110);
+    set("saturation", 95);
   }
   if (name === "colors") {
     set("simplifyDetails", 1);
@@ -1111,11 +1079,24 @@ function setConverterPreset(name) {
     set("saturation", 96);
   }
   if (name === "cleanmode") {
-    set("simplifyDetails", 2);
+    set("simplifyDetails", 1);
     set("colorSteps", 0);
     set("outlineStrength", 1);
-    set("contrast", 106);
-    set("saturation", 96);
+    set("contrast", 107);
+    set("saturation", 94);
+    if ($("cleanSpriteMode")) $("cleanSpriteMode").checked = true;
+    if ($("mutedPalette")) $("mutedPalette").checked = true;
+  }
+  if (name === "crisp") {
+    set("spriteSize", "64");
+    set("converterMode", "pixel");
+    set("subjectFill", 89);
+    set("battleBias", -6);
+    set("simplifyDetails", 0);
+    set("colorSteps", 0);
+    set("outlineStrength", 1);
+    set("contrast", 109);
+    set("saturation", 94);
     if ($("cleanSpriteMode")) $("cleanSpriteMode").checked = true;
     if ($("mutedPalette")) $("mutedPalette").checked = true;
   }
@@ -1128,32 +1109,19 @@ function setConverterPreset(name) {
     set("subjectFill", 90);
     set("battleBias", -8);
     set("simplifyDetails", 2);
-    set("contrast", 104);
-    set("saturation", 95);
-    if ($("battleSpriteBrighten")) $("battleSpriteBrighten").checked = true;
-  }
-  if (name === "readable") {
-    set("subjectFill", 90);
-    set("battleBias", -9);
-    set("simplifyDetails", 1);
-    set("colorSteps", 0);
-    set("outlineStrength", 1);
-    set("contrast", 103);
-    set("saturation", 95);
-    if ($("cleanSpriteMode")) $("cleanSpriteMode").checked = true;
-    if ($("mutedPalette")) $("mutedPalette").checked = true;
-    if ($("battleSpriteBrighten")) $("battleSpriteBrighten").checked = true;
+    set("contrast", 106);
+    set("saturation", 96);
   }
   if (name === "master96") {
     set("spriteSize", "96");
     set("converterMode", "clean");
     set("subjectFill", 88);
     set("battleBias", -4);
-    set("simplifyDetails", 2);
+    set("simplifyDetails", 1);
     set("colorSteps", 0);
     set("outlineStrength", 1);
-    set("contrast", 106);
-    set("saturation", 96);
+    set("contrast", 107);
+    set("saturation", 95);
   }
   updateSliderValues();
   autoFitSubject();
@@ -1174,7 +1142,7 @@ $("useAiForSpriteBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) retu
 $("downloadAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const name=selectedSpecies().name; downloadBlob(`${slug(name)}-concept.png`, dataUrlToBlob(currentAiDataUrl)); });
 $("saveAiBtn").addEventListener("click",()=>{ if(!currentAiDataUrl) return alert("No AI image yet."); const blob=dataUrlToBlob(currentAiDataUrl); const mon=selectedSpecies(); addAsset({type:"concept",name:`${mon.name} Concept Image`,description:`AI concept image for ${mon.name}`,tags:["concept",mon.name,mon.type],filename:`${slug(mon.name)}-concept.png`,mime:"image/png",size:blob.size,dataUrl:currentAiDataUrl,content:currentBrief}); });
 $("sourceUpload").addEventListener("change",()=>{ const file=$("sourceUpload").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>loadImageToConverter(reader.result); reader.readAsDataURL(file); });
-["spriteSize","converterMode","cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg","cleanSpeckles","showCropBox","extraPolish","protectPalette","protectEyes","cleanSpriteMode","mutedPalette","battleSpriteBrighten"].forEach(id=>$(id).addEventListener("input", () => { updateSliderValues(); (id === "subjectFill" || id === "battleBias") ? autoFitSubject() : convertSprite(); }));
+["spriteSize","converterMode","cropZoom","offsetX","offsetY","subjectFill","battleBias","simplifyDetails","colorSteps","outlineStrength","contrast","saturation","removeBg","transparentBg","cleanSpeckles","showCropBox","extraPolish","protectPalette","protectEyes","cleanSpriteMode","mutedPalette"].forEach(id=>$(id).addEventListener("input", () => { updateSliderValues(); (id === "subjectFill" || id === "battleBias") ? autoFitSubject() : convertSprite(); }));
 document.querySelectorAll("[data-converter-preset]").forEach(btn => btn.addEventListener("click", () => setConverterPreset(btn.dataset.converterPreset)));
 $("autoFitBtn").addEventListener("click",autoFitSubject);
 $("resetConverterBtn").addEventListener("click",resetConverter);
@@ -1183,7 +1151,7 @@ $("downloadSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return 
 $("saveSpriteBtn").addEventListener("click",()=>{ if(!spriteDataUrl) return alert("Convert a sprite first."); const blob=dataUrlToBlob(spriteDataUrl); const mon=selectedSpecies(); addAsset({type:"sprite",name:`${mon.name} ${$("spriteSize").value}x${$("spriteSize").value} Sprite`,description:`Converted FireRed-style sprite for ${mon.name}`,tags:["sprite",mon.name,mon.type,`${$("spriteSize").value}x${$("spriteSize").value}`],filename:`${slug(mon.name)}-sprite-${$("spriteSize").value}.png`,mime:"image/png",size:blob.size,dataUrl:spriteDataUrl,content:currentBrief}); });
 $("importFile").addEventListener("click",()=>$("fileInput").click());
 $("fileInput").addEventListener("change",()=>{ [...$("fileInput").files].forEach(file=>{ if(file.size>2.5*1024*1024) return alert(`${file.name} is too large for this local vault.`); const reader=new FileReader(); reader.onload=()=>addAsset({type:file.type.startsWith("image/")?"sprite":"file",name:file.name.replace(/\.[^/.]+$/,"") ,description:`Imported file: ${file.name}`,tags:["imported"],filename:file.name,mime:file.type||"application/octet-stream",size:file.size,dataUrl:reader.result}); reader.readAsDataURL(file); }); $("fileInput").value=""; });
-$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"1.5",assets:vault},null,2)],{type:"application/json"})));
+$("exportVault").addEventListener("click",()=>downloadBlob("loganscreations-vault-backup.json",new Blob([JSON.stringify({app:"LoganCreations",version:"1.6",assets:vault},null,2)],{type:"application/json"})));
 $("restoreVaultBtn").addEventListener("click",()=>$("restoreInput").click());
 $("restoreInput").addEventListener("change",()=>{ const file=$("restoreInput").files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const parsed=JSON.parse(reader.result); vault=Array.isArray(parsed)?parsed:parsed.assets; if(!Array.isArray(vault)) throw new Error("No assets array"); saveVault(); renderVault(); openSection("vault"); }catch{ alert("Could not restore that JSON backup."); } }; reader.readAsText(file); });
 $("clearVault").addEventListener("click",()=>{ if(vault.length&&confirm("Remove every asset from this device vault?")){ vault=[]; saveVault(); renderVault(); } });
